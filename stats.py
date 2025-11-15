@@ -1,6 +1,3 @@
-#
-# === POCZĄTEK stats.py (Wersja 5.2) ===
-#
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -50,7 +47,6 @@ translations = {
         'form_status_fail': "Niezaliczone",
         'form_status_no_report': "Brak raportu",
         'form_status_info': "Uwaga: 'Niezaliczone' oraz 'Brak raportu' mają ten sam skutek (etap niezaliczony).",
-        # <<< TO JEST LINIA 54 - POPRAWIONA >>>
         'form_converters_expander': "ℹ️ Informacja o przelicznikach (dla danych ze Strava itp.)",
         'form_converters_warning': "Jeśli zgłaszasz kroki z aktywności (np. Strava, Garmin), stosujemy poniższe przeliczniki. Upewnij się, że Twój wynik końcowy jest poprawny.",
         'form_notes_label': "Inne (opcjonalnie)",
@@ -391,18 +387,19 @@ def connect_to_google_sheets():
         sheet = client.open(GOOGLE_SHEET_NAME)
         return sheet
     except Exception as e:
-        # Ten błąd jest oczekiwany przy uruchomieniu lokalnym BEZ pliku secrets.toml
         if "No secrets found" in str(e):
              st.error(f"Błąd połączenia: Brak pliku secrets.toml. Uruchamiasz lokalnie? Upewnij się, że plik .streamlit/secrets.toml jest poprawnie skonfigurowany.")
         else:
             st.error(f"Błąd połączenia z Google Sheets: {e}. Sprawdź 'Secrets' w Streamlit Cloud lub lokalny plik secrets.toml.")
         return None
 
+# <<< POPRAWKA BŁĘDU: Dodano _ (podkreślnik) do 'sheet' >>>
 @st.cache_data(ttl=60) 
-def load_google_sheet_data(sheet, worksheet_name):
+def load_google_sheet_data(_sheet, worksheet_name): # Zmieniono 'sheet' na '_sheet'
     """Pobiera wszystkie dane z danej zakładki jako DataFrame."""
     try:
-        worksheet = sheet.worksheet(worksheet_name)
+        # Użyj _sheet wewnątrz funkcji
+        worksheet = _sheet.worksheet(worksheet_name) 
         records = worksheet.get_all_records()
         return pd.DataFrame(records)
     except gspread.exceptions.WorksheetNotFound:
@@ -490,9 +487,8 @@ def show_submission_form(lang):
     if submitted:
         if not submitter or not participant:
             st.error(_t('form_error_no_participant', lang))
-            st.rerun() # Przerwij i odśwież, aby zachować stan formularza
+            st.rerun() 
 
-        # Zapisz wybory w pamięci sesji
         st.session_state.submitter_index_plus_one = ([None] + submitters_list_sorted).index(submitter)
         st.session_state.last_day_entered = day + 1 if day < 31 else 31 
 
@@ -636,7 +632,7 @@ def show_current_edition_dashboard(lang):
     
     sheet = connect_to_google_sheets()
     if not sheet:
-        return # Błąd jest już wyświetlany przez connect_to_google_sheets
+        return 
 
     df_raw = load_google_sheet_data(sheet, "BiezacaEdycja")
     
@@ -771,7 +767,6 @@ def show_historical_stats(lang):
     st.sidebar.markdown("---")
     st.sidebar.header(_t('sidebar_header', lang))
 
-    # Reszta tej funkcji jest DOKŁADNIE taka sama jak w V4.0
     min_editions_count = st.sidebar.slider(
         _t('min_editions', lang),
         min_value=1,
