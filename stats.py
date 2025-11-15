@@ -401,14 +401,13 @@ def connect_to_google_sheets():
             st.error(f"Błąd połączenia z Google Sheets: {e}. Sprawdź 'Secrets' w Streamlit Cloud lub lokalny plik secrets.toml.")
         return None
 
-# <<< POPRAWKA BŁĘDU (UnhashableParamError): Dodano _ (podkreślnik) do 'sheet' >>>
 @st.cache_data(ttl=60) 
-def load_google_sheet_data(_sheet, worksheet_name): # Zmieniono 'sheet' na '_sheet'
+def load_google_sheet_data(_sheet, worksheet_name): 
     """Pobiera wszystkie dane z danej zakładki jako DataFrame."""
     try:
-        # Użyj _sheet wewnątrz funkcji
         worksheet = _sheet.worksheet(worksheet_name) 
-        records = worksheet.get_all_records(header=1) # Wymuś użycie 1. wiersza jako nagłówka
+        # <<< POPRAWKA BŁĘDU: Usunięto 'header=1' >>>
+        records = worksheet.get_all_records() 
         return pd.DataFrame(records)
     except gspread.exceptions.WorksheetNotFound:
         st.error(f"Błąd: Nie znaleziono zakładki o nazwie '{worksheet_name}' w Arkuszu Google.")
@@ -426,7 +425,7 @@ def show_submission_form(lang):
     users_list = sorted(CURRENT_PARTICIPANTS)
     submitters_list_sorted = sorted(SUBMITTER_LIST)
     
-    # <<< POPRAWKA 1 (Brakujące potwierdzenie): Wyświetl potwierdzenie z sesji, jeśli istnieje >>>
+    # POPRAWKA 1 (Okienko potwierdzenia): Wyświetl, jeśli jest w sesji
     if 'last_submission' in st.session_state and st.session_state.last_submission:
         details = st.session_state.last_submission
         st.success(_t('form_success_message', lang, details['participant'], details['day'], details['status_translated']))
@@ -438,9 +437,7 @@ def show_submission_form(lang):
             st.write(f"**{_t('form_confirmation_notes', lang)}:** {details['full_notes'] if details['full_notes'] else _t('form_confirmation_notes_empty', lang)}")
         st.info(_t('form_overwrite_info', lang))
         
-        # Wyczyść, aby nie pokazywało się ponownie po odświeżeniu
-        st.session_state.last_submission = None
-    # <<< Koniec Poprawki 1 >>>
+        st.session_state.last_submission = None # Wyczyść
     
     
     participant, day, status, notes, uploaded_file = None, None, None, None, None
@@ -514,8 +511,9 @@ def show_submission_form(lang):
             st.error(_t('form_error_no_participant', lang))
             st.rerun() 
 
-        st.session_state.submitter_index_plus_one = ([None] + submitters_list_sorted).index(submitter)
+        # POPRAWKA 1 (Okienko potwierdzenia): Zapisz dzień TERAZ
         st.session_state.last_day_entered = day + 1 if day < 31 else 31 
+        st.session_state.submitter_index_plus_one = ([None] + submitters_list_sorted).index(submitter)
 
         status_key = "Zaliczone"
         if status == _t('form_status_fail', lang):
@@ -536,11 +534,10 @@ def show_submission_form(lang):
                 worksheet_log = sheet.worksheet("LogWpisow")
                 worksheet_log.append_row([submitter, participant, day, status_key, timestamp])
                 
-                # <<< POPRAWKA 1 (Brakujące potwierdzenie): Zapisz dane w sesji zamiast wyświetlać >>>
                 st.session_state.last_submission = {
                     'participant': participant,
                     'day': day,
-                    'status_translated': status, # Przekaż przetłumaczony status
+                    'status_translated': status,
                     'full_notes': full_notes
                 }
                 
@@ -560,9 +557,9 @@ def process_raw_data(df_raw, lang):
     Zwraca słownik: {participant: {day: status}} oraz max_day
     """
     if df_raw.empty:
-        return {}, 0, True # Zwróć True dla 'success'
+        return {}, 0, True 
         
-    # <<< POPRAWKA 2 (KeyError): Sprawdź, czy istnieją wymagane kolumny >>>
+    # POPRAWKA 2 (KeyError): Sprawdź nagłówki
     REQUIRED_COLS = ['Participant', 'Day', 'Status', 'Timestamp', 'Notes']
     if not all(col in df_raw.columns for col in REQUIRED_COLS):
         st.error(_t('current_header_check_error', lang))
@@ -571,7 +568,6 @@ def process_raw_data(df_raw, lang):
             _t('current_header_check_found', lang): df_raw.columns.tolist()
         })
         return {}, 0, False # Zwróć False dla 'success'
-    # <<< Koniec Poprawki 2 >>>
         
     df_raw['Day'] = pd.to_numeric(df_raw['Day'], errors='coerce')
     df_raw = df_raw.dropna(subset=['Day'])
@@ -675,11 +671,9 @@ def show_current_edition_dashboard(lang):
         st.info(_t('current_no_data', lang))
         return
 
-    # <<< POPRAWKA 2 (KeyError): Sprawdź, czy przetwarzanie się udało >>>
     current_data, max_day_reported, success = process_raw_data(df_raw, lang)
     if not success:
-        return # Błąd został już wyświetlony w process_raw_data
-    # <<< Koniec Poprawki 2 >>>
+        return
 
     st.subheader(_t('current_ranking_header', lang))
     st.markdown(_t('current_ranking_rules', lang))
@@ -1517,10 +1511,10 @@ def main():
     
     # Inicjalizacja pamięci sesji
     if 'submitter_index_plus_one' not in st.session_state:
-        st.session_state.submitter_index_plus_one = 0 # 0 to index dla "None" (placeholder)
+        st.session_state.submitter_index_plus_one = 0 
     if 'last_day_entered' not in st.session_state:
         st.session_state.last_day_entered = 1
-    # 'last_submission' jest celowo NIEINIJOWANY - sprawdzamy jego istnienie
+    # 'last_submission' jest celowo NIEINIJOWANY
     
     app_section = st.sidebar.radio(
         _t('nav_header', lang),
@@ -1545,6 +1539,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-#
-# === KONIEC stats.py (Wersja 5.4) ===
-#
