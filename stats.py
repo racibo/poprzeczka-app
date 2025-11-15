@@ -16,12 +16,9 @@ import io
 st.set_page_config(layout="wide", page_title="Analiza i Zarządzanie Poprzeczką")
 
 # === Definicje Plików i Uczestników ===
-# Plik historyczny jest nadal odczytywany z repozytorium
 FILE_HISTORICAL = "historical_results.json" 
-# Nazwa Twojego Arkusza Google
 GOOGLE_SHEET_NAME = "Baza Danych Poprzeczki" 
 
-# Uczestnicy edycji (LISTOPAD 2025 - zaktualizuj wg potrzeb)
 CURRENT_PARTICIPANTS = sorted([
     'ataraksja', 'browery', 'cezary-io', 'edycu007', 'ervin-lemark', 
     'fredkese', 'homesteadlt', 'manuvert', 'marianomariano', 'merthin', 
@@ -31,7 +28,6 @@ SUBMITTER_LIST = CURRENT_PARTICIPANTS + ['poprzeczka (Admin)']
 
 
 # === Słownik Tłumaczeń (PL/EN) ===
-# (Pozostaje bez zmian - taki sam jak w Wersji 4.0)
 translations = {
     'pl': {
         'app_title': "Analiza i Zarządzanie Poprzeczką",
@@ -51,7 +47,8 @@ translations = {
         'form_status_fail': "Niezaliczone",
         'form_status_no_report': "Brak raportu",
         'form_status_info': "Uwaga: 'Niezaliczone' oraz 'Brak raportu' mają ten sam skutek (etap niezaliczony).",
-        'form_converters_expander': ℹ️ Informacja o przelicznikach (dla danych ze Strava itp.)",
+        # <<< POPRAWKA BŁĘDU (brakowało cudzysłowu otwierającego) >>>
+        'form_converters_expander': "ℹ️ Informacja o przelicznikach (dla danych ze Strava itp.)",
         'form_converters_warning': "Jeśli zgłaszasz kroki z aktywności (np. Strava, Garmin), stosujemy poniższe przeliczniki. Upewnij się, że Twój wynik końcowy jest poprawny.",
         'form_notes_label': "Inne (opcjonalnie)",
         'form_notes_placeholder': "Np. 'Dane ze Strava', 'Link do zrzutu ekranu: ...', 'Zapomniałem zegarka'",
@@ -67,7 +64,7 @@ translations = {
         'form_confirmation_status': "Status",
         'form_confirmation_notes': "Notatki",
         'form_confirmation_notes_empty': "Brak",
-        'form_overwrite_info': "W razie pomyłki, po prostu wprowadź dane dla tego samego uczestnika i dnia jeszcze raz. Nowy wpis nadpisze stary w rankingu.", # Zmieniona informacja
+        'form_overwrite_info': "W razie pomyłki, po prostu wprowadź dane dla tego samego uczestnika i dnia jeszcze raz. Nowy wpis nadpisze stary w rankingu.",
         'current_header': "📊 Ranking i Status Bieżącej Edycji",
         'current_no_data': "Brak danych dla bieżącej edycji. Wprowadź pierwsze dane za pomocą formularza.",
         'current_ranking_header': "Aktualna Klasyfikacja",
@@ -195,7 +192,6 @@ translations = {
         'survival_analysis_no_selection': "Wybierz co najmniej jedną edycję, aby zobaczyć analizę przetrwania.",
     },
     'en': {
-        # ... (Tłumaczenia EN są takie same jak w V4.0) ...
         'app_title': "Step Challenge Analysis & Management",
         'nav_header': "Navigation",
         'nav_current_ranking': "📊 Current Edition Ranking",
@@ -372,7 +368,6 @@ def _t(key, lang, *args):
 def connect_to_google_sheets():
     """Łączy się z Google Sheets używając st.secrets."""
     try:
-        # Użyj kluczy ze st.secrets
         creds_json = {
             "type": st.secrets["type"],
             "project_id": st.secrets["project_id"],
@@ -403,6 +398,9 @@ def load_google_sheet_data(sheet, worksheet_name):
         worksheet = sheet.worksheet(worksheet_name)
         records = worksheet.get_all_records()
         return pd.DataFrame(records)
+    except gspread.exceptions.WorksheetNotFound:
+        st.error(f"Błąd: Nie znaleziono zakładki o nazwie '{worksheet_name}' w Arkuszu Google.")
+        return pd.DataFrame()
     except Exception as e:
         st.error(f"Nie można wczytać danych z zakładki '{worksheet_name}': {e}")
         return pd.DataFrame()
@@ -425,16 +423,16 @@ def show_submission_form(lang):
         with col1:
             submitter = st.selectbox(
                 _t('form_submitter_label', lang),
-                options=submitters_list_sorted,
-                index=st.session_state.get('submitter_index', None), 
-                placeholder=_t('form_submitter_placeholder', lang)
+                options=[None] + submitters_list_sorted, # Dodaj None na początek
+                index=st.session_state.get('submitter_index_plus_one', 0), # index 0 to teraz None
+                format_func=lambda x: _t('form_submitter_placeholder', lang) if x is None else x
             )
             
             participant = st.selectbox(
                 _t('form_participant_label', lang),
-                options=users_list,
-                index=None, 
-                placeholder=_t('form_participant_placeholder', lang)
+                options=[None] + users_list, # Dodaj None na początek
+                index=0, # Zawsze zaczynaj od pustego
+                format_func=lambda x: _t('form_participant_placeholder', lang) if x is None else x
             )
         with col2:
             day = st.number_input(
@@ -487,7 +485,8 @@ def show_submission_form(lang):
             st.error(_t('form_error_no_participant', lang))
             return 
 
-        st.session_state.submitter_index = submitters_list_sorted.index(submitter)
+        # Zapisz wybory w pamięci sesji
+        st.session_state.submitter_index_plus_one = ([None] + submitters_list_sorted).index(submitter)
         st.session_state.last_day_entered = day + 1 if day < 31 else 31 
 
         status_key = "Zaliczone"
@@ -503,11 +502,9 @@ def show_submission_form(lang):
         try:
             sheet = connect_to_google_sheets()
             if sheet:
-                # Zapisz dane do zakładki 'BiezacaEdycja'
                 worksheet_data = sheet.worksheet("BiezacaEdycja")
                 worksheet_data.append_row([participant, day, status_key, full_notes, timestamp])
                 
-                # Zapisz log do zakładki 'LogWpisow'
                 worksheet_log = sheet.worksheet("LogWpisow")
                 worksheet_log.append_row([submitter, participant, day, status_key, timestamp])
                 
@@ -519,29 +516,34 @@ def show_submission_form(lang):
                     st.write(f"**{_t('form_confirmation_status', lang)}:** {status}")
                     st.write(f"**{_t('form_confirmation_notes', lang)}:** {full_notes if full_notes else _t('form_confirmation_notes_empty', lang)}")
                 st.info(_t('form_overwrite_info', lang))
+                
+                # Wyczyść pamięć podręczną, aby natychmiast zobaczyć zmiany w rankingu
+                st.cache_data.clear() 
             else:
                 st.error(_t('form_error_message', lang, "Nie można połączyć się z arkuszem."))
         except Exception as e:
             st.error(_t('form_error_message', lang, e))
+            
+        # POPRAWKA 3 (błąd zapisu): Uruchom ponownie, aby zaktualizować pamięć stanu
+        st.rerun()
 
 # === Sekcja 2: Ranking Bieżącej Edycji ===
 
 def process_raw_data(df_raw):
     """
     Przetwarza surowe dane (append-only) z Google Sheets w strukturę "najnowszy wpis wygrywa".
-    Zwraca słownik: {participant: {day: status}}
+    Zwraca słownik: {participant: {day: status}} oraz max_day
     """
     if df_raw.empty:
         return {}, 0
         
-    # Upewnij się, że Day jest liczbą
     df_raw['Day'] = pd.to_numeric(df_raw['Day'], errors='coerce')
-    df_raw = df_raw.dropna(subset=['Day']) # Usuń błędne wpisy
-    
-    # Sortuj po znaczniku czasu, aby najnowsze były na końcu
+    df_raw = df_raw.dropna(subset=['Day'])
+    if df_raw.empty: # Może być puste po czyszczeniu
+        return {}, 0
+        
     df_raw = df_raw.sort_values(by="Timestamp")
     
-    # Stwórz strukturę danych, nadpisując starsze wpisy nowszymi
     processed_data = {}
     for _, row in df_raw.iterrows():
         participant = row['Participant']
@@ -562,7 +564,7 @@ def process_raw_data(df_raw):
 def calculate_ranking(data, max_day_reported, lang):
     """Oblicza ranking na podstawie zasad gry."""
     ranking_data = []
-    elimination_map = {} # Słownik do śledzenia statusu eliminacji
+    elimination_map = {} 
 
     for participant in CURRENT_PARTICIPANTS:
         days_data = data.get(participant, {})
@@ -571,6 +573,7 @@ def calculate_ranking(data, max_day_reported, lang):
         consecutive_fails = 0
         eliminated_on_day = None
         
+        # POPRAWKA 2 (Logika "Odpadł"): Pętla tylko do ostatniego ZARAPORTOWANEGO dnia
         for day in range(1, max_day_reported + 1):
             if eliminated_on_day: 
                 break
@@ -638,7 +641,6 @@ def show_current_edition_dashboard(lang):
         st.info(_t('current_no_data', lang))
         return
 
-    # Przetwórz surowe dane (najnowszy wpis wygrywa)
     current_data, max_day_reported = process_raw_data(df_raw)
 
     st.subheader(_t('current_ranking_header', lang))
@@ -662,13 +664,14 @@ def show_current_edition_dashboard(lang):
         eliminated_on = elimination_map.get(participant)
 
         for day in range(1, max_day_reported + 1):
+            # POPRAWKA 6 (Ukryj dane po eliminacji)
             if eliminated_on and day > eliminated_on:
-                status_icon = "" # Puste pole po eliminacji
+                status_icon = "" 
             elif day in days_data:
                 status_key = days_data[day].get("status", "Brak raportu")
                 status_icon = "✅" if status_key == "Zaliczone" else ("❌" if status_key == "Niezaliczone" else "❓")
             else:
-                status_icon = "❓" # Brak raportu
+                status_icon = "❓" 
 
             pivot_data.append({
                 _t('completeness_col_participant', lang): participant,
@@ -767,7 +770,6 @@ def show_historical_stats(lang):
     st.sidebar.header(_t('sidebar_header', lang))
 
     # Reszta tej funkcji jest DOKŁADNIE taka sama jak w V4.0
-    # ... (skopiowano bez zmian całą logikę filtrów i wykresów) ...
     min_editions_count = st.sidebar.slider(
         _t('min_editions', lang),
         min_value=1,
@@ -846,7 +848,6 @@ def show_historical_stats(lang):
     chart_type_labels = [_t('results', lang), _t('positions', lang)]
     chart_type = st.sidebar.radio(_t('chart_type', lang), chart_type_labels, key="hist_chart_type")
 
-    # --- KARTY (metrics) ---
     st.subheader(_t('user_details_header', lang))
     if len(selected_users) == 1:
         user = selected_users[0]
@@ -863,7 +864,6 @@ def show_historical_stats(lang):
     else:
         st.info(_t('select_single_user', lang))
 
-    # === Wykres liniowy porównujący graczy w czasie ===
     st.subheader(_t('comparison_chart_title_results', lang) if chart_type == _t('results', lang) else _t('comparison_chart_title_positions', lang))
 
     if chart_type == _t('results', lang):
@@ -904,7 +904,6 @@ def show_historical_stats(lang):
     else:
         st.info(_t('no_data_selected', lang))
 
-    # === Zestawienie miesięczne w formie tabel ===
     st.subheader(_t('monthly_summary', lang))
     st.write(_t('monthly_summary_desc', lang))
 
@@ -940,7 +939,6 @@ def show_historical_stats(lang):
     else:
         st.info(_t('no_data_selected', lang))
 
-    # === Historyczny wyścig medalowy ===
     st.subheader(_t('medal_race_title', lang))
     st.write(_t('medal_race_desc', lang))
 
@@ -1051,8 +1049,6 @@ def show_historical_stats(lang):
     else:
         st.info(_t('no_data_selected', lang))
 
-
-    # === Mapa cieplna zajmowanych miejsc ===
     st.subheader(_t('heatmap_title', lang))
     st.write(_t('heatmap_desc', lang))
     heatmap_df = filtered_df.dropna(subset=['miejsce'])
@@ -1085,7 +1081,6 @@ def show_historical_stats(lang):
     else:
         st.info(_t('no_data_selected', lang))
 
-    # === Wykres punktowy wyników z miejscami ===
     st.subheader(_t('scatter_plot_title', lang))
     st.write(_t('scatter_plot_desc', lang))
 
@@ -1163,7 +1158,6 @@ def show_historical_stats(lang):
     else:
         st.info(_t('no_data_selected', lang))
 
-    # --- Pozostałe analizy ---
     col1, col2 = st.columns(2)
 
     with col1:
@@ -1214,7 +1208,6 @@ def show_historical_stats(lang):
         else:
             st.info(_t('no_data_selected', lang))
 
-    # === Statystyki graczy (tabela) ===
     st.subheader(_t('player_stats', lang))
     stats_df = df[df['uczestnik'].isin(eligible_users)].copy()
     if not stats_df.empty:
@@ -1249,7 +1242,6 @@ def show_historical_stats(lang):
     else:
         st.info(_t('no_data_selected', lang))
 
-    # === Nowe ciekawe tabele i wykresy ===
     st.subheader(_t('participants_per_edition', lang))
     if not df.empty:
         participants_per_edition = df.groupby('miesiac_rok_str')['uczestnik'].nunique().reset_index()
@@ -1488,8 +1480,8 @@ def main():
     lang = st.sidebar.selectbox("Język / Language", ["pl", "en"])
     
     # Inicjalizacja pamięci sesji
-    if 'submitter_index' not in st.session_state:
-        st.session_state.submitter_index = None
+    if 'submitter_index_plus_one' not in st.session_state:
+        st.session_state.submitter_index_plus_one = 0 # 0 to index dla "None" (placeholder)
     if 'last_day_entered' not in st.session_state:
         st.session_state.last_day_entered = 1
     
