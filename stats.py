@@ -74,6 +74,10 @@ translations = {
         3.  Odpadnięcie następuje po **3 kolejnych** niepowodzeniach (Niezaliczone / Brak raportu) *biorąc pod uwagę tylko zaraportowane dni*.
         """,
         'current_ranking_error': "Wystąpił błąd podczas obliczania rankingu: {0}",
+        'current_header_check_error': "BŁĄD KONFIGURACJI: Sprawdź nagłówki w Arkuszu Google!",
+        'current_header_check_details': "Aplikacja nie może odczytać danych, ponieważ nagłówki w zakładce 'BiezacaEdycja' są nieprawidłowe.",
+        'current_header_check_expected': "Oczekiwane nagłówki",
+        'current_header_check_found': "Znalezione nagłówki",
         'ranking_col_participant': "Uczestnik",
         'ranking_col_highest_pass': "Najw. Zaliczone",
         'ranking_col_status': "Status",
@@ -236,6 +240,10 @@ translations = {
         3.  Elimination occurs after **3 consecutive failures** (Failed / No Report) *based on reported days only*.
         """,
         'current_ranking_error': "An error occurred while calculating the ranking: {0}",
+        'current_header_check_error': "CONFIG ERROR: Check Google Sheet Headers!",
+        'current_header_check_details': "The app cannot read data because the headers in the 'BiezacaEdycja' worksheet are incorrect.",
+        'current_header_check_expected': "Expected Headers",
+        'current_header_check_found': "Found Headers",
         'ranking_col_participant': "Participant",
         'ranking_col_highest_pass': "Highest Pass",
         'ranking_col_status': "Status",
@@ -393,14 +401,14 @@ def connect_to_google_sheets():
             st.error(f"Błąd połączenia z Google Sheets: {e}. Sprawdź 'Secrets' w Streamlit Cloud lub lokalny plik secrets.toml.")
         return None
 
-# <<< POPRAWKA BŁĘDU: Dodano _ (podkreślnik) do 'sheet' >>>
+# <<< POPRAWKA BŁĘDU (UnhashableParamError): Dodano _ (podkreślnik) do 'sheet' >>>
 @st.cache_data(ttl=60) 
 def load_google_sheet_data(_sheet, worksheet_name): # Zmieniono 'sheet' na '_sheet'
     """Pobiera wszystkie dane z danej zakładki jako DataFrame."""
     try:
         # Użyj _sheet wewnątrz funkcji
         worksheet = _sheet.worksheet(worksheet_name) 
-        records = worksheet.get_all_records()
+        records = worksheet.get_all_records(header=1) # Wymuś użycie 1. wiersza jako nagłówka
         return pd.DataFrame(records)
     except gspread.exceptions.WorksheetNotFound:
         st.error(f"Błąd: Nie znaleziono zakładki o nazwie '{worksheet_name}' w Arkuszu Google.")
@@ -417,6 +425,23 @@ def show_submission_form(lang):
     
     users_list = sorted(CURRENT_PARTICIPANTS)
     submitters_list_sorted = sorted(SUBMITTER_LIST)
+    
+    # <<< POPRAWKA 1 (Brakujące potwierdzenie): Wyświetl potwierdzenie z sesji, jeśli istnieje >>>
+    if 'last_submission' in st.session_state and st.session_state.last_submission:
+        details = st.session_state.last_submission
+        st.success(_t('form_success_message', lang, details['participant'], details['day'], details['status_translated']))
+        
+        with st.expander(_t('form_confirmation_header', lang), expanded=True):
+            st.write(f"**{_t('form_confirmation_participant', lang)}:** {details['participant']}")
+            st.write(f"**{_t('form_confirmation_day', lang)}:** {details['day']}")
+            st.write(f"**{_t('form_confirmation_status', lang)}:** {details['status_translated']}")
+            st.write(f"**{_t('form_confirmation_notes', lang)}:** {details['full_notes'] if details['full_notes'] else _t('form_confirmation_notes_empty', lang)}")
+        st.info(_t('form_overwrite_info', lang))
+        
+        # Wyczyść, aby nie pokazywało się ponownie po odświeżeniu
+        st.session_state.last_submission = None
+    # <<< Koniec Poprawki 1 >>>
+    
     
     participant, day, status, notes, uploaded_file = None, None, None, None, None
     
@@ -511,14 +536,13 @@ def show_submission_form(lang):
                 worksheet_log = sheet.worksheet("LogWpisow")
                 worksheet_log.append_row([submitter, participant, day, status_key, timestamp])
                 
-                st.success(_t('form_success_message', lang, participant, day, status))
-                
-                with st.expander(_t('form_confirmation_header', lang), expanded=True):
-                    st.write(f"**{_t('form_confirmation_participant', lang)}:** {participant}")
-                    st.write(f"**{_t('form_confirmation_day', lang)}:** {day}")
-                    st.write(f"**{_t('form_confirmation_status', lang)}:** {status}")
-                    st.write(f"**{_t('form_confirmation_notes', lang)}:** {full_notes if full_notes else _t('form_confirmation_notes_empty', lang)}")
-                st.info(_t('form_overwrite_info', lang))
+                # <<< POPRAWKA 1 (Brakujące potwierdzenie): Zapisz dane w sesji zamiast wyświetlać >>>
+                st.session_state.last_submission = {
+                    'participant': participant,
+                    'day': day,
+                    'status_translated': status, # Przekaż przetłumaczony status
+                    'full_notes': full_notes
+                }
                 
                 st.cache_data.clear() 
             else:
@@ -530,18 +554,29 @@ def show_submission_form(lang):
 
 # === Sekcja 2: Ranking Bieżącej Edycji ===
 
-def process_raw_data(df_raw):
+def process_raw_data(df_raw, lang):
     """
     Przetwarza surowe dane (append-only) z Google Sheets w strukturę "najnowszy wpis wygrywa".
     Zwraca słownik: {participant: {day: status}} oraz max_day
     """
     if df_raw.empty:
-        return {}, 0
+        return {}, 0, True # Zwróć True dla 'success'
+        
+    # <<< POPRAWKA 2 (KeyError): Sprawdź, czy istnieją wymagane kolumny >>>
+    REQUIRED_COLS = ['Participant', 'Day', 'Status', 'Timestamp', 'Notes']
+    if not all(col in df_raw.columns for col in REQUIRED_COLS):
+        st.error(_t('current_header_check_error', lang))
+        st.json({
+            _t('current_header_check_expected', lang): REQUIRED_COLS,
+            _t('current_header_check_found', lang): df_raw.columns.tolist()
+        })
+        return {}, 0, False # Zwróć False dla 'success'
+    # <<< Koniec Poprawki 2 >>>
         
     df_raw['Day'] = pd.to_numeric(df_raw['Day'], errors='coerce')
     df_raw = df_raw.dropna(subset=['Day'])
     if df_raw.empty:
-        return {}, 0
+        return {}, 0, True
         
     df_raw = df_raw.sort_values(by="Timestamp")
     
@@ -559,7 +594,7 @@ def process_raw_data(df_raw):
         }
         
     max_day = int(df_raw['Day'].max())
-    return processed_data, max_day
+    return processed_data, max_day, True
 
 
 def calculate_ranking(data, max_day_reported, lang):
@@ -640,7 +675,11 @@ def show_current_edition_dashboard(lang):
         st.info(_t('current_no_data', lang))
         return
 
-    current_data, max_day_reported = process_raw_data(df_raw)
+    # <<< POPRAWKA 2 (KeyError): Sprawdź, czy przetwarzanie się udało >>>
+    current_data, max_day_reported, success = process_raw_data(df_raw, lang)
+    if not success:
+        return # Błąd został już wyświetlony w process_raw_data
+    # <<< Koniec Poprawki 2 >>>
 
     st.subheader(_t('current_ranking_header', lang))
     st.markdown(_t('current_ranking_rules', lang))
@@ -1481,6 +1520,7 @@ def main():
         st.session_state.submitter_index_plus_one = 0 # 0 to index dla "None" (placeholder)
     if 'last_day_entered' not in st.session_state:
         st.session_state.last_day_entered = 1
+    # 'last_submission' jest celowo NIEINIJOWANY - sprawdzamy jego istnienie
     
     app_section = st.sidebar.radio(
         _t('nav_header', lang),
@@ -1506,5 +1546,5 @@ def main():
 if __name__ == "__main__":
     main()
 #
-# === KONIEC stats.py (Wersja 5.2) ===
+# === KONIEC stats.py (Wersja 5.4) ===
 #
