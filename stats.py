@@ -1,3 +1,6 @@
+#
+# === POCZĄTEK stats.py (Wersja 5.2) ===
+#
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -47,7 +50,7 @@ translations = {
         'form_status_fail': "Niezaliczone",
         'form_status_no_report': "Brak raportu",
         'form_status_info': "Uwaga: 'Niezaliczone' oraz 'Brak raportu' mają ten sam skutek (etap niezaliczony).",
-        # <<< POPRAWKA BŁĘDU (brakowało cudzysłowu otwierającego) >>>
+        # <<< TO JEST LINIA 54 - POPRAWIONA >>>
         'form_converters_expander': "ℹ️ Informacja o przelicznikach (dla danych ze Strava itp.)",
         'form_converters_warning': "Jeśli zgłaszasz kroki z aktywności (np. Strava, Garmin), stosujemy poniższe przeliczniki. Upewnij się, że Twój wynik końcowy jest poprawny.",
         'form_notes_label': "Inne (opcjonalnie)",
@@ -192,6 +195,7 @@ translations = {
         'survival_analysis_no_selection': "Wybierz co najmniej jedną edycję, aby zobaczyć analizę przetrwania.",
     },
     'en': {
+        # ... (Tłumaczenia EN pozostają bez zmian) ...
         'app_title': "Step Challenge Analysis & Management",
         'nav_header': "Navigation",
         'nav_current_ranking': "📊 Current Edition Ranking",
@@ -363,8 +367,7 @@ def _t(key, lang, *args):
 
 
 # === Połączenie z Google Sheets ===
-
-@st.cache_resource(ttl=600) # Cache'uj połączenie przez 10 minut
+@st.cache_resource(ttl=600) 
 def connect_to_google_sheets():
     """Łączy się z Google Sheets używając st.secrets."""
     try:
@@ -388,10 +391,14 @@ def connect_to_google_sheets():
         sheet = client.open(GOOGLE_SHEET_NAME)
         return sheet
     except Exception as e:
-        st.error(f"Błąd połączenia z Google Sheets: {e}. Sprawdź 'Secrets' w Streamlit Cloud.")
+        # Ten błąd jest oczekiwany przy uruchomieniu lokalnym BEZ pliku secrets.toml
+        if "No secrets found" in str(e):
+             st.error(f"Błąd połączenia: Brak pliku secrets.toml. Uruchamiasz lokalnie? Upewnij się, że plik .streamlit/secrets.toml jest poprawnie skonfigurowany.")
+        else:
+            st.error(f"Błąd połączenia z Google Sheets: {e}. Sprawdź 'Secrets' w Streamlit Cloud lub lokalny plik secrets.toml.")
         return None
 
-@st.cache_data(ttl=60) # Cache'uj dane przez 60 sekund
+@st.cache_data(ttl=60) 
 def load_google_sheet_data(sheet, worksheet_name):
     """Pobiera wszystkie dane z danej zakładki jako DataFrame."""
     try:
@@ -423,15 +430,15 @@ def show_submission_form(lang):
         with col1:
             submitter = st.selectbox(
                 _t('form_submitter_label', lang),
-                options=[None] + submitters_list_sorted, # Dodaj None na początek
-                index=st.session_state.get('submitter_index_plus_one', 0), # index 0 to teraz None
+                options=[None] + submitters_list_sorted, 
+                index=st.session_state.get('submitter_index_plus_one', 0), 
                 format_func=lambda x: _t('form_submitter_placeholder', lang) if x is None else x
             )
             
             participant = st.selectbox(
                 _t('form_participant_label', lang),
-                options=[None] + users_list, # Dodaj None na początek
-                index=0, # Zawsze zaczynaj od pustego
+                options=[None] + users_list, 
+                index=0, 
                 format_func=lambda x: _t('form_participant_placeholder', lang) if x is None else x
             )
         with col2:
@@ -483,7 +490,7 @@ def show_submission_form(lang):
     if submitted:
         if not submitter or not participant:
             st.error(_t('form_error_no_participant', lang))
-            return 
+            st.rerun() # Przerwij i odśwież, aby zachować stan formularza
 
         # Zapisz wybory w pamięci sesji
         st.session_state.submitter_index_plus_one = ([None] + submitters_list_sorted).index(submitter)
@@ -517,14 +524,12 @@ def show_submission_form(lang):
                     st.write(f"**{_t('form_confirmation_notes', lang)}:** {full_notes if full_notes else _t('form_confirmation_notes_empty', lang)}")
                 st.info(_t('form_overwrite_info', lang))
                 
-                # Wyczyść pamięć podręczną, aby natychmiast zobaczyć zmiany w rankingu
                 st.cache_data.clear() 
             else:
                 st.error(_t('form_error_message', lang, "Nie można połączyć się z arkuszem."))
         except Exception as e:
             st.error(_t('form_error_message', lang, e))
             
-        # POPRAWKA 3 (błąd zapisu): Uruchom ponownie, aby zaktualizować pamięć stanu
         st.rerun()
 
 # === Sekcja 2: Ranking Bieżącej Edycji ===
@@ -539,7 +544,7 @@ def process_raw_data(df_raw):
         
     df_raw['Day'] = pd.to_numeric(df_raw['Day'], errors='coerce')
     df_raw = df_raw.dropna(subset=['Day'])
-    if df_raw.empty: # Może być puste po czyszczeniu
+    if df_raw.empty:
         return {}, 0
         
     df_raw = df_raw.sort_values(by="Timestamp")
@@ -573,7 +578,6 @@ def calculate_ranking(data, max_day_reported, lang):
         consecutive_fails = 0
         eliminated_on_day = None
         
-        # POPRAWKA 2 (Logika "Odpadł"): Pętla tylko do ostatniego ZARAPORTOWANEGO dnia
         for day in range(1, max_day_reported + 1):
             if eliminated_on_day: 
                 break
@@ -632,8 +636,7 @@ def show_current_edition_dashboard(lang):
     
     sheet = connect_to_google_sheets()
     if not sheet:
-        st.error("Nie udało się połączyć z bazą danych Google Sheets.")
-        return
+        return # Błąd jest już wyświetlany przez connect_to_google_sheets
 
     df_raw = load_google_sheet_data(sheet, "BiezacaEdycja")
     
@@ -664,7 +667,6 @@ def show_current_edition_dashboard(lang):
         eliminated_on = elimination_map.get(participant)
 
         for day in range(1, max_day_reported + 1):
-            # POPRAWKA 6 (Ukryj dane po eliminacji)
             if eliminated_on and day > eliminated_on:
                 status_icon = "" 
             elif day in days_data:
@@ -1508,3 +1510,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+#
+# === KONIEC stats.py (Wersja 5.2) ===
+#
