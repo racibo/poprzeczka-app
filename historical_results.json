@@ -1,0 +1,9054 @@
+{
+  "nanie.lilla": {
+    "08.2022": {
+      "miejsce": 16,
+      "rezultat_uczestnika": "4",
+      "status": null
+    },
+    "09.2022": {
+      "miejsce": 15,
+      "rezultat_uczestnika": "3",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    }
+  },
+  "aleximprovements": {
+    "11.2023": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "11",
+      "status": null
+    },
+    "12.2023": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "8",
+      "status": null
+    },
+    "01.2024": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "10",
+      "status": null
+    },
+    "02.2024": {
+      "miejsce": 14,
+      "rezultat_uczestnika": "8",
+      "status": null
+    },
+    "03.2024": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "04.2024": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "05.2024": {
+      "miejsce": 14,
+      "rezultat_uczestnika": "7",
+      "status": null
+    },
+    "06.2024": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "11",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    }
+  },
+  "allonyx.NGS": {
+    "07.2022": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "08.2022": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "10",
+      "status": null
+    },
+    "09.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "12.2022": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "01.2023": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "5",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    }
+  },
+  "asia-pl": {
+    "06.2021": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "07.2021": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "18",
+      "status": null
+    },
+    "08.2021": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "11",
+      "status": null
+    },
+    "09.2021": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "10.2021": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "11",
+      "status": null
+    },
+    "11.2021": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "13",
+      "status": null
+    },
+    "12.2021": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "6",
+      "status": null
+    },
+    "01.2022": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "8",
+      "status": null
+    },
+    "02.2022": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "03.2022": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "04.2022": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "05.2022": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "06.2022": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "18",
+      "status": null
+    },
+    "07.2022": {
+      "miejsce": 15,
+      "rezultat_uczestnika": "9",
+      "status": null
+    },
+    "08.2022": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "8",
+      "status": null
+    },
+    "09.2022": {
+      "miejsce": 14,
+      "rezultat_uczestnika": "7",
+      "status": null
+    },
+    "10.2022": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "7",
+      "status": null
+    },
+    "11.2022": {
+      "miejsce": 15,
+      "rezultat_uczestnika": "2",
+      "status": null
+    },
+    "12.2022": {
+      "miejsce": 15,
+      "rezultat_uczestnika": "1",
+      "status": null
+    },
+    "01.2023": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "7",
+      "status": null
+    },
+    "02.2023": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "6",
+      "status": null
+    },
+    "03.2023": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "6",
+      "status": null
+    },
+    "04.2023": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "05.2023": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "11",
+      "status": null
+    },
+    "06.2023": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "10",
+      "status": null
+    },
+    "07.2023": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "9",
+      "status": null
+    },
+    "08.2023": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "8",
+      "status": null
+    },
+    "09.2023": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "6",
+      "status": null
+    },
+    "10.2023": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "7",
+      "status": null
+    },
+    "11.2023": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "7",
+      "status": null
+    },
+    "12.2023": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "10",
+      "status": null
+    },
+    "01.2024": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "8",
+      "status": null
+    },
+    "02.2024": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "9",
+      "status": null
+    },
+    "03.2024": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "7",
+      "status": null
+    },
+    "04.2024": {
+      "miejsce": 15,
+      "rezultat_uczestnika": "8",
+      "status": null
+    },
+    "05.2024": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "8",
+      "status": null
+    },
+    "06.2024": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "13",
+      "status": null
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2025": {
+      "miejsce": 12,
+      "status": null,
+      "rezultat_uczestnika": "11"
+    },
+    "08.2025": {
+      "miejsce": 13,
+      "status": null,
+      "rezultat_uczestnika": "8"
+    },
+    "09.2025": {
+      "miejsce": 13,
+      "status": null,
+      "rezultat_uczestnika": "7"
+    },
+    "10.2025": {
+      "miejsce": 14,
+      "status": null,
+      "rezultat_uczestnika": "9"
+    }
+  },
+  "ataraksja": {
+    "04.2023": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "3",
+      "status": null
+    },
+    "05.2023": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "06.2023": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "5",
+      "status": null
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "12.2024": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "6",
+      "status": null
+    },
+    "01.2025": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "02.2025": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "13",
+      "status": null
+    },
+    "05.2025": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    }
+  },
+  "browery": {
+    "06.2021": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "38",
+      "status": null
+    },
+    "07.2021": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "37",
+      "status": null
+    },
+    "08.2021": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "09.2021": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "35",
+      "status": null
+    },
+    "10.2021": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "33",
+      "status": null
+    },
+    "11.2021": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "25",
+      "status": null
+    },
+    "12.2021": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "01.2022": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "48",
+      "status": null
+    },
+    "02.2022": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "03.2022": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "04.2022": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "40",
+      "status": null
+    },
+    "05.2022": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "37",
+      "status": null
+    },
+    "06.2022": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "47",
+      "status": null
+    },
+    "07.2022": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "08.2022": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "09.2022": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "10.2022": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "11.2022": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "12.2022": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "21",
+      "status": null
+    },
+    "01.2023": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "02.2023": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "28",
+      "status": null
+    },
+    "03.2023": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "04.2023": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "21",
+      "status": null
+    },
+    "05.2023": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "06.2023": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "07.2023": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "28",
+      "status": null
+    },
+    "08.2023": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "34",
+      "status": null
+    },
+    "09.2023": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "22",
+      "status": null
+    },
+    "10.2023": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "11.2023": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "12.2023": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "22",
+      "status": null
+    },
+    "01.2024": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "34",
+      "status": null
+    },
+    "02.2024": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "27",
+      "status": null
+    },
+    "03.2024": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "32",
+      "status": null
+    },
+    "04.2024": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "05.2024": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "18",
+      "status": null
+    },
+    "06.2024": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "07.2024": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "20",
+      "status": null
+    },
+    "08.2024": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "32",
+      "status": null
+    },
+    "09.2024": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "10.2024": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "11.2024": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "30",
+      "status": null
+    },
+    "12.2024": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "01.2025": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "18",
+      "status": null
+    },
+    "02.2025": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "13",
+      "status": null
+    },
+    "03.2025": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "04.2025": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "05.2025": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "08.2025": {
+      "miejsce": 7,
+      "status": null,
+      "rezultat_uczestnika": "23"
+    },
+    "09.2025": {
+      "miejsce": 11,
+      "status": null,
+      "rezultat_uczestnika": "16"
+    },
+    "10.2025": {
+      "miejsce": 5,
+      "status": null,
+      "rezultat_uczestnika": "21"
+    }
+  },
+  "cezary-io": {
+    "06.2021": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "35",
+      "status": null
+    },
+    "07.2021": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "38",
+      "status": null
+    },
+    "08.2021": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "09.2021": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "21",
+      "status": null
+    },
+    "10.2021": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "11.2021": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "12.2021": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "11",
+      "status": null
+    },
+    "01.2022": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "02.2022": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "26",
+      "status": null
+    },
+    "03.2022": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "25",
+      "status": null
+    },
+    "04.2022": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "05.2022": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "06.2022": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "07.2022": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "40",
+      "status": null
+    },
+    "08.2022": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "33",
+      "status": null
+    },
+    "09.2022": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "22",
+      "status": null
+    },
+    "10.2022": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "21",
+      "status": null
+    },
+    "11.2022": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "18",
+      "status": null
+    },
+    "12.2022": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "01.2023": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "34",
+      "status": null
+    },
+    "02.2023": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "31",
+      "status": null
+    },
+    "03.2023": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "23",
+      "status": null
+    },
+    "04.2023": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "22",
+      "status": null
+    },
+    "05.2023": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "27",
+      "status": null
+    },
+    "06.2023": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "36",
+      "status": null
+    },
+    "07.2023": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "40",
+      "status": null
+    },
+    "08.2023": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "41",
+      "status": null
+    },
+    "09.2023": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "25",
+      "status": null
+    },
+    "10.2023": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "33",
+      "status": null
+    },
+    "11.2023": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "30",
+      "status": null
+    },
+    "12.2023": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "22",
+      "status": null
+    },
+    "01.2024": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "02.2024": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "34",
+      "status": null
+    },
+    "03.2024": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "04.2024": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "33",
+      "status": null
+    },
+    "05.2024": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "06.2024": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "07.2024": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "20",
+      "status": null
+    },
+    "08.2024": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "30",
+      "status": null
+    },
+    "09.2024": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "10.2024": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "23",
+      "status": null
+    },
+    "11.2024": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "12.2024": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "01.2025": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "22",
+      "status": null
+    },
+    "02.2025": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "27",
+      "status": null
+    },
+    "03.2025": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "27",
+      "status": null
+    },
+    "04.2025": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "32",
+      "status": null
+    },
+    "05.2025": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "39",
+      "status": null
+    },
+    "06.2025": {
+      "miejsce": 1,
+      "status": null,
+      "rezultat_uczestnika": "52"
+    },
+    "07.2025": {
+      "miejsce": 2,
+      "status": null,
+      "rezultat_uczestnika": "41"
+    },
+    "08.2025": {
+      "miejsce": 3,
+      "status": null,
+      "rezultat_uczestnika": "35"
+    },
+    "09.2025": {
+      "miejsce": 5,
+      "status": null,
+      "rezultat_uczestnika": "23"
+    },
+    "10.2025": {
+      "miejsce": 1,
+      "status": null,
+      "rezultat_uczestnika": "37"
+    }
+  },
+  "deepresearch": {
+    "11.2021": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "30",
+      "status": null
+    },
+    "12.2021": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "7",
+      "status": null
+    },
+    "01.2022": {
+      "miejsce": 15,
+      "rezultat_uczestnika": "5",
+      "status": null
+    },
+    "02.2022": {
+      "miejsce": 15,
+      "rezultat_uczestnika": "13",
+      "status": null
+    },
+    "03.2022": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "18",
+      "status": null
+    },
+    "04.2022": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "05.2022": {
+      "miejsce": 16,
+      "rezultat_uczestnika": "9",
+      "status": null
+    },
+    "06.2022": {
+      "miejsce": 17,
+      "rezultat_uczestnika": "1",
+      "status": null
+    },
+    "07.2022": {
+      "miejsce": 18,
+      "rezultat_uczestnika": "4",
+      "status": null
+    },
+    "02.2023": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "27",
+      "status": null
+    },
+    "03.2023": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "2",
+      "status": null
+    },
+    "02.2025": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "3",
+      "status": null
+    },
+    "03.2025": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "36",
+      "status": null
+    },
+    "04.2025": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "8",
+      "status": null
+    },
+    "05.2025": {
+      "miejsce": 15,
+      "rezultat_uczestnika": "1",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    }
+  },
+  "drlobes": {
+    "05.2022": {
+      "miejsce": 14,
+      "rezultat_uczestnika": "10",
+      "status": null
+    },
+    "06.2022": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "28",
+      "status": null
+    },
+    "07.2022": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "08.2022": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "8",
+      "status": null
+    },
+    "09.2022": {
+      "miejsce": 16,
+      "rezultat_uczestnika": "2",
+      "status": null
+    },
+    "10.2022": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "6",
+      "status": null
+    },
+    "11.2022": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "8",
+      "status": null
+    },
+    "12.2022": {
+      "miejsce": 14,
+      "rezultat_uczestnika": "3",
+      "status": null
+    },
+    "01.2023": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "7",
+      "status": null
+    },
+    "02.2023": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "4",
+      "status": null
+    },
+    "03.2023": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "7",
+      "status": null
+    },
+    "04.2023": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "4",
+      "status": null
+    },
+    "05.2023": {
+      "miejsce": 14,
+      "rezultat_uczestnika": "3",
+      "status": null
+    },
+    "06.2023": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "8",
+      "status": null
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": 4,
+      "rezultat_uczestnika": null,
+      "status": null
+    },
+    "09.2023": {
+      "miejsce": 9,
+      "rezultat_uczestnika": null,
+      "status": null
+    },
+    "10.2023": {
+      "miejsce": 11,
+      "rezultat_uczestnika": null,
+      "status": null
+    },
+    "11.2023": {
+      "miejsce": 10,
+      "rezultat_uczestnika": null,
+      "status": null
+    },
+    "12.2023": {
+      "miejsce": 12,
+      "rezultat_uczestnika": null,
+      "status": null
+    },
+    "01.2024": {
+      "miejsce": 11,
+      "rezultat_uczestnika": null,
+      "status": null
+    },
+    "02.2024": {
+      "miejsce": 13,
+      "rezultat_uczestnika": null,
+      "status": null
+    },
+    "03.2024": {
+      "miejsce": 14,
+      "rezultat_uczestnika": null,
+      "status": null
+    },
+    "04.2024": {
+      "miejsce": 14,
+      "rezultat_uczestnika": null,
+      "status": null
+    },
+    "05.2024": {
+      "miejsce": 11,
+      "rezultat_uczestnika": null,
+      "status": null
+    },
+    "06.2024": {
+      "miejsce": 14,
+      "rezultat_uczestnika": null,
+      "status": null
+    },
+    "07.2024": {
+      "miejsce": 11,
+      "rezultat_uczestnika": null,
+      "status": null
+    },
+    "08.2024": {
+      "miejsce": 11,
+      "rezultat_uczestnika": null,
+      "status": null
+    },
+    "09.2024": {
+      "miejsce": 11,
+      "rezultat_uczestnika": null,
+      "status": null
+    },
+    "10.2024": {
+      "miejsce": 12,
+      "rezultat_uczestnika": null,
+      "status": null
+    },
+    "11.2024": {
+      "miejsce": 12,
+      "rezultat_uczestnika": null,
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    }
+  },
+  "edycu007": {
+    "07.2022": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "23",
+      "status": null
+    },
+    "08.2022": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "09.2022": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "10.2022": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "11.2022": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "12.2022": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "01.2023": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "02.2023": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "21",
+      "status": null
+    },
+    "03.2023": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "04.2023": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "23",
+      "status": null
+    },
+    "05.2023": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "21",
+      "status": null
+    },
+    "06.2023": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "07.2023": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "22",
+      "status": null
+    },
+    "08.2023": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "09.2023": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "10.2023": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "11.2023": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "12.2023": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "20",
+      "status": null
+    },
+    "01.2024": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "26",
+      "status": null
+    },
+    "02.2024": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "9",
+      "status": null
+    },
+    "03.2024": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "22",
+      "status": null
+    },
+    "04.2024": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "05.2024": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "06.2024": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "07.2024": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "08.2024": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "21",
+      "status": null
+    },
+    "09.2024": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "10.2024": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "11.2024": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "18",
+      "status": null
+    },
+    "12.2024": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "11",
+      "status": null
+    },
+    "01.2025": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "23",
+      "status": null
+    },
+    "02.2025": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "03.2025": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "04.2025": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "05.2025": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "18",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2025": {
+      "miejsce": 12,
+      "status": null,
+      "rezultat_uczestnika": "6"
+    },
+    "07.2025": {
+      "miejsce": 6,
+      "status": null,
+      "rezultat_uczestnika": "23"
+    },
+    "08.2025": {
+      "miejsce": 11,
+      "status": null,
+      "rezultat_uczestnika": "13"
+    },
+    "09.2025": {
+      "miejsce": 8,
+      "status": null,
+      "rezultat_uczestnika": "20"
+    },
+    "10.2025": {
+      "miejsce": 11,
+      "status": null,
+      "rezultat_uczestnika": "11"
+    }
+  },
+  "ervin-lemark": {
+    "10.2021": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "30",
+      "status": null
+    },
+    "11.2021": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "13",
+      "status": null
+    },
+    "12.2021": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "01.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2022": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "34",
+      "status": null
+    },
+    "09.2022": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "25",
+      "status": null
+    },
+    "05.2024": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "21",
+      "status": null
+    },
+    "06.2024": {
+      "miejsce": 15,
+      "rezultat_uczestnika": "3",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2025": {
+      "miejsce": 9,
+      "status": null,
+      "rezultat_uczestnika": "19"
+    },
+    "10.2025": {
+      "miejsce": 12,
+      "status": null,
+      "rezultat_uczestnika": "11"
+    }
+  },
+  "fredkese": {
+    "05.2022": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "06.2022": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "31",
+      "status": null
+    },
+    "07.2022": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "08.2022": {
+      "miejsce": 15,
+      "rezultat_uczestnika": "5",
+      "status": null
+    },
+    "09.2022": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "9",
+      "status": null
+    },
+    "10.2022": {
+      "miejsce": 14,
+      "rezultat_uczestnika": "3",
+      "status": null
+    },
+    "11.2022": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "9",
+      "status": null
+    },
+    "12.2022": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "13",
+      "status": null
+    },
+    "01.2023": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "7",
+      "status": null
+    },
+    "02.2023": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "03.2023": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "7",
+      "status": null
+    },
+    "04.2023": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "28",
+      "status": null
+    },
+    "05.2023": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "23",
+      "status": null
+    },
+    "06.2023": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "27",
+      "status": null
+    },
+    "07.2023": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "28",
+      "status": null
+    },
+    "08.2023": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "6",
+      "status": null
+    },
+    "09.2023": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "10.2023": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "11.2023": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "12.2023": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "22",
+      "status": null
+    },
+    "01.2024": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "32",
+      "status": null
+    },
+    "02.2024": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "03.2024": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "25",
+      "status": null
+    },
+    "04.2024": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "25",
+      "status": null
+    },
+    "05.2024": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "27",
+      "status": null
+    },
+    "06.2024": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "07.2024": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "08.2024": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "22",
+      "status": null
+    },
+    "09.2024": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "23",
+      "status": null
+    },
+    "10.2024": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "18",
+      "status": null
+    },
+    "11.2024": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "31",
+      "status": null
+    },
+    "12.2024": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "23",
+      "status": null
+    },
+    "01.2025": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "02.2025": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "03.2025": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "30",
+      "status": null
+    },
+    "04.2025": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "05.2025": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "30",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2025": {
+      "miejsce": 6,
+      "status": null,
+      "rezultat_uczestnika": "26"
+    },
+    "07.2025": {
+      "miejsce": 8,
+      "status": null,
+      "rezultat_uczestnika": "18"
+    },
+    "08.2025": {
+      "miejsce": 9,
+      "status": null,
+      "rezultat_uczestnika": "18"
+    },
+    "09.2025": {
+      "miejsce": 7,
+      "status": null,
+      "rezultat_uczestnika": "23"
+    },
+    "10.2025": {
+      "miejsce": 9,
+      "status": null,
+      "rezultat_uczestnika": "18"
+    }
+  },
+  "grecki-bazar-ewy": {
+    "06.2021": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "07.2021": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "20",
+      "status": null
+    },
+    "08.2021": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "09.2021": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "21",
+      "status": null
+    },
+    "10.2021": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "13",
+      "status": null
+    },
+    "11.2021": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "12.2021": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "01.2022": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "30",
+      "status": null
+    },
+    "02.2022": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "03.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    }
+  },
+  "griega": {
+    "02.2022": {
+      "miejsce": 17,
+      "rezultat_uczestnika": "8",
+      "status": null
+    },
+    "03.2022": {
+      "miejsce": 16,
+      "rezultat_uczestnika": "4",
+      "status": null
+    },
+    "04.2022": {
+      "miejsce": 18,
+      "rezultat_uczestnika": "1",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    }
+  },
+  "homesteadlt": {
+    "03.2022": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "13",
+      "status": null
+    },
+    "04.2022": {
+      "miejsce": 15,
+      "rezultat_uczestnika": "10",
+      "status": null
+    },
+    "05.2022": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "06.2022": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "26",
+      "status": null
+    },
+    "07.2022": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "08.2022": {
+      "miejsce": 14,
+      "rezultat_uczestnika": "7",
+      "status": null
+    },
+    "09.2022": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "20",
+      "status": null
+    },
+    "10.2022": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "11.2022": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "13",
+      "status": null
+    },
+    "12.2022": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "11",
+      "status": null
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": 16,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "03.2023": {
+      "miejsce": 14,
+      "rezultat_uczestnika": "9",
+      "status": null
+    },
+    "04.2023": {
+      "miejsce": 14,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "05.2023": {
+      "miejsce": 18,
+      "rezultat_uczestnika": "13",
+      "status": null
+    },
+    "06.2023": {
+      "miejsce": 15,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "07.2023": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "08.2023": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "09.2023": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "11",
+      "status": null
+    },
+    "10.2023": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "9",
+      "status": null
+    },
+    "11.2023": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "9",
+      "status": null
+    },
+    "12.2023": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "13",
+      "status": null
+    },
+    "01.2024": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "11",
+      "status": null
+    },
+    "02.2024": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "03.2024": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "04.2024": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "11",
+      "status": null
+    },
+    "05.2024": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "06.2024": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "07.2024": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "08.2024": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "09.2024": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "11",
+      "status": null
+    },
+    "10.2024": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "11.2024": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "12.2024": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "01.2025": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "11",
+      "status": null
+    },
+    "02.2025": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "03.2025": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "04.2025": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "30",
+      "status": null
+    },
+    "05.2025": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2025": {
+      "miejsce": 8,
+      "status": null,
+      "rezultat_uczestnika": "21"
+    },
+    "07.2025": {
+      "miejsce": 7,
+      "status": null,
+      "rezultat_uczestnika": "22"
+    },
+    "08.2025": {
+      "miejsce": 8,
+      "status": null,
+      "rezultat_uczestnika": "19"
+    },
+    "09.2025": {
+      "miejsce": 12,
+      "status": null,
+      "rezultat_uczestnika": "13"
+    },
+    "10.2025": {
+      "miejsce": 13,
+      "status": null,
+      "rezultat_uczestnika": "10"
+    }
+  },
+  "ilodz24hd": {
+    "06.2021": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "28",
+      "status": null
+    },
+    "07.2021": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "08.2021": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "30",
+      "status": null
+    },
+    "09.2021": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "38",
+      "status": null
+    },
+    "10.2021": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "11.2021": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "11",
+      "status": null
+    },
+    "12.2021": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "01.2022": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "02.2022": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "18",
+      "status": null
+    },
+    "03.2022": {
+      "miejsce": 14,
+      "rezultat_uczestnika": "11",
+      "status": null
+    },
+    "04.2022": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "05.2022": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "06.2022": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "07.2022": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "08.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    }
+  },
+  "jozef230": {
+    "06.2021": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "11",
+      "status": null
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "1",
+      "status": null
+    },
+    "09.2021": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "10.2021": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "11.2021": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "12.2021": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "01.2022": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "02.2022": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "03.2022": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "04.2022": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "05.2022": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "06.2022": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "07.2022": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "08.2022": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "09.2022": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "10.2022": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "11.2022": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "12.2022": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "01.2023": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "02.2023": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "03.2023": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "04.2023": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "05.2023": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "06.2023": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "07.2023": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "08.2023": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "09.2023": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "10.2023": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "11.2023": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "12.2023": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "01.2024": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "02.2024": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "03.2024": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "04.2024": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "05.2024": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "06.2024": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "07.2024": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "08.2024": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "09.2024": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "10.2024": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "11.2024": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "12.2024": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "01.2025": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "02.2025": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "03.2025": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "04.2025": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "05.2025": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    }
+  },
+  "kwsnomzys": {
+    "12.2021": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "3",
+      "status": null
+    },
+    "01.2022": {
+      "miejsce": 14,
+      "rezultat_uczestnika": "5",
+      "status": null
+    },
+    "02.2022": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "03.2022": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "11",
+      "status": null
+    },
+    "04.2022": {
+      "miejsce": 14,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "05.2022": {
+      "miejsce": 17,
+      "rezultat_uczestnika": "7",
+      "status": null
+    },
+    "06.2022": {
+      "miejsce": 14,
+      "rezultat_uczestnika": "13",
+      "status": null
+    },
+    "07.2022": {
+      "miejsce": 18,
+      "rezultat_uczestnika": "2",
+      "status": null
+    },
+    "08.2022": {
+      "miejsce": 17,
+      "rezultat_uczestnika": "2",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    }
+  },
+  "mamaemigrantefit": {
+    "05.2025": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "13",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2025": {
+      "miejsce": 10,
+      "status": null,
+      "rezultat_uczestnika": "10"
+    },
+    "07.2025": {
+      "miejsce": 13,
+      "status": null,
+      "rezultat_uczestnika": "10"
+    }
+  },
+  "manuvert": {
+    "05.2025": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "31",
+      "status": null
+    },
+    "04.2022": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "33",
+      "status": null
+    },
+    "05.2022": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "35",
+      "status": null
+    },
+    "06.2022": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "40",
+      "status": null
+    },
+    "07.2022": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "23",
+      "status": null
+    },
+    "08.2022": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "36",
+      "status": null
+    },
+    "09.2022": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "32",
+      "status": null
+    },
+    "10.2022": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "26",
+      "status": null
+    },
+    "11.2022": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "26",
+      "status": null
+    },
+    "12.2022": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "27",
+      "status": null
+    },
+    "01.2023": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "28",
+      "status": null
+    },
+    "02.2023": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "32",
+      "status": null
+    },
+    "03.2023": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "04.2023": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "23",
+      "status": null
+    },
+    "05.2023": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "35",
+      "status": null
+    },
+    "06.2023": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "28",
+      "status": null
+    },
+    "07.2023": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "08.2023": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "27",
+      "status": null
+    },
+    "09.2023": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "22",
+      "status": null
+    },
+    "10.2023": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "11.2023": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "30",
+      "status": null
+    },
+    "12.2023": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "30",
+      "status": null
+    },
+    "01.2024": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "37",
+      "status": null
+    },
+    "02.2024": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "30",
+      "status": null
+    },
+    "03.2024": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "32",
+      "status": null
+    },
+    "04.2024": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "32",
+      "status": null
+    },
+    "05.2024": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "33",
+      "status": null
+    },
+    "06.2024": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "36",
+      "status": null
+    },
+    "07.2024": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "20",
+      "status": null
+    },
+    "08.2024": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "36",
+      "status": null
+    },
+    "09.2024": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "25",
+      "status": null
+    },
+    "10.2024": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "11.2024": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "31",
+      "status": null
+    },
+    "12.2024": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "31",
+      "status": null
+    },
+    "01.2025": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "02.2025": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "27",
+      "status": null
+    },
+    "03.2025": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "04.2025": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "23",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2025": {
+      "miejsce": 2,
+      "status": null,
+      "rezultat_uczestnika": "36"
+    },
+    "07.2025": {
+      "miejsce": 3,
+      "status": null,
+      "rezultat_uczestnika": "28"
+    },
+    "08.2025": {
+      "miejsce": 1,
+      "status": null,
+      "rezultat_uczestnika": "37"
+    },
+    "09.2025": {
+      "miejsce": 2,
+      "status": null,
+      "rezultat_uczestnika": "27"
+    },
+    "10.2025": {
+      "miejsce": 2,
+      "status": null,
+      "rezultat_uczestnika": "34"
+    }
+  },
+  "marianomariano": {
+    "05.2025": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "3",
+      "status": null
+    },
+    "12.2022": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "5",
+      "status": null
+    },
+    "01.2023": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "5",
+      "status": null
+    },
+    "02.2023": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "03.2023": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "5",
+      "status": null
+    },
+    "04.2023": {
+      "miejsce": 14,
+      "rezultat_uczestnika": "2",
+      "status": null
+    },
+    "05.2023": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "4",
+      "status": null
+    },
+    "06.2023": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "5",
+      "status": null
+    },
+    "07.2023": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "5",
+      "status": null
+    },
+    "08.2023": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "7",
+      "status": null
+    },
+    "09.2023": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "5",
+      "status": null
+    },
+    "10.2023": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "5",
+      "status": null
+    },
+    "11.2023": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "6",
+      "status": null
+    },
+    "12.2023": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "31",
+      "status": null
+    },
+    "01.2024": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "31",
+      "status": null
+    },
+    "02.2024": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "20",
+      "status": null
+    },
+    "03.2024": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "18",
+      "status": null
+    },
+    "04.2024": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "10",
+      "status": null
+    },
+    "05.2024": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "9",
+      "status": null
+    },
+    "06.2024": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "07.2024": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "08.2024": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "13",
+      "status": null
+    },
+    "09.2024": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "10.2024": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "11.2024": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "11",
+      "status": null
+    },
+    "12.2024": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "11",
+      "status": null
+    },
+    "01.2025": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "02.2025": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "7",
+      "status": null
+    },
+    "03.2025": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "04.2025": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2025": {
+      "miejsce": 11,
+      "status": null,
+      "rezultat_uczestnika": "9"
+    },
+    "07.2025": {
+      "miejsce": 10,
+      "status": null,
+      "rezultat_uczestnika": "15"
+    },
+    "08.2025": {
+      "miejsce": 10,
+      "status": null,
+      "rezultat_uczestnika": "17"
+    },
+    "09.2025": {
+      "miejsce": 10,
+      "status": null,
+      "rezultat_uczestnika": "17"
+    },
+    "10.2025": {
+      "miejsce": 6,
+      "status": null,
+      "rezultat_uczestnika": "18"
+    }
+  },
+  "merthin": {
+    "05.2025": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "38",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "40",
+      "status": null
+    },
+    "07.2021": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "41",
+      "status": null
+    },
+    "08.2021": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "32",
+      "status": null
+    },
+    "09.2021": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "39",
+      "status": null
+    },
+    "10.2021": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "37",
+      "status": null
+    },
+    "11.2021": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "12.2021": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "26",
+      "status": null
+    },
+    "01.2022": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "32",
+      "status": null
+    },
+    "02.2022": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "03.2022": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "30",
+      "status": null
+    },
+    "04.2022": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "32",
+      "status": null
+    },
+    "05.2022": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "39",
+      "status": null
+    },
+    "06.2022": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "44",
+      "status": null
+    },
+    "07.2022": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "40",
+      "status": null
+    },
+    "08.2022": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "35",
+      "status": null
+    },
+    "09.2022": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "34",
+      "status": null
+    },
+    "10.2022": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "31",
+      "status": null
+    },
+    "11.2022": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "12.2022": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "01.2023": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "28",
+      "status": null
+    },
+    "02.2023": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "33",
+      "status": null
+    },
+    "03.2023": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "32",
+      "status": null
+    },
+    "04.2023": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "05.2023": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "40",
+      "status": null
+    },
+    "06.2023": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "32",
+      "status": null
+    },
+    "07.2023": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "48",
+      "status": null
+    },
+    "08.2023": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "38",
+      "status": null
+    },
+    "09.2023": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "23",
+      "status": null
+    },
+    "10.2023": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "11.2023": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "31",
+      "status": null
+    },
+    "12.2023": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "31",
+      "status": null
+    },
+    "01.2024": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "02.2024": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "32",
+      "status": null
+    },
+    "03.2024": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "32",
+      "status": null
+    },
+    "04.2024": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "33",
+      "status": null
+    },
+    "05.2024": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "35",
+      "status": null
+    },
+    "06.2024": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "33",
+      "status": null
+    },
+    "07.2024": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "27",
+      "status": null
+    },
+    "08.2024": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "41",
+      "status": null
+    },
+    "09.2024": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "28",
+      "status": null
+    },
+    "10.2024": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "28",
+      "status": null
+    },
+    "11.2024": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "30",
+      "status": null
+    },
+    "12.2024": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "34",
+      "status": null
+    },
+    "01.2025": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "25",
+      "status": null
+    },
+    "02.2025": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "30",
+      "status": null
+    },
+    "03.2025": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "36",
+      "status": null
+    },
+    "04.2025": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "32",
+      "status": null
+    },
+    "06.2025": {
+      "miejsce": 3,
+      "status": null,
+      "rezultat_uczestnika": "36"
+    },
+    "07.2025": {
+      "miejsce": 1,
+      "status": null,
+      "rezultat_uczestnika": "51"
+    },
+    "08.2025": {
+      "miejsce": 2,
+      "status": null,
+      "rezultat_uczestnika": "37"
+    },
+    "09.2025": {
+      "miejsce": 4,
+      "status": null,
+      "rezultat_uczestnika": "23"
+    },
+    "10.2025": {
+      "miejsce": 7,
+      "status": null,
+      "rezultat_uczestnika": "18"
+    }
+  },
+  "new.things": {
+    "05.2025": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "25",
+      "status": null
+    },
+    "10.2024": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "11.2024": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "35",
+      "status": null
+    },
+    "12.2024": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "22",
+      "status": null
+    },
+    "01.2025": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "35",
+      "status": null
+    },
+    "02.2025": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "32",
+      "status": null
+    },
+    "03.2025": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "26",
+      "status": null
+    },
+    "04.2025": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "30",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2025": {
+      "miejsce": 5,
+      "status": null,
+      "rezultat_uczestnika": "29"
+    },
+    "07.2025": {
+      "miejsce": 5,
+      "status": null,
+      "rezultat_uczestnika": "23"
+    },
+    "08.2025": {
+      "miejsce": 6,
+      "status": null,
+      "rezultat_uczestnika": "24"
+    },
+    "09.2025": {
+      "miejsce": 6,
+      "status": null,
+      "rezultat_uczestnika": "23"
+    },
+    "10.2025": {
+      "miejsce": 3,
+      "status": null,
+      "rezultat_uczestnika": "25"
+    }
+  },
+  "racibo": {
+    "05.2025": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "28",
+      "status": null
+    },
+    "07.2021": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "08.2021": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "31",
+      "status": null
+    },
+    "09.2021": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "21",
+      "status": null
+    },
+    "10.2021": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "22",
+      "status": null
+    },
+    "11.2021": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "12.2021": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "20",
+      "status": null
+    },
+    "01.2022": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "02.2022": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "25",
+      "status": null
+    },
+    "03.2022": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "28",
+      "status": null
+    },
+    "04.2022": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "18",
+      "status": null
+    },
+    "05.2022": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "23",
+      "status": null
+    },
+    "06.2022": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "20",
+      "status": null
+    },
+    "07.2022": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "08.2022": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "09.2022": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "27",
+      "status": null
+    },
+    "10.2022": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "11.2022": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "12.2022": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "21",
+      "status": null
+    },
+    "01.2023": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "26",
+      "status": null
+    },
+    "02.2023": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "27",
+      "status": null
+    },
+    "03.2023": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "04.2023": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "25",
+      "status": null
+    },
+    "05.2023": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "06.2023": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "33",
+      "status": null
+    },
+    "07.2023": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "18",
+      "status": null
+    },
+    "08.2023": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "6",
+      "status": null
+    },
+    "09.2023": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "10.2023": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "11.2023": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "12.2023": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "01.2024": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "32",
+      "status": null
+    },
+    "02.2024": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "03.2024": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "26",
+      "status": null
+    },
+    "04.2024": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "18",
+      "status": null
+    },
+    "05.2024": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "32",
+      "status": null
+    },
+    "06.2024": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "25",
+      "status": null
+    },
+    "07.2024": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "39",
+      "status": null
+    },
+    "08.2024": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "26",
+      "status": null
+    },
+    "09.2024": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "23",
+      "status": null
+    },
+    "10.2024": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "11.2024": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "12.2024": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "20",
+      "status": null
+    },
+    "01.2025": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "20",
+      "status": null
+    },
+    "02.2025": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "31",
+      "status": null
+    },
+    "03.2025": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "33",
+      "status": null
+    },
+    "04.2025": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "30",
+      "status": null
+    },
+    "06.2025": {
+      "miejsce": 9,
+      "status": null,
+      "rezultat_uczestnika": "16"
+    },
+    "07.2025": {
+      "miejsce": 4,
+      "status": null,
+      "rezultat_uczestnika": "25"
+    },
+    "08.2025": {
+      "miejsce": 4,
+      "status": null,
+      "rezultat_uczestnika": "32"
+    },
+    "09.2025": {
+      "miejsce": 1,
+      "status": null,
+      "rezultat_uczestnika": "29"
+    },
+    "10.2025": {
+      "miejsce": 4,
+      "status": null,
+      "rezultat_uczestnika": "23"
+    }
+  },
+  "santacruz.sports": {
+    "05.2025": {
+      "miejsce": 14,
+      "rezultat_uczestnika": "2",
+      "status": null
+    },
+    "04.2025": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "8",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2025": {
+      "miejsce": 13,
+      "status": null,
+      "rezultat_uczestnika": "3"
+    },
+    "07.2025": {
+      "miejsce": 14,
+      "status": null,
+      "rezultat_uczestnika": "5"
+    }
+  },
+  "sk1920": {
+    "05.2025": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "37",
+      "status": null
+    },
+    "07.2021": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "32",
+      "status": null
+    },
+    "08.2021": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "21",
+      "status": null
+    },
+    "09.2021": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "10.2021": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "27",
+      "status": null
+    },
+    "11.2021": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "12.2021": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "01.2022": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "02.2022": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "03.2022": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "27",
+      "status": null
+    },
+    "04.2022": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "05.2022": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "23",
+      "status": null
+    },
+    "06.2022": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "34",
+      "status": null
+    },
+    "07.2022": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "25",
+      "status": null
+    },
+    "08.2022": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "20",
+      "status": null
+    },
+    "09.2022": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "26",
+      "status": null
+    },
+    "10.2022": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "11.2022": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "12.2022": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "01.2023": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "13",
+      "status": null
+    },
+    "02.2023": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "03.2023": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "04.2023": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "21",
+      "status": null
+    },
+    "05.2023": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "06.2023": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "27",
+      "status": null
+    },
+    "07.2023": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "34",
+      "status": null
+    },
+    "08.2023": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "09.2023": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "10.2023": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "11.2023": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "12.2023": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "22",
+      "status": null
+    },
+    "01.2024": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "22",
+      "status": null
+    },
+    "02.2024": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "23",
+      "status": null
+    },
+    "03.2024": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "04.2024": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "05.2024": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "13",
+      "status": null
+    },
+    "06.2024": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "22",
+      "status": null
+    },
+    "07.2024": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "33",
+      "status": null
+    },
+    "08.2024": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "09.2024": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "13",
+      "status": null
+    },
+    "10.2024": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "18",
+      "status": null
+    },
+    "11.2024": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "12.2024": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "13",
+      "status": null
+    },
+    "01.2025": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "02.2025": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "03.2025": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "04.2025": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "06.2025": {
+      "miejsce": 4,
+      "status": null,
+      "rezultat_uczestnika": "30"
+    },
+    "07.2025": {
+      "miejsce": 9,
+      "status": null,
+      "rezultat_uczestnika": "17"
+    },
+    "08.2025": {
+      "miejsce": 12,
+      "status": null,
+      "rezultat_uczestnika": "12"
+    },
+    "09.2025": {
+      "miejsce": 3,
+      "status": null,
+      "rezultat_uczestnika": "25"
+    },
+    "10.2025": {
+      "miejsce": 8,
+      "status": null,
+      "rezultat_uczestnika": "18"
+    }
+  },
+  "masoom": {
+    "02.2024": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "27",
+      "status": null
+    },
+    "03.2024": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "04.2024": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "24",
+      "status": null
+    },
+    "05.2024": {
+      "miejsce": 15,
+      "rezultat_uczestnika": "4",
+      "status": null
+    },
+    "06.2024": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    }
+  },
+  "matthew1": {
+    "11.2021": {
+      "miejsce": 2,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "12.2021": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "9",
+      "status": null
+    },
+    "01.2022": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "50",
+      "status": null
+    },
+    "02.2022": {
+      "miejsce": 1,
+      "rezultat_uczestnika": "33",
+      "status": null
+    },
+    "03.2022": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "26",
+      "status": null
+    },
+    "04.2022": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "18",
+      "status": null
+    },
+    "05.2022": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "21",
+      "status": null
+    },
+    "06.2022": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "25",
+      "status": null
+    },
+    "07.2022": {
+      "miejsce": 14,
+      "rezultat_uczestnika": "10",
+      "status": null
+    },
+    "08.2022": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "28",
+      "status": null
+    },
+    "09.2022": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "20",
+      "status": null
+    },
+    "10.2022": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "11.2022": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "12.2022": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    }
+  },
+  "perymetr": {
+    "10.2022": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "11.2022": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    }
+  },
+  "romualdd": {
+    "01.2022": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "10",
+      "status": null
+    },
+    "02.2022": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "03.2022": {
+      "miejsce": 15,
+      "rezultat_uczestnika": "4",
+      "status": null
+    },
+    "04.2022": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "05.2022": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "06.2022": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "22",
+      "status": null
+    },
+    "07.2022": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "13",
+      "status": null
+    },
+    "08.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2022": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "9",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    }
+  },
+  "rozioo": {
+    "01.2022": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "15",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    }
+  },
+  "sandraa1": {
+    "10.2021": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "31",
+      "status": null
+    },
+    "11.2021": {
+      "miejsce": 3,
+      "rezultat_uczestnika": "29",
+      "status": null
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2022": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "26",
+      "status": null
+    },
+    "02.2022": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "20",
+      "status": null
+    },
+    "03.2022": {
+      "miejsce": 6,
+      "rezultat_uczestnika": "19",
+      "status": null
+    },
+    "04.2022": {
+      "miejsce": 16,
+      "rezultat_uczestnika": "8",
+      "status": null
+    },
+    "05.2022": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "21",
+      "status": null
+    },
+    "06.2022": {
+      "miejsce": 15,
+      "rezultat_uczestnika": "6",
+      "status": null
+    },
+    "07.2022": {
+      "miejsce": 16,
+      "rezultat_uczestnika": "9",
+      "status": null
+    },
+    "08.2022": {
+      "miejsce": 5,
+      "rezultat_uczestnika": "31",
+      "status": null
+    },
+    "09.2022": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "8",
+      "status": null
+    },
+    "10.2022": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "11",
+      "status": null
+    },
+    "11.2022": {
+      "miejsce": 14,
+      "rezultat_uczestnika": "8",
+      "status": null
+    },
+    "12.2022": {
+      "miejsce": 7,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "01.2023": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "2",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    }
+  },
+  "szejq": {
+    "07.2023": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "10",
+      "status": null
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "10",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "12.2024": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "01.2025": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "02.2025": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "03.2025": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "04.2025": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    },
+    "05.2025": {
+      "status": "PAUZA",
+      "miejsce": null,
+      "rezultat_uczestnika": null
+    }
+  },
+  "ziabutt3836": {
+    "02.2022": {
+      "miejsce": 14,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "03.2022": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "04.2022": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "23",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": "7",
+      "status": null
+    },
+    "01.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "05.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": "9",
+      "status": null
+    },
+    "06.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": "5",
+      "status": null
+    },
+    "07.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": "5",
+      "status": null
+    },
+    "08.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    }
+  },
+  "zimnaherbata": {
+    "11.2021": {
+      "miejsce": 12,
+      "rezultat_uczestnika": "12",
+      "status": null
+    },
+    "12.2021": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "7",
+      "status": null
+    },
+    "01.2022": {
+      "miejsce": 11,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "02.2022": {
+      "miejsce": 13,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "03.2022": {
+      "miejsce": 8,
+      "rezultat_uczestnika": "16",
+      "status": null
+    },
+    "04.2022": {
+      "miejsce": 4,
+      "rezultat_uczestnika": "23",
+      "status": null
+    },
+    "05.2022": {
+      "miejsce": 15,
+      "rezultat_uczestnika": "9",
+      "status": null
+    },
+    "06.2022": {
+      "miejsce": 16,
+      "rezultat_uczestnika": "5",
+      "status": null
+    },
+    "07.2022": {
+      "miejsce": 17,
+      "rezultat_uczestnika": "5",
+      "status": null
+    },
+    "08.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": 10,
+      "rezultat_uczestnika": "14",
+      "status": null
+    },
+    "05.2023": {
+      "miejsce": 9,
+      "rezultat_uczestnika": "17",
+      "status": null
+    },
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    }
+  },
+  "patif2025": {
+    "06.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2021": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2022": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2023": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "07.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "08.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "09.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "10.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "11.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "12.2024": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "01.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "02.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "03.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "04.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "05.2025": {
+      "miejsce": null,
+      "rezultat_uczestnika": null,
+      "status": "PAUZA"
+    },
+    "06.2025": {
+      "miejsce": null,
+      "status": "PAUZA",
+      "rezultat_uczestnika": null
+    },
+    "07.2025": {
+      "miejsce": 11,
+      "status": null,
+      "rezultat_uczestnika": "14"
+    },
+    "08.2025": {
+      "miejsce": 5,
+      "status": null,
+      "rezultat_uczestnika": "24"
+    },
+    "09.2025": {
+      "miejsce": 14,
+      "status": null,
+      "rezultat_uczestnika": "3"
+    },
+    "10.2025": {
+      "miejsce": 10,
+      "status": null,
+      "rezultat_uczestnika": "13"
+    }
+  }
+}
