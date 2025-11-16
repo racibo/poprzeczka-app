@@ -94,7 +94,8 @@ translations = {
         'current_log_empty': "Log wpisów jest pusty.",
         'current_stats_header': "🏆 Statystyki Bieżącej Edycji",
         'current_stats_top_submitters': "Najwięksi Pomocnicy (dzięki!)",
-        'current_stats_top_submitters_desc': "Osoby, które najczęściej wprowadzały dane do systemu. Nagrody już czekają!",
+        # <<< POPRAWKA 3 (Zmiana tekstu) >>>
+        'current_stats_top_submitters_desc': "Osoby, które najczęściej wprowadzały dane do systemu. Postaram się nagrodzić Was jakimiś tokenami.",
         'current_stats_streaks': "Najdłuższe Aktywne Serie Zaliczeń",
         'current_stats_streaks_desc': "Uczestnicy z najdłuższą nieprzerwaną serią zaliczonych etapów (do ostatniego zaraportowanego dnia).",
         'current_stats_streaks_days': "dni",
@@ -271,7 +272,7 @@ translations = {
         'current_log_empty': "Submission log is empty.",
         'current_stats_header': "🏆 Current Edition Stats",
         'current_stats_top_submitters': "Top Helpers (Thank You!)",
-        'current_stats_top_submitters_desc': "The people who submitted data most often. Rewards are coming!",
+        'current_stats_top_submitters_desc': "The people who submitted data most often. I will try to reward you with some tokens.",
         'current_stats_streaks': "Longest Active Pass Streaks",
         'current_stats_streaks_desc': "Participants with the longest unbroken streak of passed stages (up to the last reported day).",
         'current_stats_streaks_days': "days",
@@ -430,7 +431,7 @@ def load_google_sheet_data(_sheet, worksheet_name):
     """Pobiera wszystkie dane z danej zakładki jako DataFrame."""
     try:
         worksheet = _sheet.worksheet(worksheet_name) 
-        records = worksheet.get_all_records() # <--- POPRAWKA (usunięto header=1)
+        records = worksheet.get_all_records() 
         return pd.DataFrame(records)
     except gspread.exceptions.WorksheetNotFound:
         st.error(f"Błąd: Nie znaleziono zakładki o nazwie '{worksheet_name}' w Arkuszu Google.")
@@ -448,7 +449,6 @@ def show_submission_form(lang):
     users_list = sorted(CURRENT_PARTICIPANTS)
     submitters_list_sorted = sorted(SUBMITTER_LIST)
     
-    # POPRAWKA 1 (Okienko potwierdzenia): Wyświetl, jeśli jest w sesji
     if 'last_submission' in st.session_state and st.session_state.last_submission:
         details = st.session_state.last_submission
         st.success(_t('form_success_message', lang, details['participant'], details['day'], details['status_translated']))
@@ -534,7 +534,6 @@ def show_submission_form(lang):
             st.error(_t('form_error_no_participant', lang))
             st.rerun() 
 
-        # Zapisz wybory w pamięci sesji
         st.session_state.submitter_index_plus_one = ([None] + submitters_list_sorted).index(submitter)
         st.session_state.last_day_entered = day + 1 if day < 31 else 31 
 
@@ -582,7 +581,6 @@ def process_raw_data(df_raw, lang):
     if df_raw.empty:
         return {}, 0, True 
         
-    # POPRAWKA 2 (KeyError): Sprawdź nagłówki
     REQUIRED_COLS = ['Participant', 'Day', 'Status', 'Timestamp', 'Notes']
     if not all(col in df_raw.columns for col in REQUIRED_COLS):
         st.error(_t('current_header_check_error', lang))
@@ -590,7 +588,7 @@ def process_raw_data(df_raw, lang):
             _t('current_header_check_expected', lang): REQUIRED_COLS,
             _t('current_header_check_found', lang): df_raw.columns.tolist()
         })
-        return {}, 0, False # Zwróć False dla 'success'
+        return {}, 0, False 
         
     df_raw['Day'] = pd.to_numeric(df_raw['Day'], errors='coerce')
     df_raw = df_raw.dropna(subset=['Day'])
@@ -655,12 +653,19 @@ def calculate_ranking(data, max_day_reported, lang):
         # <<< POPRAWKA 1 (Logika Klasyfikacji): Nowy klucz sortowania (failure_tuple) >>>
         def get_failure_tuple(p_failures, p_highest):
             # 0 = Zaliczone (lepiej), 1 = Niezaliczone (gorzej)
-            return tuple(1 if d in p_failures else 0 for d in range(p_highest, 0, -1))
+            # Sprawdzamy od najwyższego zaliczonego dnia w dół
+            # Użyj max_day_reported, aby zapewnić, że gracze w grze są porównywani do tego samego punktu
+            start_day = max(p_highest, max_day_reported) if not eliminated_on_day else p_highest
+            # Jeśli gracz odpadł, liczy się tylko jego historia do odpadnięcia
+            if eliminated_on_day:
+                start_day = eliminated_on_day
+
+            return tuple(1 if d in p_failures else 0 for d in range(start_day, 0, -1))
 
         ranking_data.append({
             _t('ranking_col_participant', lang): participant,
             _t('ranking_col_highest_pass', lang): highest_completed,
-            "sort_key_failure_tuple": get_failure_tuple(failed_stages, max_day_reported), # Użyj max_day_reported dla spójnej długości
+            "sort_key_failure_tuple": get_failure_tuple(failed_stages, highest_completed),
             _t('ranking_col_status', lang): status_text,
             _t('ranking_col_failed_list', lang): ", ".join(map(str, sorted(failed_stages)[:10])) + ("..." if len(failed_stages) > 10 else "")
         })
@@ -686,26 +691,25 @@ def calculate_ranking(data, max_day_reported, lang):
     ]], elimination_map
 
 
-# <<< NOWA FUNKCJA: Obliczanie statystyk bieżącej edycji >>>
-def calculate_current_stats(data, max_day, lang):
+# <<< POPRAWKA 2 (Błąd logiki serii): Przebudowana funkcja >>>
+def calculate_current_stats(data, max_day, lang, elimination_map):
     streaks = []
     for participant in CURRENT_PARTICIPANTS:
+        # Pomiń, jeśli uczestnik odpadł
+        if elimination_map.get(participant) is not None:
+            continue
+
         days_data = data.get(participant, {})
         current_streak = 0
-        max_streak = 0
         
-        for day in range(1, max_day + 1):
+        # Licz wstecz od ostatniego zaraportowanego dnia
+        for day in range(max_day, 0, -1):
             if day in days_data and days_data[day]["status"] == "Zaliczone":
                 current_streak += 1
             else:
-                max_streak = max(max_streak, current_streak)
-                current_streak = 0
-        max_streak = max(max_streak, current_streak) # Sprawdź na końcu
+                # Seria przerwana (przez porażkę lub brak danych)
+                break 
         
-        # Chcemy tylko *aktywną* serię, czyli taką, która dotyka max_day
-        if max_day not in days_data or days_data[max_day]["status"] != "Zaliczone":
-             current_streak = 0 # Seria przerwana ostatniego dnia
-             
         streaks.append({"Uczestnik": participant, "Seria": current_streak})
 
     df_streaks = pd.DataFrame(streaks).sort_values(by="Seria", ascending=False)
@@ -788,30 +792,30 @@ def show_current_edition_dashboard(lang):
     col1, col2 = st.columns(2)
 
     with col1:
-        # Statystyka 1: Podziękowania
         st.markdown(f"**{_t('current_stats_top_submitters', lang)}**")
         st.caption(_t('current_stats_top_submitters_desc', lang))
         if not df_raw_logs.empty and 'Submitter' in df_raw_logs.columns:
             top_submitters = df_raw_logs['Submitter'].value_counts().nlargest(3)
             for name, count in top_submitters.items():
-                mention(label=f"**{name}** ({count} wpisów)", icon="🏆")
+                # <<< POPRAWKA 3 (Błąd 'mention'): Dodano url=None >>>
+                mention(label=f"**{name}** ({count} wpisów)", icon="🏆", url=None)
         else:
             st.info("Brak danych w logach wpisów.")
 
     with col2:
-        # Statystyka 2: Najdłuższe serie
         st.markdown(f"**{_t('current_stats_streaks', lang)}**")
         st.caption(_t('current_stats_streaks_desc', lang))
-        df_streaks = calculate_current_stats(current_data, max_day_reported, lang)
+        # <<< POPRAWKA 2: Przekazanie mapy eliminacji do funkcji >>>
+        df_streaks = calculate_current_stats(current_data, max_day_reported, lang, elimination_map)
         if not df_streaks.empty:
             for _, row in df_streaks.iterrows():
-                mention(label=f"**{row['Uczestnik']}** ({row['Seria']} {_t('current_stats_streaks_days', lang)})", icon="🔥")
+                # <<< POPRAWKA 3 (Błąd 'mention'): Dodano url=None >>>
+                mention(label=f"**{row['Uczestnik']}** ({row['Seria']} {_t('current_stats_streaks_days', lang)})", icon="🔥", url=None)
         else:
             st.info("Brak aktywnych serii.")
             
     st.markdown("---")
 
-    # Statystyka 3: Wyścig słupków
     st.subheader(_t('current_stats_race_header', lang))
     st.write(_t('current_stats_race_desc', lang))
     
@@ -820,26 +824,22 @@ def show_current_edition_dashboard(lang):
         scores = {p: 0 for p in CURRENT_PARTICIPANTS}
         
         for day in range(1, max_day_reported + 1):
-            day_str = str(day)
             
-            # Zaktualizuj wyniki dla tego dnia
             for p in CURRENT_PARTICIPANTS:
                 if p in current_data and day in current_data[p] and current_data[p][day]["status"] == "Zaliczone":
                     scores[p] += 1
             
-            # Przygotuj DataFrame dla wykresu
             df_race = pd.DataFrame.from_dict(
                 scores, 
                 orient='index', 
                 columns=[_t('current_stats_race_total', lang)]
             ).sort_values(by=_t('current_stats_race_total', lang), ascending=True)
             
-            # Wyświetl wykres
             with chart_placeholder.container():
                 st.subheader(f"{_t('current_stats_race_day', lang)}: {day}")
                 st.bar_chart(df_race, horizontal=True)
             
-            time.sleep(0.2) # Krótka pauza dla animacji
+            time.sleep(0.2) 
 
 
     if st.checkbox(_t('current_log_expander', lang)):
@@ -914,7 +914,6 @@ def show_historical_stats(lang):
     st.sidebar.markdown("---")
     st.sidebar.header(_t('sidebar_header', lang))
 
-    # Reszta tej funkcji jest DOKŁADNIE taka sama jak w V4.0
     min_editions_count = st.sidebar.slider(
         _t('min_editions', lang),
         min_value=1,
@@ -1629,7 +1628,6 @@ def main():
         st.session_state.submitter_index_plus_one = 0 
     if 'last_day_entered' not in st.session_state:
         st.session_state.last_day_entered = 1
-    # 'last_submission' jest sprawdzany, czy istnieje, nie musi być inicjowany
     
     app_section = st.sidebar.radio(
         _t('nav_header', lang),
