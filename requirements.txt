@@ -5,3 +5,4 @@ seaborn
 gspread
 oauth2client
 scipy
+streamlit-extras
