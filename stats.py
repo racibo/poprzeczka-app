@@ -19,7 +19,8 @@ st.set_page_config(
     layout="wide", 
     page_title="Analiza i Zarządzanie Poprzeczką", 
     # UWAGA: Wklej tutaj swój "surowy" link URL do logo z GitHuba
-    page_icon="https://raw.githubusercontent.com/TWOJA_NAZWA/poprzeczka-app/main/logo.png" 
+    # Przykład: page_icon="https://raw.githubusercontent.com/twoja-nazwa/poprzeczka-app/main/logo.png" 
+    page_icon="https://raw.githubusercontent.com/poprzeczka/poprzeczka-app/main/logo.png" # <--- MUSISZ ZMIENIĆ 'twoja-nazwa' i 'logo.png'
 )
 
 # === Definicje Plików i Uczestników ===
@@ -110,8 +111,8 @@ translations = {
         'current_stats_streaks_desc': "Uczestnicy z najdłuższą nieprzerwaną serią zaliczonych etapów (w dowolnym momencie edycji).", 
         'current_stats_streaks_days': "dni",
         'current_stats_race_header': "🏁 Wyścig o Najwyższy Etap",
-        'current_stats_race_desc': "Animacja pokazująca, kto prowadzi (ma najwyższy zaliczony etap) na koniec każdego dnia.",
-        'current_stats_race_button': "Uruchom Wyścig!",
+        'current_stats_race_desc': "Przesuń suwak, aby zobaczyć, kto prowadził (miał najwyższy zaliczony etap) na koniec wybranego dnia.", # <<< ZMIANA
+        'current_stats_race_button': "Uruchom Wyścig!", # Już nieużywane, ale może zostać
         'current_stats_race_day': "Etap",
         'current_stats_race_total': "Najwyższy Etap",
         'title': "Interaktywna analiza rywalizacji krokowej",
@@ -293,7 +294,7 @@ translations = {
         'current_stats_streaks_desc': "Participants with the longest unbroken streak of passed stages (at any point in the edition).",
         'current_stats_streaks_days': "days",
         'current_stats_race_header': "🏁 Highest Stage Race",
-        'current_stats_race_desc': "Animation showing who is in the lead (has the highest passed stage) at the end of each day.",
+        'current_stats_race_desc': "Move the slider to see who was in the lead (had the highest passed stage) at the end of each day.", # <<< CHANGED
         'current_stats_race_button': "Start the Race!",
         'current_stats_race_day': "Stage",
         'current_stats_race_total': "Highest Stage",
@@ -947,40 +948,39 @@ def show_current_edition_dashboard(lang):
     st.subheader(_t('current_stats_race_header', lang))
     st.write(_t('current_stats_race_desc', lang))
     
-    if st.button(_t('current_stats_race_button', lang)):
-        plt.style.use('dark_background') 
-        chart_placeholder = st.empty()
-        scores = {p: 0 for p in CURRENT_PARTICIPANTS} 
-        
-        max_axis_day = max(31, max_day_reported)
-        
-        for day in range(1, max_day_reported + 1):
-            
-            for p in CURRENT_PARTICIPANTS:
-                # <<< TA LINIA JEST POPRAWIONA (zawiera [day]) >>>
-                if p in current_data and day in current_data.get(p, {}) and current_data[p][day]["status"] == "Zaliczone":
-                    scores[p] = day 
-            
-            # <<< POPRAWKA: Usuwamy sort_values, aby zachować stałą kolejność >>>
-            df_race = pd.DataFrame.from_dict(
-                scores, 
-                orient='index', 
-                columns=[_t('current_stats_race_total', lang)]
-            ).reindex(CURRENT_PARTICIPANTS) # Użyj stałej, alfabetycznej kolejności
-            
-            # Stwórz wykres Matplotlib
-            fig, ax = plt.subplots(figsize=(10, 6))
-            # Sortuj rosnąco, aby 'ataraksja' była na górze, a 'sk1920' na dole
-            ax.barh(df_race.index.sort_values(ascending=False), df_race.loc[df_race.index.sort_values(ascending=False), _t('current_stats_race_total', lang)])
-            ax.set_xlim(0, max_axis_day) # STATYCZNA OŚ X
-            ax.set_title(f"{_t('current_stats_race_day', lang)}: {day}")
-            plt.tight_layout() 
-            
-            with chart_placeholder.container():
-                st.pyplot(fig)
-            
-            plt.close(fig) 
-            time.sleep(0.1) 
+    # <<< POPRAWKA 3 (Logika Wykresu): Zastąpiono przycisk suwakiem >>>
+    race_day_slider = st.slider(
+        _t('current_stats_race_day', lang), 
+        1, 
+        max_day_reported, 
+        max_day_reported # Domyślnie ostatni dzień
+    )
+
+    # Oblicz wyniki dla wybranego dnia
+    scores = {p: 0 for p in CURRENT_PARTICIPANTS} 
+    for day in range(1, race_day_slider + 1): # Pętla od 1 do WYBRANEGO dnia
+        for p in CURRENT_PARTICIPANTS:
+            if p in current_data and day in current_data.get(p, {}) and current_data[p][day]["status"] == "Zaliczone":
+                scores[p] = day # Nadpisz stary wynik nowym, wyższym
+    
+    df_race = pd.DataFrame.from_dict(
+        scores, 
+        orient='index', 
+        columns=[_t('current_stats_race_total', lang)]
+    ).reindex(CURRENT_PARTICIPANTS) # Stała kolejność
+
+    # Narysuj wykres
+    plt.style.use('dark_background') 
+    fig, ax = plt.subplots(figsize=(10, 6))
+    # Sortuj alfabetycznie malejąco, aby 'ataraksja' była na górze
+    sorted_index = sorted(df_race.index, reverse=True) 
+    ax.barh(sorted_index, df_race.loc[sorted_index, _t('current_stats_race_total', lang)])
+    ax.set_xlim(0, max(31, max_day_reported)) # STATYCZNA OŚ X
+    ax.set_title(f"{_t('current_stats_race_day', lang)}: {race_day_slider}")
+    plt.tight_layout() 
+    st.pyplot(fig)
+    plt.close(fig) 
+    # <<< Koniec Poprawki 3 >>>
 
 
     if st.checkbox(_t('current_log_expander', lang)):
