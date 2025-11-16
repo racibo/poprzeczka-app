@@ -15,14 +15,12 @@ import time
 from streamlit_extras.mention import mention # Do podziękowań
 
 # --- Ustawienia Strony ---
-# Zmieniono ikonę na link do pliku "surowego" na GitHubie, aby naprawić cache
 st.set_page_config(
     layout="wide", 
     page_title="Analiza i Zarządzanie Poprzeczką", 
-    # Wklej tutaj swój "surowy" link do logo z GitHuba
+    # UWAGA: Wklej tutaj swój "surowy" link URL do logo z GitHuba
     page_icon="https://raw.githubusercontent.com/TWOJA_NAZWA/poprzeczka-app/main/logo.png" 
 )
-# UWAGA: Powyżej w 'page_icon' musisz wkleić swój "surowy" link do logo na GitHubie!
 
 # === Definicje Plików i Uczestników ===
 FILE_HISTORICAL = "historical_results.json" 
@@ -950,7 +948,6 @@ def show_current_edition_dashboard(lang):
     st.write(_t('current_stats_race_desc', lang))
     
     if st.button(_t('current_stats_race_button', lang)):
-        # <<< POPRAWKA 3 (Logika Wykresu): Użyj Matplotlib dla statycznej osi >>>
         plt.style.use('dark_background') 
         chart_placeholder = st.empty()
         scores = {p: 0 for p in CURRENT_PARTICIPANTS} 
@@ -960,27 +957,30 @@ def show_current_edition_dashboard(lang):
         for day in range(1, max_day_reported + 1):
             
             for p in CURRENT_PARTICIPANTS:
-                if p in current_data and day in current_data[p] and current_data[p][day]["status"] == "Zaliczone":
+                # <<< TA LINIA JEST POPRAWIONA (zawiera [day]) >>>
+                if p in current_data and day in current_data.get(p, {}) and current_data[p][day]["status"] == "Zaliczone":
                     scores[p] = day 
             
+            # <<< POPRAWKA: Usuwamy sort_values, aby zachować stałą kolejność >>>
             df_race = pd.DataFrame.from_dict(
                 scores, 
                 orient='index', 
                 columns=[_t('current_stats_race_total', lang)]
-            ).sort_values(by=_t('current_stats_race_total', lang), ascending=True) 
+            ).reindex(CURRENT_PARTICIPANTS) # Użyj stałej, alfabetycznej kolejności
             
             # Stwórz wykres Matplotlib
-            fig, ax = plt.subplots(figsize=(10, 6)) # Ustaw rozmiar
-            ax.barh(df_race.index, df_race[_t('current_stats_race_total', lang)])
+            fig, ax = plt.subplots(figsize=(10, 6))
+            # Sortuj rosnąco, aby 'ataraksja' była na górze, a 'sk1920' na dole
+            ax.barh(df_race.index.sort_values(ascending=False), df_race.loc[df_race.index.sort_values(ascending=False), _t('current_stats_race_total', lang)])
             ax.set_xlim(0, max_axis_day) # STATYCZNA OŚ X
             ax.set_title(f"{_t('current_stats_race_day', lang)}: {day}")
-            plt.tight_layout() # Dopasuj
+            plt.tight_layout() 
             
             with chart_placeholder.container():
                 st.pyplot(fig)
             
             plt.close(fig) 
-            time.sleep(0.1) # Płynniejsza animacja
+            time.sleep(0.1) 
 
 
     if st.checkbox(_t('current_log_expander', lang)):
