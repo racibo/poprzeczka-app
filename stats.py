@@ -49,7 +49,6 @@ translations = {
         'form_status_fail': "Niezaliczone",
         'form_status_no_report': "Brak raportu",
         'form_status_info': "Uwaga: 'Niezaliczone' oraz 'Brak raportu' mają ten sam skutek (etap niezaliczony).",
-        # <<< POPRAWKA 1 (SyntaxError): Ta linia jest poprawna >>>
         'form_converters_expander': "ℹ️ Informacja o przelicznikach (dla danych ze Strava itp.)",
         'form_converters_warning': "Jeśli zgłaszasz kroki z aktywności (np. Strava, Garmin), stosujemy poniższe przeliczniki. Upewnij się, że Twój wynik końcowy jest poprawny.",
         'form_notes_label': "Inne (opcjonalnie)",
@@ -77,7 +76,6 @@ translations = {
         2.  Przy remisie, sortowanie odbywa się przez porównanie wyników etap po etapie (zaczynając od góry). Pierwsza różnica decyduje - osoba z 'Niezaliczonym' etapem przegrywa.
         3.  Odpadnięcie następuje po **3 kolejnych** niepowodzeniach (Niezaliczone / Brak raportu).
         """,
-        # <<< POPRAWKA 2 (Missing Key): Dodano brakujący klucz >>>
         'current_official_ranking_header': "Oficjalna Klasyfikacja (wg kompletnych etapów)",
         'current_official_stage_selector': "Wybierz etap, aby zobaczyć oficjalną klasyfikację z tego dnia:",
         'current_official_ranking_desc': "Poniższa klasyfikacja jest oparta o **Etap {0}**. Jest to ostatni (lub wybrany) dzień, dla którego wszyscy aktywni uczestnicy posiadają kompletne dane (jawne lub wywnioskowane).",
@@ -87,6 +85,7 @@ translations = {
         'current_header_check_details': "Aplikacja nie może odczytać danych, ponieważ nagłówki w zakładce '{0}' są nieprawidłowe.",
         'current_header_check_expected': "Oczekiwane nagłówki",
         'current_header_check_found': "Znalezione nagłówki",
+        'ranking_col_rank': "Miejsce", # <<< NOWA KOLUMNA RANKINGU
         'ranking_col_participant': "Uczestnik",
         'ranking_col_highest_pass': "Najw. Zaliczone",
         'ranking_col_status': "Status",
@@ -105,7 +104,6 @@ translations = {
         'current_stats_streaks': "Najdłuższe Serie Zaliczeń", 
         'current_stats_streaks_desc': "Uczestnicy z najdłuższą nieprzerwaną serią zaliczonych etapów (w dowolnym momencie edycji).", 
         'current_stats_streaks_days': "dni",
-        # <<< POPRAWKA 3 (Logika Wykresu): Zmiana tekstów >>>
         'current_stats_race_header': "🏁 Wyścig o Najwyższy Etap",
         'current_stats_race_desc': "Animacja pokazująca, kto prowadzi (ma najwyższy zaliczony etap) na koniec każdego dnia.",
         'current_stats_race_button': "Uruchom Wyścig!",
@@ -261,7 +259,6 @@ translations = {
         2.  On a tie, sorted by comparing stage results top-down. The first difference decides - the participant with a 'Failed' stage loses.
         3.  Elimination occurs after **3 consecutive failures** (Failed / No Report).
         """,
-        # <<< POPRAWKA 2 (Missing Key): Dodano brakujący klucz >>>
         'current_official_ranking_header': "Official Standings (by Complete Stage)",
         'current_official_stage_selector': "Select a stage to see the official standings from that day:",
         'current_official_ranking_desc': "The following standings are based on **Stage {0}**. This is the last (or selected) day for which all active participants have complete data (explicit or inferred).",
@@ -271,6 +268,7 @@ translations = {
         'current_header_check_details': "The app cannot read data because the headers in the '{0}' worksheet are incorrect.",
         'current_header_check_expected': "Expected Headers",
         'current_header_check_found': "Found Headers",
+        'ranking_col_rank': "Rank", # <<< NOWA KOLUMNA RANKINGU
         'ranking_col_participant': "Participant",
         'ranking_col_highest_pass': "Highest Pass",
         'ranking_col_status': "Status",
@@ -289,7 +287,6 @@ translations = {
         'current_stats_streaks': "Longest Pass Streaks",
         'current_stats_streaks_desc': "Participants with the longest unbroken streak of passed stages (at any point in the edition).",
         'current_stats_streaks_days': "days",
-        # <<< POPRAWKA 3 (Logika Wykresu): Zmiana tekstów >>>
         'current_stats_race_header': "🏁 Highest Stage Race",
         'current_stats_race_desc': "Animation showing who is in the lead (has the highest passed stage) at the end of each day.",
         'current_stats_race_button': "Start the Race!",
@@ -706,10 +703,27 @@ def calculate_ranking(data, max_day_reported, lang):
 
     ranking_data.sort(key=sort_key)
     
+    # <<< POPRAWKA 1 (Ranking turniejowy) >>>
+    last_sort_key = None
+    rank_col_name = _t('ranking_col_rank', lang)
+    for i, entry in enumerate(ranking_data):
+        current_sort_key = (
+            entry[_t('ranking_col_highest_pass', lang)], 
+            entry["sort_key_failure_tuple"]
+        )
+        
+        if i > 0 and current_sort_key == last_sort_key:
+            entry[rank_col_name] = ranking_data[i-1][rank_col_name] # Taki sam rank
+        else:
+            entry[rank_col_name] = i + 1 # Nowy rank
+        
+        last_sort_key = current_sort_key
+    # <<< Koniec Poprawki 1 >>>
+    
     df_ranking = pd.DataFrame(ranking_data)
-    df_ranking.index = df_ranking.index + 1 
     
     return df_ranking[[
+        rank_col_name, # Dodano kolumnę 'Miejsce'
         _t('ranking_col_participant', lang), 
         _t('ranking_col_highest_pass', lang), 
         _t('ranking_col_status', lang), 
@@ -754,27 +768,24 @@ def find_last_complete_stage(data, elimination_map, max_day):
     (jawne lub wywnioskowane przez przyszłe wpisy).
     """
     
-    # 1. Stwórz mapę najwyższego dnia, z którego mamy jakikolwiek wpis dla uczestnika
     participant_max_days = {
         p: max((int(k) for k in data.get(p, {}).keys()), default=0)
         for p in CURRENT_PARTICIPANTS
     }
 
     complete_stages = []
-    for day in range(1, max_day + 1): # Idź od początku
+    for day in range(1, max_day + 1): 
         is_complete_for_all = True
         active_participants_on_this_day = []
 
-        # 2. Znajdź aktywnych uczestników
         for p in CURRENT_PARTICIPANTS:
             elim_day = elimination_map.get(p)
-            if elim_day is None or elim_day >= day: # Aktywny jeśli nie odpadł LUB odpadł DOKŁADNIE TEGO DNIA
+            if elim_day is None or elim_day >= day: 
                 active_participants_on_this_day.append(p)
         
         if not active_participants_on_this_day and max_day > 0:
             continue 
 
-        # 3. Sprawdź kompletność dla wszystkich aktywnych
         for p in active_participants_on_this_day:
             has_explicit_entry = day in data.get(p, {})
             has_future_entry = participant_max_days.get(p, 0) > day
@@ -784,9 +795,9 @@ def find_last_complete_stage(data, elimination_map, max_day):
                 break 
         
         if is_complete_for_all:
-            complete_stages.append(day) # Dodaj dzień do listy
+            complete_stages.append(day) 
             
-    return complete_stages # Zwróć całą listę kompletnych dni
+    return complete_stages 
 
 def show_current_edition_dashboard(lang):
     """Wyświetla dashboard dla bieżącej edycji."""
@@ -825,17 +836,14 @@ def show_current_edition_dashboard(lang):
     # --- NOWA SEKCJA: Klasyfikacja "Oficjalna" ---
     st.subheader(_t('current_official_ranking_header', lang))
     
-    # 1. Znajdź WSZYSTKIE kompletne etapy
     complete_stages = find_last_complete_stage(current_data, elimination_map, max_day_reported)
     
     if complete_stages:
-        # Domyślnie wybierz ostatni kompletny etap
         default_stage = complete_stages[-1]
         
-        # <<< POPRAWKA 2 (Wybór etapu): Użyj suwaka >>>
         selected_stage = st.select_slider(
             _t('current_official_stage_selector', lang),
-            options=complete_stages, # Pokaż tylko kompletne dni
+            options=complete_stages, 
             value=default_stage 
         )
         
@@ -938,11 +946,10 @@ def show_current_edition_dashboard(lang):
     if st.button(_t('current_stats_race_button', lang)):
         chart_placeholder = st.empty()
         # <<< POPRAWKA 3 (Logika Wykresu): Zmiana logiki >>>
-        scores = {p: 0 for p in CURRENT_PARTICIPANTS} # Przechowuje NAJWYŻSZY etap
+        scores = {p: 0 for p in CURRENT_PARTICIPANTS} 
         
         for day in range(1, max_day_reported + 1):
             
-            # Dla każdego dnia, zaktualizuj najwyższy zaliczony etap dla każdego gracza
             for p in CURRENT_PARTICIPANTS:
                 if p in current_data and day in current_data[p] and current_data[p][day]["status"] == "Zaliczone":
                     scores[p] = day # Nadpisz stary wynik nowym, wyższym
