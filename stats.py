@@ -19,7 +19,7 @@ st.set_page_config(
     layout="wide", 
     page_title="Analiza i Zarządzanie Poprzeczką", 
     # UWAGA: Wklej tutaj swój "surowy" link URL do logo z GitHuba
-    # Przykład: page_icon="https://raw.githubusercontent.com/twoja-nazwa/poprzeczka-app/main/logo.png" 
+    # Przykład: page_icon="https://raw.githubusercontent.com/twoja-nazwa/poprzeczka-app/main/logoP.png" 
     page_icon="https://raw.githubusercontent.com/poprzeczka/poprzeczka-app/main/logo.png" # <--- PRZYKŁADOWY LINK, ZMIEŃ NA WŁASNY
 )
 
@@ -1842,3 +1842,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
