@@ -15,7 +15,14 @@ import time
 from streamlit_extras.mention import mention # Do podziękowań
 
 # --- Ustawienia Strony ---
-st.set_page_config(layout="wide", page_title="Analiza i Zarządzanie Poprzeczką", page_icon="logoP.png")
+# Zmieniono ikonę na link do pliku "surowego" na GitHubie, aby naprawić cache
+st.set_page_config(
+    layout="wide", 
+    page_title="Analiza i Zarządzanie Poprzeczką", 
+    page_icon="https://raw.githubusercontent.com/twoja-nazwa/poprzeczka-app/main/logo.png" # <--- ZMIEŃ "twoja-nazwa" i "logo.png"
+)
+# UWAGA: Powyżej w 'page_icon' musisz wkleić swój "surowy" link do logo na GitHubie!
+
 # === Definicje Plików i Uczestników ===
 FILE_HISTORICAL = "historical_results.json" 
 GOOGLE_SHEET_NAME = "Baza Danych Poprzeczki" 
@@ -720,7 +727,6 @@ def calculate_ranking(data, max_day_reported, lang):
     
     df_ranking = pd.DataFrame(ranking_data)
     
-    # Zmień typ kolumny 'Miejsce' na int, aby ładnie się wyświetlało
     df_ranking[rank_col_name] = df_ranking[rank_col_name].astype(int)
     
     return df_ranking[[
@@ -827,8 +833,7 @@ def show_current_edition_dashboard(lang):
     try:
         ranking_df, elimination_map = calculate_ranking(current_data, max_day_reported, lang)
         st.markdown(_t('current_ranking_rules', lang, max_day_reported))
-        # <<< POPRAWKA 1 (Ukryj indeks) >>>
-        st.dataframe(ranking_df, use_container_width=True, hide_index=True)
+        st.dataframe(ranking_df, use_container_width=True, hide_index=True) # <<< POPRAWKA: Ukryto indeks
     except Exception as e:
         st.error(_t('current_ranking_error', lang, e))
         elimination_map = {} 
@@ -853,8 +858,7 @@ def show_current_edition_dashboard(lang):
         
         try:
             official_ranking_df, _ = calculate_ranking(current_data, selected_stage, lang)
-            # <<< POPRAWKA 1 (Ukryj indeks) >>>
-            st.dataframe(official_ranking_df, use_container_width=True, hide_index=True)
+            st.dataframe(official_ranking_df, use_container_width=True, hide_index=True) # <<< POPRAWKA: Ukryto indeks
         except Exception as e:
             st.error(_t('current_ranking_error', lang, e))
     else:
@@ -947,26 +951,38 @@ def show_current_edition_dashboard(lang):
     st.write(_t('current_stats_race_desc', lang))
     
     if st.button(_t('current_stats_race_button', lang)):
+        # <<< POPRAWKA 3 (Logika Wykresu): Użyj Matplotlib dla statycznej osi >>>
+        plt.style.use('dark_background') # Ustaw styl dla wykresu
         chart_placeholder = st.empty()
         scores = {p: 0 for p in CURRENT_PARTICIPANTS} 
+        
+        # Znajdź maksymalny możliwy dzień (np. 31) lub max_day_reported
+        max_axis_day = max(31, max_day_reported)
         
         for day in range(1, max_day_reported + 1):
             
             for p in CURRENT_PARTICIPANTS:
-                if p in current_data and day in current_data[p] and current_data[p][day]["status"] == "Zaliczone":
+                if p in current_data and day in current_data[p] and current_data[p]["status"] == "Zaliczone":
                     scores[p] = day 
             
             df_race = pd.DataFrame.from_dict(
                 scores, 
                 orient='index', 
                 columns=[_t('current_stats_race_total', lang)]
-            ).sort_values(by=_t('current_stats_race_total', lang), ascending=True)
+            ).sort_values(by=_t('current_stats_race_total', lang), ascending=True) # Sortuj ROSNĄCO dla barh
+            
+            # Stwórz wykres Matplotlib
+            fig, ax = plt.subplots()
+            ax.barh(df_race.index, df_race[_t('current_stats_race_total', lang)])
+            ax.set_xlim(0, max_axis_day) # STATYCZNA OŚ X
+            ax.set_title(f"{_t('current_stats_race_day', lang)}: {day}")
+            # ax.invert_yaxis() # Nie potrzeba przy sortowaniu ascending
             
             with chart_placeholder.container():
-                st.subheader(f"{_t('current_stats_race_day', lang)}: {day}")
-                st.bar_chart(df_race, horizontal=True)
+                st.pyplot(fig)
             
-            time.sleep(0.2) 
+            plt.close(fig) # Zwolnij pamięć
+            time.sleep(0.1) # Płynniejsza animacja
 
 
     if st.checkbox(_t('current_log_expander', lang)):
@@ -1778,5 +1794,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
