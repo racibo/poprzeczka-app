@@ -85,7 +85,7 @@ translations = {
         'current_header_check_details': "Aplikacja nie może odczytać danych, ponieważ nagłówki w zakładce '{0}' są nieprawidłowe.",
         'current_header_check_expected': "Oczekiwane nagłówki",
         'current_header_check_found': "Znalezione nagłówki",
-        'ranking_col_rank': "Miejsce", # <<< NOWA KOLUMNA RANKINGU
+        'ranking_col_rank': "Miejsce", 
         'ranking_col_participant': "Uczestnik",
         'ranking_col_highest_pass': "Najw. Zaliczone",
         'ranking_col_status': "Status",
@@ -268,7 +268,7 @@ translations = {
         'current_header_check_details': "The app cannot read data because the headers in the '{0}' worksheet are incorrect.",
         'current_header_check_expected': "Expected Headers",
         'current_header_check_found': "Found Headers",
-        'ranking_col_rank': "Rank", # <<< NOWA KOLUMNA RANKINGU
+        'ranking_col_rank': "Rank", 
         'ranking_col_participant': "Participant",
         'ranking_col_highest_pass': "Highest Pass",
         'ranking_col_status': "Status",
@@ -718,9 +718,11 @@ def calculate_ranking(data, max_day_reported, lang):
             entry[rank_col_name] = i + 1 # Nowy rank
         
         last_sort_key = current_sort_key
-    # <<< Koniec Poprawki 1 >>>
     
     df_ranking = pd.DataFrame(ranking_data)
+    
+    # Zmień typ kolumny 'Miejsce' na int, aby ładnie się wyświetlało
+    df_ranking[rank_col_name] = df_ranking[rank_col_name].astype(int)
     
     return df_ranking[[
         rank_col_name, # Dodano kolumnę 'Miejsce'
@@ -826,7 +828,8 @@ def show_current_edition_dashboard(lang):
     try:
         ranking_df, elimination_map = calculate_ranking(current_data, max_day_reported, lang)
         st.markdown(_t('current_ranking_rules', lang, max_day_reported))
-        st.dataframe(ranking_df, use_container_width=True)
+        # <<< POPRAWKA 1 (Ukryj indeks) >>>
+        st.dataframe(ranking_df, use_container_width=True, hide_index=True)
     except Exception as e:
         st.error(_t('current_ranking_error', lang, e))
         elimination_map = {} 
@@ -851,7 +854,8 @@ def show_current_edition_dashboard(lang):
         
         try:
             official_ranking_df, _ = calculate_ranking(current_data, selected_stage, lang)
-            st.dataframe(official_ranking_df, use_container_width=True)
+            # <<< POPRAWKA 1 (Ukryj indeks) >>>
+            st.dataframe(official_ranking_df, use_container_width=True, hide_index=True)
         except Exception as e:
             st.error(_t('current_ranking_error', lang, e))
     else:
@@ -945,14 +949,13 @@ def show_current_edition_dashboard(lang):
     
     if st.button(_t('current_stats_race_button', lang)):
         chart_placeholder = st.empty()
-        # <<< POPRAWKA 3 (Logika Wykresu): Zmiana logiki >>>
         scores = {p: 0 for p in CURRENT_PARTICIPANTS} 
         
         for day in range(1, max_day_reported + 1):
             
             for p in CURRENT_PARTICIPANTS:
                 if p in current_data and day in current_data[p] and current_data[p][day]["status"] == "Zaliczone":
-                    scores[p] = day # Nadpisz stary wynik nowym, wyższym
+                    scores[p] = day 
             
             df_race = pd.DataFrame.from_dict(
                 scores, 
