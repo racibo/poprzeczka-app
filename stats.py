@@ -15,8 +15,7 @@ import time
 from streamlit_extras.mention import mention # Do podziękowań
 
 # --- Ustawienia Strony ---
-st.set_page_config(layout="wide", page_title="Analiza i Zarządzanie Poprzeczką")
-
+st.set_page_config(layout="wide", page_title="Analiza i Zarządzanie Poprzeczką", page_icon="logo.png")
 # === Definicje Plików i Uczestników ===
 FILE_HISTORICAL = "historical_results.json" 
 GOOGLE_SHEET_NAME = "Baza Danych Poprzeczki" 
@@ -1779,3 +1778,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
