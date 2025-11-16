@@ -111,10 +111,10 @@ translations = {
         'current_stats_streaks_desc': "Uczestnicy z najdłuższą nieprzerwaną serią zaliczonych etapów (w dowolnym momencie edycji).", 
         'current_stats_streaks_days': "dni",
         'current_stats_race_header': "🏁 Wyścig o Najwyższy Etap",
-        'current_stats_race_desc': "Animacja pokazująca, kto prowadzi (ma najwyższy zaliczony etap) na koniec każdego dnia.",
-        'current_stats_race_mode': "Wybierz tryb:", # <<< NOWY KLUCZ
-        'current_stats_race_mode_anim': "Animacja", # <<< NOWY KLUCZ
-        'current_stats_race_mode_manual': "Kontrola ręczna", # <<< NOWY KLUCZ
+        'current_stats_race_desc': "Przesuń suwak, aby zobaczyć, kto prowadził (miał najwyższy zaliczony etap) na koniec wybranego dnia.",
+        'current_stats_race_mode': "Wybierz tryb:",
+        'current_stats_race_mode_anim': "Animacja",
+        'current_stats_race_mode_manual': "Kontrola ręczna",
         'current_stats_race_button': "Uruchom Wyścig!", 
         'current_stats_race_day': "Etap",
         'current_stats_race_total': "Najwyższy Etap",
@@ -298,9 +298,10 @@ translations = {
         'current_stats_streaks_days': "days",
         'current_stats_race_header': "🏁 Highest Stage Race",
         'current_stats_race_desc': "Move the slider to see who was in the lead (had the highest passed stage) at the end of each day.",
-CH    'current_stats_race_mode': "Select Mode:", # <<< NEW KEY
-        'current_stats_race_mode_anim': "Animation", # <<< NEW KEY
-        'current_stats_race_mode_manual': "Manual Control", # <<< NEW KEY
+        # <<< POPRAWKA 2 (Missing Key): Usunięto 'CH ' >>>
+        'current_stats_race_mode': "Select Mode:", 
+        'current_stats_race_mode_anim': "Animation", 
+        'current_stats_race_mode_manual': "Manual Control", 
         'current_stats_race_button': "Start the Race!",
         'current_stats_race_day': "Stage",
         'current_stats_race_total': "Highest Stage",
@@ -811,10 +812,10 @@ def find_last_complete_stage(data, elimination_map, max_day):
     return complete_stages 
 
 # <<< NOWA FUNKCJA POMOCNICZA DLA WYKRESU >>>
-def get_race_data_for_day(data, max_day, lang):
+def get_race_data_for_day(data, day_to_show, lang):
     """Oblicza najwyższy zaliczony etap dla każdego gracza na koniec danego dnia."""
     scores = {p: 0 for p in CURRENT_PARTICIPANTS} 
-    for day in range(1, max_day + 1):
+    for day in range(1, day_to_show + 1):
         for p in CURRENT_PARTICIPANTS:
             if p in data and day in data.get(p, {}) and data[p][day]["status"] == "Zaliczone":
                 scores[p] = day 
@@ -968,80 +969,61 @@ def show_current_edition_dashboard(lang):
             
     st.markdown("---")
 
-    # <<< POPRAWKA 3: Przebudowa Wykresu na Radio + Suwak >>>
     st.subheader(_t('current_stats_race_header', lang))
     st.write(_t('current_stats_race_desc', lang))
     
-    # Stwórz jeden kontener na wykres
+    # <<< POPRAWKA 3: Przebudowa Wykresu na Radio + Suwak >>>
+    # Miejsce na wykres
     chart_placeholder = st.empty()
     
-    # Stwórz kontrolki pod wykresem
-    col_controls1, col_controls2 = st.columns([1, 3])
-    with col_controls1:
-        mode = st.radio(
-            _t('current_stats_race_mode', lang), 
-            (_t('current_stats_race_mode_anim', lang), _t('current_stats_race_mode_manual', lang)), 
-            horizontal=True,
-            label_visibility="collapsed"
-        )
+    # Kontrolki pod wykresem
+    mode = st.radio(
+        _t('current_stats_race_mode', lang), 
+        (_t('current_stats_race_mode_anim', lang), _t('current_stats_race_mode_manual', lang)), 
+        index=1, # Domyślnie "Kontrola ręczna"
+        horizontal=True,
+    )
     
-    with col_controls2:
-        if mode == _t('current_stats_race_mode_anim', lang):
-            run_animation = st.button(_t('current_stats_race_button', lang))
-        else:
-            # Pokaż suwak tylko w trybie ręcznym
-            race_day_slider = st.slider(
-                _t('current_stats_race_day', lang), 
-                1, max_day_reported, max_day_reported
-            )
-
-    # Ustaw styl wykresu
-    plt.style.use('dark_background')
-    max_axis_day = max(31, max_day_reported) # Stała oś X
+    plt.style.use('dark_background') 
+    max_axis_day = max(31, max_day_reported)
     
-    if mode == _t('current_stats_race_mode_anim', lang) and run_animation:
-        # Tryb Animacji
-        scores = {p: 0 for p in CURRENT_PARTICIPANTS} 
-        for day in range(1, max_day_reported + 1):
-            for p in CURRENT_PARTICIPANTS:
-                if p in current_data and day in current_data.get(p, {}) and current_data[p][day]["status"] == "Zaliczone":
-                    scores[p] = day 
-            
-            df_race = pd.DataFrame.from_dict(
-                scores, orient='index', columns=[_t('current_stats_race_total', lang)]
-            ).reindex(CURRENT_PARTICIPANTS)
-            
-            fig, ax = plt.subplots(figsize=(10, 6))
-            sorted_index = sorted(df_race.index, reverse=True) 
-            ax.barh(sorted_index, df_race.loc[sorted_index, _t('current_stats_race_total', lang)])
-            ax.set_xlim(0, max_axis_day) 
-            ax.set_title(f"{_t('current_stats_race_day', lang)}: {day}")
-            plt.tight_layout() 
-            
-            with chart_placeholder.container():
-                st.pyplot(fig)
-            
-            plt.close(fig) 
-            time.sleep(0.1) 
+    if mode == _t('current_stats_race_mode_anim', lang):
+        if st.button(_t('current_stats_race_button', lang)):
+            scores = {p: 0 for p in CURRENT_PARTICIPANTS} 
+            for day in range(1, max_day_reported + 1):
+                for p in CURRENT_PARTICIPANTS:
+                    if p in current_data and day in current_data.get(p, {}) and current_data[p][day]["status"] == "Zaliczone":
+                        scores[p] = day 
+                
+                df_race = pd.DataFrame.from_dict(
+                    scores, orient='index', columns=[_t('current_stats_race_total', lang)]
+                ).reindex(CURRENT_PARTICIPANTS)
+                
+                fig, ax = plt.subplots(figsize=(10, 6))
+                sorted_index = sorted(df_race.index, reverse=True) 
+                ax.barh(sorted_index, df_race.loc[sorted_index, _t('current_stats_race_total', lang)])
+                ax.set_xlim(0, max_axis_day) 
+                ax.set_title(f"{_t('current_stats_race_day', lang)}: {day}")
+                plt.tight_layout() 
+                
+                with chart_placeholder.container():
+                    st.pyplot(fig)
+                plt.close(fig) 
+                time.sleep(0.1)
     else:
-        # Tryb Ręczny (lub domyślny)
-        day_to_show = race_day_slider if mode == _t('current_stats_race_mode_manual', lang) else max_day_reported
+        # Tryb Ręczny (domyślny)
+        race_day_slider = st.slider(
+            _t('current_stats_race_day', lang), 
+            1, max_day_reported, max_day_reported
+        )
         
-        scores = {p: 0 for p in CURRENT_PARTICIPANTS} 
-        for day in range(1, day_to_show + 1):
-            for p in CURRENT_PARTICIPANTS:
-                if p in current_data and day in current_data.get(p, {}) and current_data[p][day]["status"] == "Zaliczone":
-                    scores[p] = day 
-        
-        df_race = pd.DataFrame.from_dict(
-            scores, orient='index', columns=[_t('current_stats_race_total', lang)]
-        ).reindex(CURRENT_PARTICIPANTS)
+        df_race = get_race_data_for_day(current_data, race_day_slider, lang)
         
         fig, ax = plt.subplots(figsize=(10, 6))
         sorted_index = sorted(df_race.index, reverse=True) 
         ax.barh(sorted_index, df_race.loc[sorted_index, _t('current_stats_race_total', lang)])
         ax.set_xlim(0, max_axis_day) 
-        ax.set_title(f"{_t('current_stats_race_day', lang)}: {day_to_show}")
+        ax.set_title(f"{_t('current_stats_race_day', lang)}: {race_day_slider}")
         plt.tight_layout() 
         
         with chart_placeholder.container():
