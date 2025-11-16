@@ -19,7 +19,8 @@ from streamlit_extras.mention import mention # Do podziękowań
 st.set_page_config(
     layout="wide", 
     page_title="Analiza i Zarządzanie Poprzeczką", 
-    page_icon="https://raw.githubusercontent.com/twoja-nazwa/poprzeczka-app/main/logo.png" # <--- ZMIEŃ "twoja-nazwa" i "logo.png"
+    # Wklej tutaj swój "surowy" link do logo z GitHuba
+    page_icon="https://raw.githubusercontent.com/TWOJA_NAZWA/poprzeczka-app/main/logo.png" 
 )
 # UWAGA: Powyżej w 'page_icon' musisz wkleić swój "surowy" link do logo na GitHubie!
 
@@ -709,7 +710,6 @@ def calculate_ranking(data, max_day_reported, lang):
 
     ranking_data.sort(key=sort_key)
     
-    # <<< POPRAWKA 1 (Ranking turniejowy) >>>
     last_sort_key = None
     rank_col_name = _t('ranking_col_rank', lang)
     for i, entry in enumerate(ranking_data):
@@ -719,9 +719,9 @@ def calculate_ranking(data, max_day_reported, lang):
         )
         
         if i > 0 and current_sort_key == last_sort_key:
-            entry[rank_col_name] = ranking_data[i-1][rank_col_name] # Taki sam rank
+            entry[rank_col_name] = ranking_data[i-1][rank_col_name] 
         else:
-            entry[rank_col_name] = i + 1 # Nowy rank
+            entry[rank_col_name] = i + 1 
         
         last_sort_key = current_sort_key
     
@@ -730,7 +730,7 @@ def calculate_ranking(data, max_day_reported, lang):
     df_ranking[rank_col_name] = df_ranking[rank_col_name].astype(int)
     
     return df_ranking[[
-        rank_col_name, # Dodano kolumnę 'Miejsce'
+        rank_col_name, 
         _t('ranking_col_participant', lang), 
         _t('ranking_col_highest_pass', lang), 
         _t('ranking_col_status', lang), 
@@ -768,7 +768,6 @@ def calculate_current_stats(data, max_day, lang):
     
     return df_top_streaks[df_top_streaks["Seria"] > 0] 
 
-# <<< NOWA FUNKCJA (POPRAWIONA LOGIKA) >>>
 def find_last_complete_stage(data, elimination_map, max_day):
     """
     Znajduje ostatni dzień, dla którego wszyscy aktywni uczestnicy mają dane
@@ -833,7 +832,7 @@ def show_current_edition_dashboard(lang):
     try:
         ranking_df, elimination_map = calculate_ranking(current_data, max_day_reported, lang)
         st.markdown(_t('current_ranking_rules', lang, max_day_reported))
-        st.dataframe(ranking_df, use_container_width=True, hide_index=True) # <<< POPRAWKA: Ukryto indeks
+        st.dataframe(ranking_df, use_container_width=True, hide_index=True)
     except Exception as e:
         st.error(_t('current_ranking_error', lang, e))
         elimination_map = {} 
@@ -858,7 +857,7 @@ def show_current_edition_dashboard(lang):
         
         try:
             official_ranking_df, _ = calculate_ranking(current_data, selected_stage, lang)
-            st.dataframe(official_ranking_df, use_container_width=True, hide_index=True) # <<< POPRAWKA: Ukryto indeks
+            st.dataframe(official_ranking_df, use_container_width=True, hide_index=True)
         except Exception as e:
             st.error(_t('current_ranking_error', lang, e))
     else:
@@ -952,36 +951,35 @@ def show_current_edition_dashboard(lang):
     
     if st.button(_t('current_stats_race_button', lang)):
         # <<< POPRAWKA 3 (Logika Wykresu): Użyj Matplotlib dla statycznej osi >>>
-        plt.style.use('dark_background') # Ustaw styl dla wykresu
+        plt.style.use('dark_background') 
         chart_placeholder = st.empty()
         scores = {p: 0 for p in CURRENT_PARTICIPANTS} 
         
-        # Znajdź maksymalny możliwy dzień (np. 31) lub max_day_reported
         max_axis_day = max(31, max_day_reported)
         
         for day in range(1, max_day_reported + 1):
             
             for p in CURRENT_PARTICIPANTS:
-                if p in current_data and day in current_data[p] and current_data[p]["status"] == "Zaliczone":
+                if p in current_data and day in current_data[p] and current_data[p][day]["status"] == "Zaliczone":
                     scores[p] = day 
             
             df_race = pd.DataFrame.from_dict(
                 scores, 
                 orient='index', 
                 columns=[_t('current_stats_race_total', lang)]
-            ).sort_values(by=_t('current_stats_race_total', lang), ascending=True) # Sortuj ROSNĄCO dla barh
+            ).sort_values(by=_t('current_stats_race_total', lang), ascending=True) 
             
             # Stwórz wykres Matplotlib
-            fig, ax = plt.subplots()
+            fig, ax = plt.subplots(figsize=(10, 6)) # Ustaw rozmiar
             ax.barh(df_race.index, df_race[_t('current_stats_race_total', lang)])
             ax.set_xlim(0, max_axis_day) # STATYCZNA OŚ X
             ax.set_title(f"{_t('current_stats_race_day', lang)}: {day}")
-            # ax.invert_yaxis() # Nie potrzeba przy sortowaniu ascending
+            plt.tight_layout() # Dopasuj
             
             with chart_placeholder.container():
                 st.pyplot(fig)
             
-            plt.close(fig) # Zwolnij pamięć
+            plt.close(fig) 
             time.sleep(0.1) # Płynniejsza animacja
 
 
