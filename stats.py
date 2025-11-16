@@ -37,7 +37,7 @@ translations = {
         'nav_current_ranking': "📊 Ranking Bieżącej Edycji",
         'nav_submission_form': "📋 Formularz Wprowadzania Danych",
         'nav_historical_stats': "📈 Statystyki Historyczne",
-        'form_header': "Formularz wprowadzania danych", # <<< POPRAWKA 3
+        'form_header': "Formularz wprowadzania danych",
         'form_info': "Wprowadź dane za konkretny etap (dzień) rywalizacji.",
         'form_submitter_label': "Twoja nazwa (Kto wprowadza dane?)",
         'form_submitter_placeholder': "Wybierz, kto wprowadza dane...",
@@ -56,7 +56,7 @@ translations = {
         'form_upload_label': "Zrzut ekranu (opcjonalnie) - na razie tylko informacyjnie",
         'form_thanks_note': "> W miarę możliwości będę nagradzał za pomoc we współtworzeniu rozgrywki. Z góry dziękuję za pomoc!",
         'form_submit_button': "Zapisz dane",
-        'form_ranking_info': 'Bieżące klasyfikacje możesz już teraz sprawdzić w dziale "Ranking Bieżącej Edycji"', # <<< POPRAWKA 5
+        'form_ranking_info': 'Bieżące klasyfikacje możesz już teraz sprawdzić w dziale "Ranking Bieżącej Edycji"',
         'form_success_message': "Pomyślnie zapisano: **{0}** - Dzień {1} - Status: **{2}**",
         'form_error_message': "Wystąpił błąd podczas zapisu danych: {0}",
         'form_error_no_participant': "Błąd: Musisz wybrać uczestnika i wprowadzającego.",
@@ -69,13 +69,17 @@ translations = {
         'form_overwrite_info': "W razie pomyłki, po prostu wprowadź dane dla tego samego uczestnika i dnia jeszcze raz. Nowy wpis nadpisze stary w rankingu.",
         'current_header': "📊 Ranking i Status Bieżącej Edycji",
         'current_no_data': "Brak danych dla bieżącej edycji. Wprowadź pierwsze dane za pomocą formularza.",
-        'current_ranking_header': "Aktualna Klasyfikacja",
+        'current_ranking_header': "Aktualna Klasyfikacja (Na Żywo)",
         'current_ranking_rules': """
         Klasyfikacja jest liczona na żywo zgodnie z zasadami:
         1.  Sortowanie po **najwyższym zaliczonym etapie** (malejąco).
         2.  Przy remisie, sortowanie odbywa się przez porównanie wyników etap po etapie (zaczynając od góry). Pierwsza różnica decyduje - osoba z 'Niezaliczonym' etapem przegrywa.
         3.  Odpadnięcie następuje po **3 kolejnych** niepowodzeniach (Niezaliczone / Brak raportu) *biorąc pod uwagę tylko zaraportowane dni*.
         """,
+        # <<< NOWA SEKCJA (Klasyfikacja Oficjalna) >>>
+        'current_official_ranking_header': "Oficjalna Klasyfikacja (ostatni kompletny etap)",
+        'current_official_ranking_desc': "Poniższa klasyfikacja jest oparta o **Etap {0}**, czyli ostatni dzień, dla którego wszyscy aktywni uczestnicy wprowadzili swoje dane. Ranking 'na żywo' powyżej może być niekompletny z powodu braku danych.",
+        'current_official_ranking_none': "Nie znaleziono jeszcze żadnego w pełni kompletnego etapu (np. brakuje danych za Etap 1 od wszystkich).",
         'current_ranking_error': "Wystąpił błąd podczas obliczania rankingu: {0}",
         'current_header_check_error': "BŁĄD KONFIGURACJI: Sprawdź nagłówki w Arkuszu Google!",
         'current_header_check_details': "Aplikacja nie może odczytać danych, ponieważ nagłówki w zakładce '{0}' są nieprawidłowe.",
@@ -95,10 +99,9 @@ translations = {
         'current_log_empty': "Log wpisów jest pusty.",
         'current_stats_header': "🏆 Statystyki Bieżącej Edycji",
         'current_stats_top_submitters': "Najwięksi Pomocnicy (dzięki!)",
-        # <<< POPRAWKA 1 (Zmiana tekstu) >>>
         'current_stats_top_submitters_desc': "Osoby, które najczęściej wprowadzały dane do systemu. Postaram się nagrodzić Was jakimiś tokenami.",
-        'current_stats_streaks': "Najdłuższe Serie Zaliczeń", # <<< POPRAWKA 2 (Zmiana nazwy)
-        'current_stats_streaks_desc': "Uczestnicy z najdłuższą nieprzerwaną serią zaliczonych etapów (w dowolnym momencie edycji).", # <<< POPRAWKA 2 (Zmiana opisu)
+        'current_stats_streaks': "Najdłuższe Serie Zaliczeń", 
+        'current_stats_streaks_desc': "Uczestnicy z najdłuższą nieprzerwaną serią zaliczonych etapów (w dowolnym momencie edycji).", 
         'current_stats_streaks_days': "dni",
         'current_stats_race_header': "🏁 Wyścig Zaliczeń (Liczba Zwycięstw Etapowych)",
         'current_stats_race_desc': "Animacja pokazująca łączną liczbę zaliczonych etapów, dzień po dniu.",
@@ -216,7 +219,7 @@ translations = {
         'nav_current_ranking': "📊 Current Edition Ranking",
         'nav_submission_form': "📋 Data Entry Form",
         'nav_historical_stats': "📈 Historical Stats",
-        'form_header': "Data Entry Form", # <<< CHANGED
+        'form_header': "Data Entry Form",
         'form_info': "Enter data for a specific stage (day) of the competition.",
         'form_submitter_label': "Your Name (Who is entering the data?)",
         'form_submitter_placeholder': "Select submitter...",
@@ -235,7 +238,7 @@ translations = {
         'form_upload_label': "Screenshot (optional) - for info only",
         'form_thanks_note': "> Where possible, I will reward assistance in co-creating the game. Thank you in advance for your help!",
         'form_submit_button': "Save Data",
-        'form_ranking_info': 'You can check the current standings right now in the "Current Edition Ranking" section', # <<< NEW
+        'form_ranking_info': 'You can check the current standings right now in the "Current Edition Ranking" section',
         'form_success_message': "Successfully saved: **{0}** - Day {1} - Status: **{2}**",
         'form_error_message': "An error occurred while saving data: {0}",
         'form_error_no_participant': "Error: You must select a submitter and a participant.",
@@ -248,13 +251,17 @@ translations = {
         'form_overwrite_info': "If you make a mistake, just re-enter the data for the same participant and day. The new entry will overwrite the old one in the ranking.",
         'current_header': "📊 Current Edition Ranking & Status",
         'current_no_data': "No data for the current edition. Please enter the first data using the form.",
-        'current_ranking_header': "Current Standings",
+        'current_ranking_header': "Current Standings (Live)",
         'current_ranking_rules': """
         Standings are calculated live according to the rules:
         1.  Sorted by the **highest completed stage** (descending).
         2.  On a tie, sorted by comparing stage results top-down. The first difference decides - the participant with a 'Failed' stage loses.
         3.  Elimination occurs after **3 consecutive failures** (Failed / No Report) *based on reported days only*.
         """,
+        # <<< NOWA SEKCJA (Klasyfikacja Oficjalna) >>>
+        'current_official_ranking_header': "Official Standings (Last Complete Stage)",
+        'current_official_ranking_desc': "The following standings are based on **Stage {0}**, the last day for which all active participants submitted their data. The 'Live' ranking above may be incomplete due to missing data.",
+        'current_official_ranking_none': "No fully complete stage has been found yet (e.g., data for Stage 1 is missing).",
         'current_ranking_error': "An error occurred while calculating the ranking: {0}",
         'current_header_check_error': "CONFIG ERROR: Check Google Sheet Headers!",
         'current_header_check_details': "The app cannot read data because the headers in the '{0}' worksheet are incorrect.",
@@ -275,8 +282,8 @@ translations = {
         'current_stats_header': "🏆 Current Edition Stats",
         'current_stats_top_submitters': "Top Helpers (Thank You!)",
         'current_stats_top_submitters_desc': "The people who submitted data most often. I will try to reward you with some tokens.",
-        'current_stats_streaks': "Longest Pass Streaks", # <<< CHANGED
-        'current_stats_streaks_desc': "Participants with the longest unbroken streak of passed stages (at any point in the edition).", # <<< CHANGED
+        'current_stats_streaks': "Longest Pass Streaks",
+        'current_stats_streaks_desc': "Participants with the longest unbroken streak of passed stages (at any point in the edition).",
         'current_stats_streaks_days': "days",
         'current_stats_race_header': "🏁 Pass Race (Total Stage Wins)",
         'current_stats_race_desc': "Animation showing the cumulative number of passed stages, day by day.",
@@ -434,10 +441,9 @@ def load_google_sheet_data(_sheet, worksheet_name):
     try:
         worksheet = _sheet.worksheet(worksheet_name) 
         records = worksheet.get_all_records() 
-        if not records: # Jeśli arkusz jest pusty
+        if not records:
             return pd.DataFrame()
         
-        # Użyj pierwszego wiersza jako nagłówka
         headers = records[0]
         data = records[1:]
         return pd.DataFrame(data, columns=headers)
@@ -579,8 +585,7 @@ def show_submission_form(lang):
                     st.error(_t('form_error_message', lang, "Nie można połączyć się z arkuszem."))
             except Exception as e:
                 st.error(_t('form_error_message', lang, e))
-        
-        # POPRAWKA 4: Przeniesiono rerun() na sam koniec, aby stan sesji się zapisał
+            
         st.rerun()
 
 # === Sekcja 2: Ranking Bieżącej Edycji ===
@@ -603,9 +608,8 @@ def process_raw_data(df_raw, lang, expected_cols, worksheet_name):
         })
         return {}, 0, False 
         
-    # Dalsze przetwarzanie wymaga 'Day' i 'Timestamp'
     if 'Day' not in df_raw.columns or 'Timestamp' not in df_raw.columns:
-        return {}, 0, False # Błąd już został zgłoszony
+        return {}, 0, False 
         
     df_raw['Day'] = pd.to_numeric(df_raw['Day'], errors='coerce')
     df_raw = df_raw.dropna(subset=['Day'])
@@ -671,7 +675,6 @@ def calculate_ranking(data, max_day_reported, lang):
             start_day = max(p_highest, max_day_reported) if not eliminated_on_day else p_highest
             if eliminated_on_day:
                 start_day = eliminated_on_day
-            # 0 = Zaliczone, 1 = Niezaliczone
             return tuple(1 if d in p_failures else 0 for d in range(start_day, 0, -1))
 
         ranking_data.append({
@@ -704,6 +707,7 @@ def calculate_ranking(data, max_day_reported, lang):
 
 # <<< POPRAWKA 2 (Logika serii): Całkowicie nowa funkcja >>>
 def calculate_current_stats(data, max_day, lang):
+    """Oblicza najdłuższe serie zaliczeń (niekoniecznie aktywne)."""
     streaks = []
     for participant in CURRENT_PARTICIPANTS:
         days_data = data.get(participant, {})
@@ -716,24 +720,46 @@ def calculate_current_stats(data, max_day, lang):
             else:
                 max_streak = max(max_streak, current_streak)
                 current_streak = 0
-        max_streak = max(max_streak, current_streak) # Ostatnie sprawdzenie
+        max_streak = max(max_streak, current_streak) 
         
         streaks.append({"Uczestnik": participant, "Seria": max_streak})
 
     df_streaks = pd.DataFrame(streaks).sort_values(by="Seria", ascending=False)
     
-    # Znajdź 3 najlepsze wyniki serii (lub więcej, jeśli są remisy na 3. miejscu)
-    if df_streaks.empty:
-        return df_streaks
+    if df_streaks.empty or df_streaks["Seria"].max() == 0:
+        return pd.DataFrame(columns=["Uczestnik", "Seria"]) 
         
     top_streaks_values = df_streaks["Seria"].unique()
-    top_3_values = top_streaks_values[:3] # Weź pierwsze 3 unikalne wyniki
+    # Znajdź 3 najlepsze unikalne wartości serii
+    top_3_values = sorted(top_streaks_values, reverse=True)[:3]
     
-    # Filtruj, aby pokazać wszystkich, którzy mają jeden z 3 najlepszych wyników
     df_top_streaks = df_streaks[df_streaks["Seria"].isin(top_3_values)]
     
-    return df_top_streaks[df_top_streaks["Seria"] > 0] # Pokaż tylko serie > 0
+    return df_top_streaks[df_top_streaks["Seria"] > 0] 
 
+# <<< NOWA FUNKCJA: Znajdowanie ostatniego kompletnego etapu >>>
+def find_last_complete_stage(data, elimination_map, max_day):
+    """Znajduje ostatni dzień, dla którego wszyscy aktywni uczestnicy mają dane."""
+    for day in range(max_day, 0, -1): # Idź od tyłu
+        active_participants_on_this_day = []
+        for p in CURRENT_PARTICIPANTS:
+            elim_day = elimination_map.get(p)
+            # Jest aktywny, jeśli nie odpadł LUB odpadł PO tym dniu
+            if elim_day is None or elim_day > day:
+                active_participants_on_this_day.append(p)
+        
+        is_complete = True
+        if not active_participants_on_this_day: # Jeśli nikogo nie ma w grze
+            is_complete = False
+            
+        for p in active_participants_on_this_day:
+            if p not in data or day not in data[p]:
+                is_complete = False # Ktoś aktywny nie ma wpisu
+                break
+        
+        if is_complete:
+            return day # Znaleziono!
+    return None # Nie ma żadnego kompletnego dnia
 
 def show_current_edition_dashboard(lang):
     """Wyświetla dashboard dla bieżącej edycji."""
@@ -743,7 +769,6 @@ def show_current_edition_dashboard(lang):
     if not sheet:
         return 
 
-    # Wczytaj oba arkusze
     df_raw_data = load_google_sheet_data(sheet, "BiezacaEdycja")
     df_raw_logs = load_google_sheet_data(sheet, "LogWpisow")
     
@@ -751,12 +776,12 @@ def show_current_edition_dashboard(lang):
         st.info(_t('current_no_data', lang))
         return
 
-    # Sprawdź nagłówki i przetwórz dane BiezacaEdycja
     expected_data_cols = ['Participant', 'Day', 'Status', 'Timestamp', 'Notes']
     current_data, max_day_reported, success_data = process_raw_data(df_raw_data, lang, expected_data_cols, "BiezacaEdycja")
     if not success_data:
-        return # Błąd został już wyświetlony
+        return
 
+    # --- Klasyfikacja "Na Żywo" ---
     st.subheader(_t('current_ranking_header', lang))
     st.markdown(_t('current_ranking_rules', lang))
     
@@ -766,8 +791,29 @@ def show_current_edition_dashboard(lang):
     except Exception as e:
         st.error(_t('current_ranking_error', lang, e))
         elimination_map = {} 
+        
+    st.markdown("---")
 
+    # --- NOWA SEKCJA: Klasyfikacja "Oficjalna" ---
+    st.subheader(_t('current_official_ranking_header', lang))
     
+    # 1. Znajdź ostatni kompletny dzień
+    last_complete_day = find_last_complete_stage(current_data, elimination_map, max_day_reported)
+    
+    if last_complete_day:
+        st.info(_t('current_official_ranking_desc', lang, last_complete_day))
+        # 2. Oblicz ranking tylko do tego dnia
+        try:
+            official_ranking_df, _ = calculate_ranking(current_data, last_complete_day, lang)
+            st.dataframe(official_ranking_df, use_container_width=True)
+        except Exception as e:
+            st.error(_t('current_ranking_error', lang, e))
+    else:
+        st.info(_t('current_official_ranking_none', lang))
+    
+    st.markdown("---")
+    
+    # --- Kompletność Danych ---
     days_to_show_count = 15
     st.subheader(_t('current_completeness_header', lang, days_to_show_count))
     
@@ -809,7 +855,7 @@ def show_current_edition_dashboard(lang):
     
     st.dataframe(completeness_pivot, use_container_width=True)
 
-    # --- NOWA SEKCJA: Statystyki Bieżącej Edycji ---
+    # --- Statystyki Bieżącej Edycji ---
     st.subheader(_t('current_stats_header', lang))
     col1, col2 = st.columns(2)
 
@@ -817,7 +863,6 @@ def show_current_edition_dashboard(lang):
         st.markdown(f"**{_t('current_stats_top_submitters', lang)}**")
         st.caption(_t('current_stats_top_submitters_desc', lang))
         
-        # POPRAWKA 1 (KeyError): Sprawdź nagłówki LogWpisow
         expected_log_cols = ['Submitter', 'Participant', 'Day', 'Status_Reported', 'Timestamp']
         if df_raw_logs.empty:
             st.info(_t('current_log_empty', lang))
@@ -830,23 +875,22 @@ def show_current_edition_dashboard(lang):
             })
         else:
             top_submitters = df_raw_logs['Submitter'].value_counts().nlargest(3)
+            if top_submitters.empty:
+                 st.info(_t('current_log_empty', lang))
             for name, count in top_submitters.items():
-                # POPRAWKA 3 (Błąd 'mention'): Dodano url=None
                 mention(label=f"**{name}** ({count} wpisów)", icon="🏆", url=None)
 
     with col2:
         st.markdown(f"**{_t('current_stats_streaks', lang)}**")
         st.caption(_t('current_stats_streaks_desc', lang))
         
-        # POPRAWKA 2 (Logika serii): Użyj nowej funkcji
         df_streaks = calculate_current_stats(current_data, max_day_reported, lang)
         
         if not df_streaks.empty:
             for _, row in df_streaks.iterrows():
-                # POPRAWKA 3 (Błąd 'mention'): Dodano url=None
                 mention(label=f"**{row['Uczestnik']}** ({row['Seria']} {_t('current_stats_streaks_days', lang)})", icon="🔥", url=None)
         else:
-            st.info("Brak aktywnych serii.")
+            st.info("Brak znaczących serii.")
             
     st.markdown("---")
 
@@ -1662,6 +1706,7 @@ def main():
         st.session_state.submitter_index_plus_one = 0 
     if 'last_day_entered' not in st.session_state:
         st.session_state.last_day_entered = 1
+    # 'last_submission' jest sprawdzany, czy istnieje
     
     app_section = st.sidebar.radio(
         _t('nav_header', lang),
