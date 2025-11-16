@@ -37,7 +37,7 @@ translations = {
         'nav_current_ranking': "📊 Ranking Bieżącej Edycji",
         'nav_submission_form': "📋 Formularz Wprowadzania Danych",
         'nav_historical_stats': "📈 Statystyki Historyczne",
-        'form_header': "Formularz zgłoszeniowy Poprzeczki",
+        'form_header': "Formularz wprowadzania danych", # <<< POPRAWKA 3
         'form_info': "Wprowadź dane za konkretny etap (dzień) rywalizacji.",
         'form_submitter_label': "Twoja nazwa (Kto wprowadza dane?)",
         'form_submitter_placeholder': "Wybierz, kto wprowadza dane...",
@@ -56,6 +56,7 @@ translations = {
         'form_upload_label': "Zrzut ekranu (opcjonalnie) - na razie tylko informacyjnie",
         'form_thanks_note': "> W miarę możliwości będę nagradzał za pomoc we współtworzeniu rozgrywki. Z góry dziękuję za pomoc!",
         'form_submit_button': "Zapisz dane",
+        'form_ranking_info': 'Bieżące klasyfikacje możesz już teraz sprawdzić w dziale "Ranking Bieżącej Edycji"', # <<< POPRAWKA 5
         'form_success_message': "Pomyślnie zapisano: **{0}** - Dzień {1} - Status: **{2}**",
         'form_error_message': "Wystąpił błąd podczas zapisu danych: {0}",
         'form_error_no_participant': "Błąd: Musisz wybrać uczestnika i wprowadzającego.",
@@ -77,7 +78,7 @@ translations = {
         """,
         'current_ranking_error': "Wystąpił błąd podczas obliczania rankingu: {0}",
         'current_header_check_error': "BŁĄD KONFIGURACJI: Sprawdź nagłówki w Arkuszu Google!",
-        'current_header_check_details': "Aplikacja nie może odczytać danych, ponieważ nagłówki w zakładce 'BiezacaEdycja' są nieprawidłowe.",
+        'current_header_check_details': "Aplikacja nie może odczytać danych, ponieważ nagłówki w zakładce '{0}' są nieprawidłowe.",
         'current_header_check_expected': "Oczekiwane nagłówki",
         'current_header_check_found': "Znalezione nagłówki",
         'ranking_col_participant': "Uczestnik",
@@ -94,10 +95,10 @@ translations = {
         'current_log_empty': "Log wpisów jest pusty.",
         'current_stats_header': "🏆 Statystyki Bieżącej Edycji",
         'current_stats_top_submitters': "Najwięksi Pomocnicy (dzięki!)",
-        # <<< POPRAWKA 3 (Zmiana tekstu) >>>
+        # <<< POPRAWKA 1 (Zmiana tekstu) >>>
         'current_stats_top_submitters_desc': "Osoby, które najczęściej wprowadzały dane do systemu. Postaram się nagrodzić Was jakimiś tokenami.",
-        'current_stats_streaks': "Najdłuższe Aktywne Serie Zaliczeń",
-        'current_stats_streaks_desc': "Uczestnicy z najdłuższą nieprzerwaną serią zaliczonych etapów (do ostatniego zaraportowanego dnia).",
+        'current_stats_streaks': "Najdłuższe Serie Zaliczeń", # <<< POPRAWKA 2 (Zmiana nazwy)
+        'current_stats_streaks_desc': "Uczestnicy z najdłuższą nieprzerwaną serią zaliczonych etapów (w dowolnym momencie edycji).", # <<< POPRAWKA 2 (Zmiana opisu)
         'current_stats_streaks_days': "dni",
         'current_stats_race_header': "🏁 Wyścig Zaliczeń (Liczba Zwycięstw Etapowych)",
         'current_stats_race_desc': "Animacja pokazująca łączną liczbę zaliczonych etapów, dzień po dniu.",
@@ -215,7 +216,7 @@ translations = {
         'nav_current_ranking': "📊 Current Edition Ranking",
         'nav_submission_form': "📋 Data Entry Form",
         'nav_historical_stats': "📈 Historical Stats",
-        'form_header': "Step Challenge Submission Form",
+        'form_header': "Data Entry Form", # <<< CHANGED
         'form_info': "Enter data for a specific stage (day) of the competition.",
         'form_submitter_label': "Your Name (Who is entering the data?)",
         'form_submitter_placeholder': "Select submitter...",
@@ -234,6 +235,7 @@ translations = {
         'form_upload_label': "Screenshot (optional) - for info only",
         'form_thanks_note': "> Where possible, I will reward assistance in co-creating the game. Thank you in advance for your help!",
         'form_submit_button': "Save Data",
+        'form_ranking_info': 'You can check the current standings right now in the "Current Edition Ranking" section', # <<< NEW
         'form_success_message': "Successfully saved: **{0}** - Day {1} - Status: **{2}**",
         'form_error_message': "An error occurred while saving data: {0}",
         'form_error_no_participant': "Error: You must select a submitter and a participant.",
@@ -255,7 +257,7 @@ translations = {
         """,
         'current_ranking_error': "An error occurred while calculating the ranking: {0}",
         'current_header_check_error': "CONFIG ERROR: Check Google Sheet Headers!",
-        'current_header_check_details': "The app cannot read data because the headers in the 'BiezacaEdycja' worksheet are incorrect.",
+        'current_header_check_details': "The app cannot read data because the headers in the '{0}' worksheet are incorrect.",
         'current_header_check_expected': "Expected Headers",
         'current_header_check_found': "Found Headers",
         'ranking_col_participant': "Participant",
@@ -273,8 +275,8 @@ translations = {
         'current_stats_header': "🏆 Current Edition Stats",
         'current_stats_top_submitters': "Top Helpers (Thank You!)",
         'current_stats_top_submitters_desc': "The people who submitted data most often. I will try to reward you with some tokens.",
-        'current_stats_streaks': "Longest Active Pass Streaks",
-        'current_stats_streaks_desc': "Participants with the longest unbroken streak of passed stages (up to the last reported day).",
+        'current_stats_streaks': "Longest Pass Streaks", # <<< CHANGED
+        'current_stats_streaks_desc': "Participants with the longest unbroken streak of passed stages (at any point in the edition).", # <<< CHANGED
         'current_stats_streaks_days': "days",
         'current_stats_race_header': "🏁 Pass Race (Total Stage Wins)",
         'current_stats_race_desc': "Animation showing the cumulative number of passed stages, day by day.",
@@ -432,7 +434,13 @@ def load_google_sheet_data(_sheet, worksheet_name):
     try:
         worksheet = _sheet.worksheet(worksheet_name) 
         records = worksheet.get_all_records() 
-        return pd.DataFrame(records)
+        if not records: # Jeśli arkusz jest pusty
+            return pd.DataFrame()
+        
+        # Użyj pierwszego wiersza jako nagłówka
+        headers = records[0]
+        data = records[1:]
+        return pd.DataFrame(data, columns=headers)
     except gspread.exceptions.WorksheetNotFound:
         st.error(f"Błąd: Nie znaleziono zakładki o nazwie '{worksheet_name}' w Arkuszu Google.")
         return pd.DataFrame()
@@ -449,6 +457,7 @@ def show_submission_form(lang):
     users_list = sorted(CURRENT_PARTICIPANTS)
     submitters_list_sorted = sorted(SUBMITTER_LIST)
     
+    # POPRAWKA 4 (Okienko potwierdzenia): Wyświetl, jeśli jest w sesji
     if 'last_submission' in st.session_state and st.session_state.last_submission:
         details = st.session_state.last_submission
         st.success(_t('form_success_message', lang, details['participant'], details['day'], details['status_translated']))
@@ -503,6 +512,9 @@ def show_submission_form(lang):
             st.caption(_t('form_status_info', lang))
         
         submitted = st.form_submit_button(_t('form_submit_button', lang))
+        # POPRAWKA 5 (Info o rankingu)
+        st.caption(_t('form_ranking_info', lang))
+
 
         with st.expander(_t('form_converters_expander', lang)):
             st.warning(_t('form_converters_warning', lang))
@@ -532,48 +544,48 @@ def show_submission_form(lang):
     if submitted:
         if not submitter or not participant:
             st.error(_t('form_error_no_participant', lang))
-            st.rerun() 
+        else:
+            st.session_state.submitter_index_plus_one = ([None] + submitters_list_sorted).index(submitter)
+            st.session_state.last_day_entered = day + 1 if day < 31 else 31 
 
-        st.session_state.submitter_index_plus_one = ([None] + submitters_list_sorted).index(submitter)
-        st.session_state.last_day_entered = day + 1 if day < 31 else 31 
-
-        status_key = "Zaliczone"
-        if status == _t('form_status_fail', lang):
-            status_key = "Niezaliczone"
-        elif status == _t('form_status_no_report', lang):
-            status_key = "Brak raportu"
-        
-        file_info = f"Załączono plik: {uploaded_file.name}" if uploaded_file else ""
-        full_notes = f"{notes} | {file_info}".strip(" | ")
-        timestamp = datetime.now().isoformat()
-
-        try:
-            sheet = connect_to_google_sheets()
-            if sheet:
-                worksheet_data = sheet.worksheet("BiezacaEdycja")
-                worksheet_data.append_row([participant, day, status_key, full_notes, timestamp])
-                
-                worksheet_log = sheet.worksheet("LogWpisow")
-                worksheet_log.append_row([submitter, participant, day, status_key, timestamp])
-                
-                st.session_state.last_submission = {
-                    'participant': participant,
-                    'day': day,
-                    'status_translated': status,
-                    'full_notes': full_notes
-                }
-                
-                st.cache_data.clear() 
-            else:
-                st.error(_t('form_error_message', lang, "Nie można połączyć się z arkuszem."))
-        except Exception as e:
-            st.error(_t('form_error_message', lang, e))
+            status_key = "Zaliczone"
+            if status == _t('form_status_fail', lang):
+                status_key = "Niezaliczone"
+            elif status == _t('form_status_no_report', lang):
+                status_key = "Brak raportu"
             
+            file_info = f"Załączono plik: {uploaded_file.name}" if uploaded_file else ""
+            full_notes = f"{notes} | {file_info}".strip(" | ")
+            timestamp = datetime.now().isoformat()
+
+            try:
+                sheet = connect_to_google_sheets()
+                if sheet:
+                    worksheet_data = sheet.worksheet("BiezacaEdycja")
+                    worksheet_data.append_row([participant, day, status_key, full_notes, timestamp])
+                    
+                    worksheet_log = sheet.worksheet("LogWpisow")
+                    worksheet_log.append_row([submitter, participant, day, status_key, timestamp])
+                    
+                    st.session_state.last_submission = {
+                        'participant': participant,
+                        'day': day,
+                        'status_translated': status,
+                        'full_notes': full_notes
+                    }
+                    
+                    st.cache_data.clear() 
+                else:
+                    st.error(_t('form_error_message', lang, "Nie można połączyć się z arkuszem."))
+            except Exception as e:
+                st.error(_t('form_error_message', lang, e))
+        
+        # POPRAWKA 4: Przeniesiono rerun() na sam koniec, aby stan sesji się zapisał
         st.rerun()
 
 # === Sekcja 2: Ranking Bieżącej Edycji ===
 
-def process_raw_data(df_raw, lang):
+def process_raw_data(df_raw, lang, expected_cols, worksheet_name):
     """
     Przetwarza surowe dane (append-only) z Google Sheets w strukturę "najnowszy wpis wygrywa".
     Zwraca słownik: {participant: {day: status}} oraz max_day
@@ -581,14 +593,19 @@ def process_raw_data(df_raw, lang):
     if df_raw.empty:
         return {}, 0, True 
         
-    REQUIRED_COLS = ['Participant', 'Day', 'Status', 'Timestamp', 'Notes']
-    if not all(col in df_raw.columns for col in REQUIRED_COLS):
+    # POPRAWKA 1 (KeyError): Sprawdź nagłówki
+    if not all(col in df_raw.columns for col in expected_cols):
         st.error(_t('current_header_check_error', lang))
         st.json({
-            _t('current_header_check_expected', lang): REQUIRED_COLS,
+            _t('current_header_check_details', lang, worksheet_name): "",
+            _t('current_header_check_expected', lang): expected_cols,
             _t('current_header_check_found', lang): df_raw.columns.tolist()
         })
         return {}, 0, False 
+        
+    # Dalsze przetwarzanie wymaga 'Day' i 'Timestamp'
+    if 'Day' not in df_raw.columns or 'Timestamp' not in df_raw.columns:
+        return {}, 0, False # Błąd już został zgłoszony
         
     df_raw['Day'] = pd.to_numeric(df_raw['Day'], errors='coerce')
     df_raw = df_raw.dropna(subset=['Day'])
@@ -650,16 +667,11 @@ def calculate_ranking(data, max_day_reported, lang):
         highest_completed = max(completed_stages) if completed_stages else 0
         status_text = _t('ranking_status_eliminated', lang, eliminated_on_day) if eliminated_on_day else _t('ranking_status_active', lang)
         
-        # <<< POPRAWKA 1 (Logika Klasyfikacji): Nowy klucz sortowania (failure_tuple) >>>
         def get_failure_tuple(p_failures, p_highest):
-            # 0 = Zaliczone (lepiej), 1 = Niezaliczone (gorzej)
-            # Sprawdzamy od najwyższego zaliczonego dnia w dół
-            # Użyj max_day_reported, aby zapewnić, że gracze w grze są porównywani do tego samego punktu
             start_day = max(p_highest, max_day_reported) if not eliminated_on_day else p_highest
-            # Jeśli gracz odpadł, liczy się tylko jego historia do odpadnięcia
             if eliminated_on_day:
                 start_day = eliminated_on_day
-
+            # 0 = Zaliczone, 1 = Niezaliczone
             return tuple(1 if d in p_failures else 0 for d in range(start_day, 0, -1))
 
         ranking_data.append({
@@ -671,11 +683,10 @@ def calculate_ranking(data, max_day_reported, lang):
         })
         elimination_map[participant] = eliminated_on_day 
     
-    # <<< POPRAWKA 1 (Logika Klasyfikacji): Nowe sortowanie >>>
     def sort_key(entry):
         return (
-            -entry[_t('ranking_col_highest_pass', lang)], # 1. Najwyższy zaliczony (malejąco)
-            entry["sort_key_failure_tuple"]               # 2. Krotka porażek (rosnąco)
+            -entry[_t('ranking_col_highest_pass', lang)], 
+            entry["sort_key_failure_tuple"]               
         )
 
     ranking_data.sort(key=sort_key)
@@ -691,29 +702,37 @@ def calculate_ranking(data, max_day_reported, lang):
     ]], elimination_map
 
 
-# <<< POPRAWKA 2 (Błąd logiki serii): Przebudowana funkcja >>>
-def calculate_current_stats(data, max_day, lang, elimination_map):
+# <<< POPRAWKA 2 (Logika serii): Całkowicie nowa funkcja >>>
+def calculate_current_stats(data, max_day, lang):
     streaks = []
     for participant in CURRENT_PARTICIPANTS:
-        # Pomiń, jeśli uczestnik odpadł
-        if elimination_map.get(participant) is not None:
-            continue
-
         days_data = data.get(participant, {})
         current_streak = 0
+        max_streak = 0
         
-        # Licz wstecz od ostatniego zaraportowanego dnia
-        for day in range(max_day, 0, -1):
+        for day in range(1, max_day + 1):
             if day in days_data and days_data[day]["status"] == "Zaliczone":
                 current_streak += 1
             else:
-                # Seria przerwana (przez porażkę lub brak danych)
-                break 
+                max_streak = max(max_streak, current_streak)
+                current_streak = 0
+        max_streak = max(max_streak, current_streak) # Ostatnie sprawdzenie
         
-        streaks.append({"Uczestnik": participant, "Seria": current_streak})
+        streaks.append({"Uczestnik": participant, "Seria": max_streak})
 
     df_streaks = pd.DataFrame(streaks).sort_values(by="Seria", ascending=False)
-    return df_streaks[df_streaks["Seria"] > 0] # Pokaż tylko aktywne serie > 0
+    
+    # Znajdź 3 najlepsze wyniki serii (lub więcej, jeśli są remisy na 3. miejscu)
+    if df_streaks.empty:
+        return df_streaks
+        
+    top_streaks_values = df_streaks["Seria"].unique()
+    top_3_values = top_streaks_values[:3] # Weź pierwsze 3 unikalne wyniki
+    
+    # Filtruj, aby pokazać wszystkich, którzy mają jeden z 3 najlepszych wyników
+    df_top_streaks = df_streaks[df_streaks["Seria"].isin(top_3_values)]
+    
+    return df_top_streaks[df_top_streaks["Seria"] > 0] # Pokaż tylko serie > 0
 
 
 def show_current_edition_dashboard(lang):
@@ -724,6 +743,7 @@ def show_current_edition_dashboard(lang):
     if not sheet:
         return 
 
+    # Wczytaj oba arkusze
     df_raw_data = load_google_sheet_data(sheet, "BiezacaEdycja")
     df_raw_logs = load_google_sheet_data(sheet, "LogWpisow")
     
@@ -731,9 +751,11 @@ def show_current_edition_dashboard(lang):
         st.info(_t('current_no_data', lang))
         return
 
-    current_data, max_day_reported, success = process_raw_data(df_raw_data, lang)
-    if not success:
-        return
+    # Sprawdź nagłówki i przetwórz dane BiezacaEdycja
+    expected_data_cols = ['Participant', 'Day', 'Status', 'Timestamp', 'Notes']
+    current_data, max_day_reported, success_data = process_raw_data(df_raw_data, lang, expected_data_cols, "BiezacaEdycja")
+    if not success_data:
+        return # Błąd został już wyświetlony
 
     st.subheader(_t('current_ranking_header', lang))
     st.markdown(_t('current_ranking_rules', lang))
@@ -794,22 +816,34 @@ def show_current_edition_dashboard(lang):
     with col1:
         st.markdown(f"**{_t('current_stats_top_submitters', lang)}**")
         st.caption(_t('current_stats_top_submitters_desc', lang))
-        if not df_raw_logs.empty and 'Submitter' in df_raw_logs.columns:
+        
+        # POPRAWKA 1 (KeyError): Sprawdź nagłówki LogWpisow
+        expected_log_cols = ['Submitter', 'Participant', 'Day', 'Status_Reported', 'Timestamp']
+        if df_raw_logs.empty:
+            st.info(_t('current_log_empty', lang))
+        elif not all(col in df_raw_logs.columns for col in expected_log_cols):
+            st.error(_t('current_header_check_error', lang))
+            st.json({
+                _t('current_header_check_details', lang, "LogWpisow"): "",
+                _t('current_header_check_expected', lang): expected_log_cols,
+                _t('current_header_check_found', lang): df_raw_logs.columns.tolist()
+            })
+        else:
             top_submitters = df_raw_logs['Submitter'].value_counts().nlargest(3)
             for name, count in top_submitters.items():
-                # <<< POPRAWKA 3 (Błąd 'mention'): Dodano url=None >>>
+                # POPRAWKA 3 (Błąd 'mention'): Dodano url=None
                 mention(label=f"**{name}** ({count} wpisów)", icon="🏆", url=None)
-        else:
-            st.info("Brak danych w logach wpisów.")
 
     with col2:
         st.markdown(f"**{_t('current_stats_streaks', lang)}**")
         st.caption(_t('current_stats_streaks_desc', lang))
-        # <<< POPRAWKA 2: Przekazanie mapy eliminacji do funkcji >>>
-        df_streaks = calculate_current_stats(current_data, max_day_reported, lang, elimination_map)
+        
+        # POPRAWKA 2 (Logika serii): Użyj nowej funkcji
+        df_streaks = calculate_current_stats(current_data, max_day_reported, lang)
+        
         if not df_streaks.empty:
             for _, row in df_streaks.iterrows():
-                # <<< POPRAWKA 3 (Błąd 'mention'): Dodano url=None >>>
+                # POPRAWKA 3 (Błąd 'mention'): Dodano url=None
                 mention(label=f"**{row['Uczestnik']}** ({row['Seria']} {_t('current_stats_streaks_days', lang)})", icon="🔥", url=None)
         else:
             st.info("Brak aktywnych serii.")
@@ -843,7 +877,7 @@ def show_current_edition_dashboard(lang):
 
 
     if st.checkbox(_t('current_log_expander', lang)):
-        if not df_raw_logs.empty:
+        if not df_raw_logs.empty and all(col in df_raw_logs.columns for col in expected_log_cols):
             df_log_sorted = df_raw_logs.sort_values("Timestamp", ascending=False)
             st.dataframe(df_log_sorted, use_container_width=True)
         else:
