@@ -6,3 +6,4 @@ gspread
 oauth2client
 scipy
 streamlit-extras
+google-api-python-client
