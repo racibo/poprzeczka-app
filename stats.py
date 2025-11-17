@@ -62,7 +62,7 @@ translations = {
         'form_converters_expander': "ℹ️ Informacja o przelicznikach (dla danych ze Strava itp.)",
         'form_converters_warning': "Jeśli zgłaszasz kroki z aktywności (np. Strava, Garmin), stosujemy poniższe przeliczniki. Upewnij się, że Twój wynik końcowy jest poprawny.",
         'form_notes_label': "Inne (opcjonalnie)",
-        'form_notes_placeholder': "Np. 'Dane ze Strava', 'Link do zrzutu ekranu: ...', 'Zapomniałem zegarka'",
+        'form_notes_placeholder': "Np. 'Dane ze Strava, Garmin Connect', 'Link do zrzutu ekranu: ...', 'Opis sytuacji'",
         'form_upload_label': "Zrzut ekranu (opcjonalnie)",
         'form_thanks_note': "> W miarę możliwości będę nagradzał za pomoc we współtworzeniu rozgrywki. Z góry dziękuję za pomoc!",
         'form_submit_button': "Zapisz dane",
@@ -250,7 +250,7 @@ translations = {
         'form_converters_expander': "ℹ️ Info about converters (for Strava data, etc.)",
         'form_converters_warning': "If you are reporting steps from activities (e.g., Strava, Garmin), we use the converters below. Please ensure your final score is correct.",
         'form_notes_label': "Other (optional)",
-        'form_notes_placeholder': "e.g., 'Data from Strava', 'Screenshot link: ...', 'Forgot my watch'",
+        'form_notes_placeholder': "e.g., 'Data from Strava, Garmin Connect', 'Screenshot link: ...', 'Description of the situation'",
         'form_upload_label': "Screenshot (optional)",
         'form_thanks_note': "> Where possible, I will reward assistance in co-creating the game. Thank you in advance for your help!",
         'form_submit_button': "Save Data",
@@ -1914,3 +1914,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
