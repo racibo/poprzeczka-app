@@ -14,11 +14,16 @@ import io
 import time
 from streamlit_extras.mention import mention # Do podziękowań
 
+# <<< NOWE IMPORTY DLA GOOGLE DRIVE >>>
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaIoBaseUpload
+
 # --- Ustawienia Strony ---
 st.set_page_config(
     layout="wide", 
     page_title="Analiza i Zarządzanie Poprzeczką", 
     # <<< POPRAWKA: Wklejony poprawny link "Raw" do Twojego pliku logo.png >>>
+    # Upewnij się, że nazwa pliku (tutaj logo.png) jest poprawna
     page_icon="https://raw.githubusercontent.com/racibo/poprzeczka-app/main/logo.png" 
 )
 
@@ -26,9 +31,7 @@ st.set_page_config(
 FILE_HISTORICAL = "historical_results.json" 
 GOOGLE_SHEET_NAME = "Baza Danych Poprzeczki" 
 
-# !!! WAŻNE: KROK 1 - WKLEJ TUTAJ ID SWOJEGO FOLDERU Z GOOGLE DRIVE !!!
-# Znajdziesz go w linku URL, gdy otworzysz ten folder w przeglądarce.
-# (To ten długi ciąg znaków po "folders/")
+# ID Twojego folderu Google Drive (pobrane z Twojego pliku)
 GOOGLE_DRIVE_FOLDER_ID = "1b-mUxDmKEUoOyLtTePeb7RaJWGfO_Xre" 
 
 CURRENT_PARTICIPANTS = sorted([
@@ -60,10 +63,11 @@ translations = {
         'form_status_no_report': "Brak raportu",
         'form_status_info': "Uwaga: 'Niezaliczone' oraz 'Brak raportu' mają ten sam skutek (etap niezaliczony).",
         'form_converters_expander': "ℹ️ Informacja o przelicznikach (dla danych ze Strava itp.)",
-        'form_converters_warning': "Jeśli zgłaszasz kroki z aktywności (np. Strava), stosujemy poniższe przeliczniki. Upewnij się, że Twój wynik końcowy jest poprawny.",
+        'form_converters_warning': "Jeśli zgłaszasz kroki z aktywności (np. Strava, Garmin), stosujemy poniższe przeliczniki. Upewnij się, że Twój wynik końcowy jest poprawny.",
         'form_notes_label': "Inne (opcjonalnie)",
         'form_notes_placeholder': "Np. 'Dane ze Strava, Garmin Connect', 'Link do zrzutu ekranu: ...', 'Opis sytuacji'",
         'form_upload_label': "Zrzut ekranu (opcjonalnie)",
+        'form_upload_link_text': "📂 Zobacz wszystkie zrzuty ekranu (folder publiczny)", # <<< NOWY KLUCZ
         'form_thanks_note': "> W miarę możliwości będę nagradzał za pomoc we współtworzeniu rozgrywki. Z góry dziękuję za pomoc!",
         'form_submit_button': "Zapisz dane",
         'form_ranking_info': 'Bieżące klasyfikacje możesz już teraz sprawdzić w dziale "Ranking Bieżącej Edycji"',
@@ -252,6 +256,7 @@ translations = {
         'form_notes_label': "Other (optional)",
         'form_notes_placeholder': "e.g., 'Data from Strava, Garmin Connect', 'Screenshot link: ...', 'Description of the situation'",
         'form_upload_label': "Screenshot (optional)",
+        'form_upload_link_text': "📂 View all screenshots (public folder)", # <<< NOWY KLUCZ
         'form_thanks_note': "> Where possible, I will reward assistance in co-creating the game. Thank you in advance for your help!",
         'form_submit_button': "Save Data",
         'form_ranking_info': 'You can check the current standings right now in the "Current Edition Ranking" section',
@@ -306,10 +311,9 @@ translations = {
         'current_stats_streaks_days': "days",
         'current_stats_race_header': "🏁 Highest Stage Race",
         'current_stats_race_desc': "Move the slider to see who was in the lead (had the highest passed stage) at the end of each day.",
-        # <<< POPRAWKA 2 (Missing Key): Usunięto 'CH ' >>>
-        'current_stats_race_mode': "Select Mode:", 
-        'current_stats_race_mode_anim': "Animation", 
-        'current_stats_race_mode_manual': "Manual Control", 
+        'current_stats_race_mode': "Select Mode:",
+        'current_stats_race_mode_anim': "Animation",
+        'current_stats_race_mode_manual': "Manual Control",
         'current_stats_race_button': "Start the Race!",
         'current_stats_race_day': "Stage",
         'current_stats_race_total': "Highest Stage",
@@ -617,6 +621,12 @@ def show_submission_form(lang):
             type=["png", "jpg", "jpeg"]
         )
         
+        # <<< NOWY LINK DO FOLDERU GDRIVE >>>
+        if GOOGLE_DRIVE_FOLDER_ID != "PASTE_YOUR_FOLDER_ID_HERE" and GOOGLE_DRIVE_FOLDER_ID:
+            folder_url = f"https://drive.google.com/drive/folders/{GOOGLE_DRIVE_FOLDER_ID}"
+            st.link_button(_t('form_upload_link_text', lang), folder_url, use_container_width=True)
+        # <<< KONIEC NOWEJ SEKCJI >>>
+
         st.markdown("---")
         st.markdown(_t('form_thanks_note', lang))
 
@@ -1046,7 +1056,6 @@ def show_current_edition_dashboard(lang):
     st.subheader(_t('current_stats_race_header', lang))
     st.write(_t('current_stats_race_desc', lang))
     
-    # <<< POPRAWKA 3: Przebudowa Wykresu na Radio + Suwak >>>
     chart_placeholder = st.empty()
     
     mode = st.radio(
@@ -1064,7 +1073,6 @@ def show_current_edition_dashboard(lang):
             scores = {p: 0 for p in CURRENT_PARTICIPANTS} 
             for day in range(1, max_day_reported + 1):
                 for p in CURRENT_PARTICIPANTS:
-                    # Poprawiona linia:
                     if p in current_data and day in current_data.get(p, {}) and current_data[p][day]["status"] == "Zaliczone":
                         scores[p] = day 
                 
@@ -1101,7 +1109,6 @@ def show_current_edition_dashboard(lang):
         with chart_placeholder.container():
             st.pyplot(fig)
         plt.close(fig)
-    # <<< Koniec Poprawki 3 >>>
 
 
     if st.checkbox(_t('current_log_expander', lang)):
@@ -1914,5 +1921,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
