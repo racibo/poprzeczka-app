@@ -67,7 +67,7 @@ translations = {
         'form_notes_label': "Inne (opcjonalnie)",
         'form_notes_placeholder': "Np. 'Dane ze Strava, Garmin Connect', 'Link do zrzutu ekranu: ...', 'Opis sytuacji'",
         'form_upload_label': "Zrzut ekranu (opcjonalnie)",
-        'form_upload_link_text': "📂 Zobacz wszystkie zrzuty ekranu (folder publiczny)", # <<< NOWY KLUCZ
+        'form_upload_link_text': "📂 Zobacz wszystkie zrzuty ekranu (folder publiczny)",
         'form_thanks_note': "> W miarę możliwości będę nagradzał za pomoc we współtworzeniu rozgrywki. Z góry dziękuję za pomoc!",
         'form_submit_button': "Zapisz dane",
         'form_ranking_info': 'Bieżące klasyfikacje możesz już teraz sprawdzić w dziale "Ranking Bieżącej Edycji"',
@@ -86,6 +86,7 @@ translations = {
         'current_header': "📊 Ranking i Status Bieżącej Edycji",
         'current_no_data': "Brak danych dla bieżącej edycji. Wprowadź pierwsze dane za pomocą formularza.",
         'current_ranking_header': "Aktualna Klasyfikacja (Na Żywo)",
+        'current_ranking_rules_expander_label': "Pokaż zasady klasyfikacji (Na Żywo)", # <<< NOWY KLUCZ
         'current_ranking_rules': """
         Klasyfikacja jest liczona na żywo do **Etapu {0}** (ostatni zaraportowany dzień).
         1.  Sortowanie po **najwyższym zaliczonym etapie** (malejąco).
@@ -105,7 +106,8 @@ translations = {
         'ranking_col_participant': "Uczestnik",
         'ranking_col_highest_pass': "Najw. Zaliczone",
         'ranking_col_status': "Status",
-        'ranking_col_failed_list': "Niezaliczone (pierwsze 10)",
+        'ranking_col_failed_list_live': "Niezaliczone (nieoficjalnie)", # <<< ZMIANA KLUCZA
+        'ranking_col_failed_list_official': "Niezaliczone", # <<< NOWY KLUCZ
         'ranking_status_active': "W grze",
         'ranking_status_eliminated': "Odpadł (Dzień {0})",
         'current_completeness_header': "Kompletność Danych (Ostatnie {0} etapów)",
@@ -116,7 +118,9 @@ translations = {
         'current_log_empty': "Log wpisów jest pusty.",
         'current_stats_header': "🏆 Statystyki Bieżącej Edycji",
         'current_stats_top_submitters': "Najwięksi Pomocnicy (dzięki!)",
-        'current_stats_top_submitters_desc': "Osoby, które najczęściej wprowadzały dane do systemu. Postaram się nagrodzić Was jakimiś tokenami.",
+        'current_stats_top_submitters_desc': "Osoby, które najczęściej wprowadzały dane do systemu (z wyłączeniem Admina).",
+        'current_stats_top_submitters_none': "Brak wpisów od pomocników.", # <<< NOWY KLUCZ
+        'current_stats_top_submitters_percentage': "Wasza pomoc to **{0:.0f}%** wszystkich wpisów ({1} wpisów). Admin dodał {2}. Dziękuję!", # <<< NOWY KLUCZ
         'current_stats_streaks': "Najdłuższe Serie Zaliczeń", 
         'current_stats_streaks_desc': "Uczestnicy z najdłuższą nieprzerwaną serią zaliczonych etapów (w dowolnym momencie edycji).", 
         'current_stats_streaks_days': "dni",
@@ -128,6 +132,14 @@ translations = {
         'current_stats_race_button': "Uruchom Wyścig!", 
         'current_stats_race_day': "Etap",
         'current_stats_race_total': "Najwyższy Etap",
+        'current_ranking_historical_expander': "Pokaż kontekst historyczny (dla obecnych graczy)", # <<< NOWY KLUCZ
+        'current_ranking_historical_no_data': "Brak danych historycznych dla obecnych uczestników.", # <<< NOWY KLUCZ
+        'hist_context_pb': "Rekord (PB)", # <<< NOWY KLUCZ
+        'hist_context_avg': "Śr. wynik (ogół)", # <<< NOWY KLUCZ
+        'hist_context_avg_last_3': "Śr. wynik (ost. 3 ed.)", # <<< NOWY KLUCZ
+        'hist_context_best_pos': "Najl. miejsce", # <<< NOWY KLUCZ
+        'hist_context_medals': "Medale (Top 3)", # <<< NOWY KLUCZ
+        'hist_context_editions': "Liczba edycji", # <<< NOWY KLUCZ
         'title': "Interaktywna analiza rywalizacji krokowej",
         'sidebar_header': "🎛️ Filtry i opcje",
         'select_period': "Wybierz okres",
@@ -256,7 +268,7 @@ translations = {
         'form_notes_label': "Other (optional)",
         'form_notes_placeholder': "e.g., 'Data from Strava, Garmin Connect', 'Screenshot link: ...', 'Description of the situation'",
         'form_upload_label': "Screenshot (optional)",
-        'form_upload_link_text': "📂 View all screenshots (public folder)", # <<< NOWY KLUCZ
+        'form_upload_link_text': "📂 View all screenshots (public folder)",
         'form_thanks_note': "> Where possible, I will reward assistance in co-creating the game. Thank you in advance for your help!",
         'form_submit_button': "Save Data",
         'form_ranking_info': 'You can check the current standings right now in the "Current Edition Ranking" section',
@@ -275,6 +287,7 @@ translations = {
         'current_header': "📊 Current Edition Ranking & Status",
         'current_no_data': "No data for the current edition. Please enter the first data using the form.",
         'current_ranking_header': "Current Standings (Live)",
+        'current_ranking_rules_expander_label': "Show ranking rules (Live)", # <<< NOWY KLUCZ
         'current_ranking_rules': """
         Standings are calculated live up to **Stage {0}** (last reported day).
         1.  Sorted by the **highest completed stage** (descending).
@@ -294,7 +307,8 @@ translations = {
         'ranking_col_participant': "Participant",
         'ranking_col_highest_pass': "Highest Pass",
         'ranking_col_status': "Status",
-        'ranking_col_failed_list': "Failed Stages (first 10)",
+        'ranking_col_failed_list_live': "Failed (unofficial)", # <<< ZMIANA KLUCZA
+        'ranking_col_failed_list_official': "Failed", # <<< NOWY KLUCZ
         'ranking_status_active': "In Game",
         'ranking_status_eliminated': "Eliminated (Day {0})",
         'current_completeness_header': "Data Completeness (Last {0} stages)",
@@ -305,7 +319,9 @@ translations = {
         'current_log_empty': "Submission log is empty.",
         'current_stats_header': "🏆 Current Edition Stats",
         'current_stats_top_submitters': "Top Helpers (Thank You!)",
-        'current_stats_top_submitters_desc': "The people who submitted data most often. I will try to reward you with some tokens.",
+        'current_stats_top_submitters_desc': "The people who submitted data most often (excluding Admin).",
+        'current_stats_top_submitters_none': "No entries from helpers.", # <<< NOWY KLUCZ
+        'current_stats_top_submitters_percentage': "Your help accounts for **{0:.0f}%** of all entries ({1} entries). Admin added {2}. Thank you!", # <<< NOWY KLUCZ
         'current_stats_streaks': "Longest Pass Streaks",
         'current_stats_streaks_desc': "Participants with the longest unbroken streak of passed stages (at any point in the edition).",
         'current_stats_streaks_days': "days",
@@ -317,6 +333,14 @@ translations = {
         'current_stats_race_button': "Start the Race!",
         'current_stats_race_day': "Stage",
         'current_stats_race_total': "Highest Stage",
+        'current_ranking_historical_expander': "Show Historical Context (for current players)", # <<< NOWY KLUCZ
+        'current_ranking_historical_no_data': "No historical data for current participants.", # <<< NOWY KLUCZ
+        'hist_context_pb': "Personal Best (PB)", # <<< NOWY KLUCZ
+        'hist_context_avg': "Avg. Result (all-time)", # <<< NOWY KLUCZ
+        'hist_context_avg_last_3': "Avg. Result (last 3 ed.)", # <<< NOWY KLUCZ
+        'hist_context_best_pos': "Best Position", # <<< NOWY KLUCZ
+        'hist_context_medals': "Medals (Top 3)", # <<< NOWY KLUCZ
+        'hist_context_editions': "Editions Count", # <<< NOWY KLUCZ
         'title': "Interactive Step Challenge Analysis",
         'sidebar_header': "🎛️ Filters & Options",
         'select_period': "Select period",
@@ -493,8 +517,16 @@ def load_google_sheet_data(_sheet, worksheet_name):
         if not records:
             return pd.DataFrame()
         
-        headers = records[0]
-        data = records[1:]
+        # <<< ZMIANA: Pobieranie nagłówków z pierwszego wiersza, danych z reszty >>>
+        headers = worksheet.row_values(1)
+        data = records[1:] # get_all_records() zwraca listę słowników, chcemy dane
+        all_data = worksheet.get_all_values()
+        if len(all_data) <= 1:
+             return pd.DataFrame() # Tylko nagłówki lub pusty
+
+        headers = all_data[0]
+        data = all_data[1:]
+        
         df = pd.DataFrame(data, columns=headers)
         if 'Day' in df.columns:
             df['Day'] = pd.to_numeric(df['Day'], errors='coerce')
@@ -621,11 +653,9 @@ def show_submission_form(lang):
             type=["png", "jpg", "jpeg"]
         )
         
-        # <<< NOWY LINK DO FOLDERU GDRIVE >>>
         if GOOGLE_DRIVE_FOLDER_ID != "PASTE_YOUR_FOLDER_ID_HERE" and GOOGLE_DRIVE_FOLDER_ID:
             folder_url = f"https://drive.google.com/drive/folders/{GOOGLE_DRIVE_FOLDER_ID}"
             st.link_button(_t('form_upload_link_text', lang), folder_url, use_container_width=True)
-        # <<< KONIEC NOWEJ SEKCJI >>>
 
         st.markdown("---")
         st.markdown(_t('form_thanks_note', lang))
@@ -742,7 +772,8 @@ def process_raw_data(df_raw, lang, expected_cols, worksheet_name):
     return processed_data, max_day, True
 
 
-def calculate_ranking(data, max_day_reported, lang):
+# <<< ZMIANA: Dodano argument ranking_type >>>
+def calculate_ranking(data, max_day_reported, lang, ranking_type='live'):
     """Oblicza ranking na podstawie zasad gry."""
     ranking_data = []
     elimination_map = {} 
@@ -784,12 +815,21 @@ def calculate_ranking(data, max_day_reported, lang):
                 start_day = eliminated_on_day
             return tuple(1 if d in p_failures else 0 for d in range(start_day, 0, -1))
 
+        # <<< NOWA LOGIKA: Dynamiczna nazwa kolumny i zawartość >>>
+        if ranking_type == 'live':
+            failed_col_key = 'ranking_col_failed_list_live'
+            failed_stages_str = ", ".join(map(str, sorted(failed_stages)[:10])) + ("..." if len(failed_stages) > 10 else "")
+        else: # 'official'
+            failed_col_key = 'ranking_col_failed_list_official'
+            failed_stages_str = ", ".join(map(str, sorted(failed_stages)))
+        # <<< KONIEC NOWEJ LOGIKI >>>
+
         ranking_data.append({
             _t('ranking_col_participant', lang): participant,
             _t('ranking_col_highest_pass', lang): highest_completed,
             "sort_key_failure_tuple": get_failure_tuple(failed_stages, highest_completed),
             _t('ranking_col_status', lang): status_text,
-            _t('ranking_col_failed_list', lang): ", ".join(map(str, sorted(failed_stages)[:10])) + ("..." if len(failed_stages) > 10 else "")
+            _t(failed_col_key, lang): failed_stages_str # <<< ZMIANA: Użycie dynamicznego klucza
         })
         elimination_map[participant] = eliminated_on_day 
     
@@ -801,7 +841,6 @@ def calculate_ranking(data, max_day_reported, lang):
 
     ranking_data.sort(key=sort_key)
     
-    last_sort_key = None
     rank_col_name = _t('ranking_col_rank', lang)
     for i, entry in enumerate(ranking_data):
         current_sort_key = (
@@ -820,12 +859,19 @@ def calculate_ranking(data, max_day_reported, lang):
     
     df_ranking[rank_col_name] = df_ranking[rank_col_name].astype(int)
     
+    # <<< NOWA LOGIKA: Dynamiczne pobranie nazwy kolumny do zwrotu >>>
+    if ranking_type == 'live':
+        failed_col_name = _t('ranking_col_failed_list_live', lang)
+    else:
+        failed_col_name = _t('ranking_col_failed_list_official', lang)
+    # <<< KONIEC NOWEJ LOGIKI >>>
+    
     return df_ranking[[
         rank_col_name, 
         _t('ranking_col_participant', lang), 
         _t('ranking_col_highest_pass', lang), 
         _t('ranking_col_status', lang), 
-        _t('ranking_col_failed_list', lang)
+        failed_col_name # <<< ZMIANA: Użycie dynamicznej nazwy
     ]], elimination_map
 
 
@@ -912,6 +958,54 @@ def get_race_data_for_day(data, day_to_show, lang):
     
     return df_race
 
+# <<< NOWA FUNKCJA POMOCNICZA DLA KONTEKSTU HISTORYCZNEGO >>>
+def show_historical_context(df_historical, lang):
+    """
+    Wyświetla tabelę z kontekstem historycznym dla OBECNYCH uczestników.
+    """
+    
+    hist_data = df_historical[df_historical['uczestnik'].isin(CURRENT_PARTICIPANTS)].copy()
+    
+    if hist_data.empty:
+        st.info(_t('current_ranking_historical_no_data', lang))
+        return
+
+    # Obliczanie statystyk
+    stats = hist_data.groupby('uczestnik').agg(
+        pb_result=pd.NamedAgg(column='rezultat_numeric', aggfunc='max'),
+        avg_result=pd.NamedAgg(column='rezultat_numeric', aggfunc='mean'),
+        editions_count=pd.NamedAgg(column='edycja_nr', aggfunc='nunique'),
+        best_position=pd.NamedAgg(column='miejsce', aggfunc='min'),
+        medals_top3=pd.NamedAgg(column='miejsce', aggfunc=lambda x: (x <= 3).sum())
+    )
+    
+    # Obliczanie "Ostatnie X edycji"
+    last_3_editions_nr = sorted(df_historical['edycja_nr'].unique())[-3:]
+    hist_last_3 = hist_data[hist_data['edycja_nr'].isin(last_3_editions_nr)]
+    avg_last_3 = hist_last_3.groupby('uczestnik')['rezultat_numeric'].mean().rename('avg_last_3')
+    
+    stats = stats.join(avg_last_3)
+    
+    # Dodanie brakujących uczestników (tych bez historii)
+    stats = stats.reindex(CURRENT_PARTICIPANTS)
+    
+    # Formatowanie tabeli wynikowej
+    stats_display = pd.DataFrame(index=CURRENT_PARTICIPANTS)
+    stats_display[_t('hist_context_pb', lang)] = stats['pb_result'].apply(lambda x: f"{x:.0f}" if pd.notna(x) else "—")
+    stats_display[_t('hist_context_avg', lang)] = stats['avg_result'].apply(lambda x: f"{x:.0f}" if pd.notna(x) else "—")
+    stats_display[_t('hist_context_avg_last_3', lang)] = stats['avg_last_3'].apply(lambda x: f"{x:.0f}" if pd.notna(x) else "—")
+    stats_display[_t('hist_context_best_pos', lang)] = stats['best_position'].apply(lambda x: f"{x:.0f}" if pd.notna(x) else "—")
+    stats_display[_t('hist_context_medals', lang)] = stats['medals_top3'].apply(lambda x: f"{x:.0f}" if pd.notna(x) and x > 0 else "—")
+    stats_display[_t('hist_context_editions', lang)] = stats['editions_count'].apply(lambda x: f"{x:.0f}" if pd.notna(x) and x > 0 else "—")
+
+    # Sortowanie wg średniego wyniku
+    stats_display = stats_display.sort_values(by=_t('hist_context_avg', lang), ascending=False)
+    
+    st.dataframe(stats_display, use_container_width=True)
+
+# <<< KONIEC NOWEJ FUNKCJI >>>
+
+
 def show_current_edition_dashboard(lang):
     """Wyświetla dashboard dla bieżącej edycji."""
     st.header(_t('current_header', lang))
@@ -922,6 +1016,10 @@ def show_current_edition_dashboard(lang):
 
     df_raw_data = load_google_sheet_data(sheet, "BiezacaEdycja")
     df_raw_logs = load_google_sheet_data(sheet, "LogWpisow")
+    
+    # <<< NOWA SEKCJA: Wczytanie danych historycznych do kontekstu >>>
+    df_historical = load_historical_data_from_json()
+    # <<< KONIEC NOWEJ SEKCJI >>>
     
     if df_raw_data.empty:
         st.info(_t('current_no_data', lang))
@@ -937,16 +1035,28 @@ def show_current_edition_dashboard(lang):
     st.subheader(_t('current_ranking_header', lang))
     
     try:
-        ranking_df, elimination_map = calculate_ranking(current_data, max_day_reported, lang)
-        st.markdown(_t('current_ranking_rules', lang, max_day_reported))
+        # <<< ZMIANA: Dodano ranking_type='live' >>>
+        ranking_df, elimination_map = calculate_ranking(current_data, max_day_reported, lang, ranking_type='live')
+        
+        # <<< ZMIANA: Przeniesienie zasad do expandera >>>
+        with st.expander(_t('current_ranking_rules_expander_label', lang)):
+            st.markdown(_t('current_ranking_rules', lang, max_day_reported))
+            
         st.dataframe(ranking_df, use_container_width=True, hide_index=True)
+        
+        # <<< NOWA SEKCJA: Statystyki historyczne w rankingu >>>
+        if not df_historical.empty:
+            with st.expander(_t('current_ranking_historical_expander', lang)):
+                show_historical_context(df_historical, lang)
+        # <<< KONIEC NOWEJ SEKCJI >>>
+        
     except Exception as e:
         st.error(_t('current_ranking_error', lang, e))
         elimination_map = {} 
         
     st.markdown("---")
 
-    # --- NOWA SEKCJA: Klasyfikacja "Oficjalna" ---
+    # --- SEKCJA: Klasyfikacja "Oficjalna" ---
     st.subheader(_t('current_official_ranking_header', lang))
     
     complete_stages = find_last_complete_stage(current_data, elimination_map, max_day_reported)
@@ -963,7 +1073,8 @@ def show_current_edition_dashboard(lang):
         st.info(_t('current_official_ranking_desc', lang, selected_stage))
         
         try:
-            official_ranking_df, _ = calculate_ranking(current_data, selected_stage, lang)
+            # <<< ZMIANA: Dodano ranking_type='official' >>>
+            official_ranking_df, _ = calculate_ranking(current_data, selected_stage, lang, ranking_type='official')
             st.dataframe(official_ranking_df, use_container_width=True, hide_index=True)
         except Exception as e:
             st.error(_t('current_ranking_error', lang, e))
@@ -1033,11 +1144,29 @@ def show_current_edition_dashboard(lang):
                 _t('current_header_check_found', lang): df_raw_logs.columns.tolist()
             })
         else:
-            top_submitters = df_raw_logs['Submitter'].value_counts().nlargest(3)
-            if top_submitters.empty:
-                 st.info(_t('current_log_empty', lang))
-            for name, count in top_submitters.items():
-                mention(label=f"**{name}** ({count} wpisów)", icon="🏆", url=None)
+            # <<< NOWA LOGIKA: Filtrowanie admina, liczenie procentu, pełna lista >>>
+            df_helpers = df_raw_logs[df_raw_logs['Submitter'] != 'poprzeczka (Admin)']
+            
+            total_entries = len(df_raw_logs)
+            helper_entries = len(df_helpers)
+            admin_entries = total_entries - helper_entries
+            
+            if total_entries > 0:
+                helper_percentage = (helper_entries / total_entries) * 100
+            else:
+                helper_percentage = 0
+            
+            all_submitters = df_helpers['Submitter'].value_counts() 
+            
+            if all_submitters.empty:
+                st.info(_t('current_stats_top_submitters_none', lang))
+            else:
+                for name, count in all_submitters.items():
+                    mention(label=f"**{name}** ({count} wpisów)", icon="🏆", url=None)
+            
+            st.markdown("---")
+            st.caption(_t('current_stats_top_submitters_percentage', lang, helper_percentage, helper_entries, admin_entries))
+            # <<< KONIEC NOWEJ LOGIKI >>>
 
     with col2:
         st.markdown(f"**{_t('current_stats_streaks', lang)}**")
