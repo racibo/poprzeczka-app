@@ -60,7 +60,7 @@ translations = {
         'form_status_no_report': "Brak raportu",
         'form_status_info': "Uwaga: 'Niezaliczone' oraz 'Brak raportu' mają ten sam skutek (etap niezaliczony).",
         'form_converters_expander': "ℹ️ Informacja o przelicznikach (dla danych ze Strava itp.)",
-        'form_converters_warning': "Jeśli zgłaszasz kroki z aktywności (np. Strava, Garmin), stosujemy poniższe przeliczniki. Upewnij się, że Twój wynik końcowy jest poprawny.",
+        'form_converters_warning': "Jeśli zgłaszasz kroki z aktywności (np. Strava), stosujemy poniższe przeliczniki. Upewnij się, że Twój wynik końcowy jest poprawny.",
         'form_notes_label': "Inne (opcjonalnie)",
         'form_notes_placeholder': "Np. 'Dane ze Strava, Garmin Connect', 'Link do zrzutu ekranu: ...', 'Opis sytuacji'",
         'form_upload_label': "Zrzut ekranu (opcjonalnie)",
@@ -248,7 +248,7 @@ translations = {
         'form_status_no_report': "No Report",
         'form_status_info': "Note: 'Failed' and 'No Report' have the same effect (stage failed).",
         'form_converters_expander': "ℹ️ Info about converters (for Strava data, etc.)",
-        'form_converters_warning': "If you are reporting steps from activities (e.g., Strava, Garmin), we use the converters below. Please ensure your final score is correct.",
+        'form_converters_warning': "If you are reporting steps from activities (e.g., Strava), we use the converters below. Please ensure your final score is correct.",
         'form_notes_label': "Other (optional)",
         'form_notes_placeholder': "e.g., 'Data from Strava, Garmin Connect', 'Screenshot link: ...', 'Description of the situation'",
         'form_upload_label': "Screenshot (optional)",
@@ -1914,4 +1914,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
