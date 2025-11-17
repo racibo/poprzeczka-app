@@ -22,8 +22,6 @@ from googleapiclient.http import MediaIoBaseUpload
 st.set_page_config(
     layout="wide", 
     page_title="Analiza i Zarządzanie Poprzeczką", 
-    # <<< POPRAWKA: Wklejony poprawny link "Raw" do Twojego pliku logo.png >>>
-    # Upewnij się, że nazwa pliku (tutaj logo.png) jest poprawna
     page_icon="https://raw.githubusercontent.com/racibo/poprzeczka-app/main/logo.png" 
 )
 
@@ -31,7 +29,6 @@ st.set_page_config(
 FILE_HISTORICAL = "historical_results.json" 
 GOOGLE_SHEET_NAME = "Baza Danych Poprzeczki" 
 
-# ID Twojego folderu Google Drive (pobrane z Twojego pliku)
 GOOGLE_DRIVE_FOLDER_ID = "1b-mUxDmKEUoOyLtTePeb7RaJWGfO_Xre" 
 
 CURRENT_PARTICIPANTS = sorted([
@@ -86,7 +83,7 @@ translations = {
         'current_header': "📊 Ranking i Status Bieżącej Edycji",
         'current_no_data': "Brak danych dla bieżącej edycji. Wprowadź pierwsze dane za pomocą formularza.",
         'current_ranking_header': "Aktualna Klasyfikacja (Na Żywo)",
-        'current_ranking_rules_expander_label': "Pokaż zasady klasyfikacji (Na Żywo)", # <<< NOWY KLUCZ
+        'current_ranking_rules_expander_label': "Pokaż zasady klasyfikacji (Na Żywo)",
         'current_ranking_rules': """
         Klasyfikacja jest liczona na żywo do **Etapu {0}** (ostatni zaraportowany dzień).
         1.  Sortowanie po **najwyższym zaliczonym etapie** (malejąco).
@@ -106,11 +103,12 @@ translations = {
         'ranking_col_participant': "Uczestnik",
         'ranking_col_highest_pass': "Najw. Zaliczone",
         'ranking_col_status': "Status",
-        'ranking_col_failed_list_live': "Niezaliczone (nieoficjalnie)", # <<< ZMIANA KLUCZA
-        'ranking_col_failed_list_official': "Niezaliczone", # <<< NOWY KLUCZ
+        'ranking_col_failed_list_live': "Niezaliczone (nieoficjalnie)", 
+        'ranking_col_failed_list_official': "Niezaliczone", 
         'ranking_status_active': "W grze",
         'ranking_status_eliminated': "Odpadł (Dzień {0})",
-        'current_completeness_header': "Kompletność Danych (Ostatnie {0} etapów)",
+        # <<< ZMIANA: Usunięto wzmiankę o liczbie dni >>>
+        'current_completeness_header': "Kompletność Danych",
         'current_completeness_no_data': "Brak danych do wyświetlenia kompletności.",
         'completeness_col_day': "Dzień",
         'completeness_col_participant': "Uczestnik",
@@ -119,8 +117,8 @@ translations = {
         'current_stats_header': "🏆 Statystyki Bieżącej Edycji",
         'current_stats_top_submitters': "Najwięksi Pomocnicy (dzięki!)",
         'current_stats_top_submitters_desc': "Osoby, które najczęściej wprowadzały dane do systemu (z wyłączeniem Admina).",
-        'current_stats_top_submitters_none': "Brak wpisów od pomocników.", # <<< NOWY KLUCZ
-        'current_stats_top_submitters_percentage': "Wasza pomoc to **{0:.0f}%** wszystkich wpisów ({1} wpisów). Admin dodał {2}. Dziękuję!", # <<< NOWY KLUCZ
+        'current_stats_top_submitters_none': "Brak wpisów od pomocników.", 
+        'current_stats_top_submitters_percentage': "Wasza pomoc to **{0:.0f}%** wszystkich wpisów ({1} wpisów). Admin dodał {2}. Dziękuję!", 
         'current_stats_streaks': "Najdłuższe Serie Zaliczeń", 
         'current_stats_streaks_desc': "Uczestnicy z najdłuższą nieprzerwaną serią zaliczonych etapów (w dowolnym momencie edycji).", 
         'current_stats_streaks_days': "dni",
@@ -132,14 +130,22 @@ translations = {
         'current_stats_race_button': "Uruchom Wyścig!", 
         'current_stats_race_day': "Etap",
         'current_stats_race_total': "Najwyższy Etap",
-        'current_ranking_historical_expander': "Pokaż kontekst historyczny (dla obecnych graczy)", # <<< NOWY KLUCZ
-        'current_ranking_historical_no_data': "Brak danych historycznych dla obecnych uczestników.", # <<< NOWY KLUCZ
-        'hist_context_pb': "Rekord (PB)", # <<< NOWY KLUCZ
-        'hist_context_avg': "Śr. wynik (ogół)", # <<< NOWY KLUCZ
-        'hist_context_avg_last_3': "Śr. wynik (ost. 3 ed.)", # <<< NOWY KLUCZ
-        'hist_context_best_pos': "Najl. miejsce", # <<< NOWY KLUCZ
-        'hist_context_medals': "Medale (Top 3)", # <<< NOWY KLUCZ
-        'hist_context_editions': "Liczba edycji", # <<< NOWY KLUCZ
+        'current_ranking_historical_expander': "Pokaż kontekst historyczny (dla obecnych graczy)", 
+        'current_ranking_historical_no_data': "Brak danych historycznych dla obecnych uczestników.", 
+        'hist_context_pb': "Rekord (PB)", 
+        'hist_context_avg': "Śr. wynik (ogół)", 
+        'hist_context_avg_last_3': "Śr. wynik (ost. 3 ed.)", 
+        'hist_context_best_pos': "Najl. miejsce", 
+        'hist_context_medals': "Medale (Top 3)", 
+        'hist_context_editions': "Liczba edycji", 
+        'participant_summary_expander': "Pokaż szczegóły uczestników",
+        'summary_current_rank': "Teraz",
+        'summary_previous_rank': "Poprz.",
+        'summary_medals': "Medale",
+        'summary_wins': "Zwycięstwa",
+        'summary_last_5_days': "Ost. 5 dni",
+        'summary_no_hist_data': "Brak historii",
+        'summary_profile_link': "Profil",
         'title': "Interaktywna analiza rywalizacji krokowej",
         'sidebar_header': "🎛️ Filtry i opcje",
         'select_period': "Wybierz okres",
@@ -287,7 +293,7 @@ translations = {
         'current_header': "📊 Current Edition Ranking & Status",
         'current_no_data': "No data for the current edition. Please enter the first data using the form.",
         'current_ranking_header': "Current Standings (Live)",
-        'current_ranking_rules_expander_label': "Show ranking rules (Live)", # <<< NOWY KLUCZ
+        'current_ranking_rules_expander_label': "Show ranking rules (Live)",
         'current_ranking_rules': """
         Standings are calculated live up to **Stage {0}** (last reported day).
         1.  Sorted by the **highest completed stage** (descending).
@@ -307,11 +313,12 @@ translations = {
         'ranking_col_participant': "Participant",
         'ranking_col_highest_pass': "Highest Pass",
         'ranking_col_status': "Status",
-        'ranking_col_failed_list_live': "Failed (unofficial)", # <<< ZMIANA KLUCZA
-        'ranking_col_failed_list_official': "Failed", # <<< NOWY KLUCZ
+        'ranking_col_failed_list_live': "Failed (unofficial)", 
+        'ranking_col_failed_list_official': "Failed", 
         'ranking_status_active': "In Game",
         'ranking_status_eliminated': "Eliminated (Day {0})",
-        'current_completeness_header': "Data Completeness (Last {0} stages)",
+        # <<< ZMIANA: Usunięto wzmiankę o liczbie dni >>>
+        'current_completeness_header': "Data Completeness",
         'current_completeness_no_data': "No data to display completeness.",
         'completeness_col_day': "Day",
         'completeness_col_participant': "Participant",
@@ -320,8 +327,8 @@ translations = {
         'current_stats_header': "🏆 Current Edition Stats",
         'current_stats_top_submitters': "Top Helpers (Thank You!)",
         'current_stats_top_submitters_desc': "The people who submitted data most often (excluding Admin).",
-        'current_stats_top_submitters_none': "No entries from helpers.", # <<< NOWY KLUCZ
-        'current_stats_top_submitters_percentage': "Your help accounts for **{0:.0f}%** of all entries ({1} entries). Admin added {2}. Thank you!", # <<< NOWY KLUCZ
+        'current_stats_top_submitters_none': "No entries from helpers.", 
+        'current_stats_top_submitters_percentage': "Your help accounts for **{0:.0f}%** of all entries ({1} entries). Admin added {2}. Thank you!", 
         'current_stats_streaks': "Longest Pass Streaks",
         'current_stats_streaks_desc': "Participants with the longest unbroken streak of passed stages (at any point in the edition).",
         'current_stats_streaks_days': "days",
@@ -333,14 +340,22 @@ translations = {
         'current_stats_race_button': "Start the Race!",
         'current_stats_race_day': "Stage",
         'current_stats_race_total': "Highest Stage",
-        'current_ranking_historical_expander': "Show Historical Context (for current players)", # <<< NOWY KLUCZ
-        'current_ranking_historical_no_data': "No historical data for current participants.", # <<< NOWY KLUCZ
-        'hist_context_pb': "Personal Best (PB)", # <<< NOWY KLUCZ
-        'hist_context_avg': "Avg. Result (all-time)", # <<< NOWY KLUCZ
-        'hist_context_avg_last_3': "Avg. Result (last 3 ed.)", # <<< NOWY KLUCZ
-        'hist_context_best_pos': "Best Position", # <<< NOWY KLUCZ
-        'hist_context_medals': "Medals (Top 3)", # <<< NOWY KLUCZ
-        'hist_context_editions': "Editions Count", # <<< NOWY KLUCZ
+        'current_ranking_historical_expander': "Show Historical Context (for current players)", 
+        'current_ranking_historical_no_data': "No historical data for current participants.", 
+        'hist_context_pb': "Personal Best (PB)", 
+        'hist_context_avg': "Avg. Result (all-time)", 
+        'hist_context_avg_last_3': "Avg. Result (last 3 ed.)", 
+        'hist_context_best_pos': "Best Position", 
+        'hist_context_medals': "Medals (Top 3)", 
+        'hist_context_editions': "Editions Count", 
+        'participant_summary_expander': "Show participant details",
+        'summary_current_rank': "Now",
+        'summary_previous_rank': "Prev.",
+        'summary_medals': "Medals",
+        'summary_wins': "Wins",
+        'summary_last_5_days': "Last 5 days",
+        'summary_no_hist_data': "No history",
+        'summary_profile_link': "Profile",
         'title': "Interactive Step Challenge Analysis",
         'sidebar_header': "🎛️ Filters & Options",
         'select_period': "Select period",
@@ -513,14 +528,8 @@ def load_google_sheet_data(_sheet, worksheet_name):
     """Pobiera wszystkie dane z danej zakładki jako DataFrame."""
     try:
         worksheet = _sheet.worksheet(worksheet_name) 
-        records = worksheet.get_all_records() 
-        if not records:
-            return pd.DataFrame()
-        
-        # <<< ZMIANA: Pobieranie nagłówków z pierwszego wiersza, danych z reszty >>>
-        headers = worksheet.row_values(1)
-        data = records[1:] # get_all_records() zwraca listę słowników, chcemy dane
         all_data = worksheet.get_all_values()
+        
         if len(all_data) <= 1:
              return pd.DataFrame() # Tylko nagłówki lub pusty
 
@@ -772,7 +781,6 @@ def process_raw_data(df_raw, lang, expected_cols, worksheet_name):
     return processed_data, max_day, True
 
 
-# <<< ZMIANA: Dodano argument ranking_type >>>
 def calculate_ranking(data, max_day_reported, lang, ranking_type='live'):
     """Oblicza ranking na podstawie zasad gry."""
     ranking_data = []
@@ -815,21 +823,19 @@ def calculate_ranking(data, max_day_reported, lang, ranking_type='live'):
                 start_day = eliminated_on_day
             return tuple(1 if d in p_failures else 0 for d in range(start_day, 0, -1))
 
-        # <<< NOWA LOGIKA: Dynamiczna nazwa kolumny i zawartość >>>
         if ranking_type == 'live':
             failed_col_key = 'ranking_col_failed_list_live'
             failed_stages_str = ", ".join(map(str, sorted(failed_stages)[:10])) + ("..." if len(failed_stages) > 10 else "")
         else: # 'official'
             failed_col_key = 'ranking_col_failed_list_official'
             failed_stages_str = ", ".join(map(str, sorted(failed_stages)))
-        # <<< KONIEC NOWEJ LOGIKI >>>
 
         ranking_data.append({
             _t('ranking_col_participant', lang): participant,
             _t('ranking_col_highest_pass', lang): highest_completed,
             "sort_key_failure_tuple": get_failure_tuple(failed_stages, highest_completed),
             _t('ranking_col_status', lang): status_text,
-            _t(failed_col_key, lang): failed_stages_str # <<< ZMIANA: Użycie dynamicznego klucza
+            _t(failed_col_key, lang): failed_stages_str 
         })
         elimination_map[participant] = eliminated_on_day 
     
@@ -859,19 +865,17 @@ def calculate_ranking(data, max_day_reported, lang, ranking_type='live'):
     
     df_ranking[rank_col_name] = df_ranking[rank_col_name].astype(int)
     
-    # <<< NOWA LOGIKA: Dynamiczne pobranie nazwy kolumny do zwrotu >>>
     if ranking_type == 'live':
         failed_col_name = _t('ranking_col_failed_list_live', lang)
     else:
         failed_col_name = _t('ranking_col_failed_list_official', lang)
-    # <<< KONIEC NOWEJ LOGIKI >>>
     
     return df_ranking[[
         rank_col_name, 
         _t('ranking_col_participant', lang), 
         _t('ranking_col_highest_pass', lang), 
         _t('ranking_col_status', lang), 
-        failed_col_name # <<< ZMIANA: Użycie dynamicznej nazwy
+        failed_col_name 
     ]], elimination_map
 
 
@@ -958,7 +962,7 @@ def get_race_data_for_day(data, day_to_show, lang):
     
     return df_race
 
-# <<< NOWA FUNKCJA POMOCNICZA DLA KONTEKSTU HISTORYCZNEGO >>>
+# <<< ZAKTUALIZOWANA FUNKCJA (Naprawiony błąd 'uczestnik_raw') >>>
 def show_historical_context(df_historical, lang):
     """
     Wyświetla tabelę z kontekstem historycznym dla OBECNYCH uczestników.
@@ -989,8 +993,14 @@ def show_historical_context(df_historical, lang):
     # Dodanie brakujących uczestników (tych bez historii)
     stats = stats.reindex(CURRENT_PARTICIPANTS)
     
-    # Formatowanie tabeli wynikowej
-    stats_display = pd.DataFrame(index=CURRENT_PARTICIPANTS)
+    participant_col_name = _t('ranking_col_participant', lang)
+    
+    # <<< ZMIANA: Naprawiono błąd 'index' vs 'uczestnik' >>>
+    stats = stats.reset_index().rename(columns={'uczestnik': 'uczestnik_raw'})
+    
+    stats_display = pd.DataFrame()
+    stats_display[participant_col_name] = stats['uczestnik_raw']
+    
     stats_display[_t('hist_context_pb', lang)] = stats['pb_result'].apply(lambda x: f"{x:.0f}" if pd.notna(x) else "—")
     stats_display[_t('hist_context_avg', lang)] = stats['avg_result'].apply(lambda x: f"{x:.0f}" if pd.notna(x) else "—")
     stats_display[_t('hist_context_avg_last_3', lang)] = stats['avg_last_3'].apply(lambda x: f"{x:.0f}" if pd.notna(x) else "—")
@@ -1001,11 +1011,80 @@ def show_historical_context(df_historical, lang):
     # Sortowanie wg średniego wyniku
     stats_display = stats_display.sort_values(by=_t('hist_context_avg', lang), ascending=False)
     
-    st.dataframe(stats_display, use_container_width=True)
+    st.dataframe(
+        stats_display, 
+        use_container_width=True, 
+        hide_index=True
+    )
 
-# <<< KONIEC NOWEJ FUNKCJI >>>
+
+# <<< ZAKTUALIZOWANA FUNKCJA (Bardziej kompaktowy widok) >>>
+def show_participant_summary(current_ranking_df, df_historical, current_data, max_day_reported, lang):
+    """
+    Wyświetla rozwijalną listę ze szczegółami każdego uczestnika.
+    (Ta funkcja zachowuje linki, zgodnie z prośbą)
+    """
+    participant_col = _t('ranking_col_participant', lang)
+    rank_col = _t('ranking_col_rank', lang)
+    
+    current_rank_map = current_ranking_df.set_index(participant_col)[rank_col].to_dict()
+
+    if not df_historical.empty:
+        hist_stats = df_historical.groupby('uczestnik').agg(
+            winner_count=pd.NamedAgg(column='miejsce', aggfunc=lambda x: (x == 1).sum()),
+            medalist_count=pd.NamedAgg(column='miejsce', aggfunc=lambda x: (x <= 3).sum())
+        )
+        df_historical_sorted = df_historical.sort_values('miesiac', ascending=False)
+        last_rank_map = df_historical_sorted.drop_duplicates('uczestnik').set_index('uczestnik')['miejsce'].to_dict()
+    else:
+        hist_stats = pd.DataFrame(columns=['winner_count', 'medalist_count'])
+        last_rank_map = {}
+
+    # <<< ZMIANA: Iteracja z indeksem, aby pominąć ostatni divider >>>
+    participants_list = current_ranking_df[participant_col].tolist()
+    num_participants = len(participants_list)
+
+    for i, participant in enumerate(participants_list):
+        current_rank = current_rank_map.get(participant, 'N/A')
+        
+        if participant in hist_stats.index:
+            wins = hist_stats.loc[participant, 'winner_count']
+            medals = hist_stats.loc[participant, 'medalist_count']
+            prev_rank = int(last_rank_map.get(participant, 0))
+            prev_rank_str = str(prev_rank) if prev_rank > 0 else "N/A"
+        else:
+            wins, medals, prev_rank_str = 0, 0, _t('summary_no_hist_data', lang)
+
+        last_5_results_icons = []
+        participant_days = current_data.get(participant, {})
+        for day in range(max_day_reported, max_day_reported - 5, -1):
+            if day < 1:
+                break
+            
+            if day in participant_days:
+                status_key = participant_days[day].get("status", "Brak raportu")
+                icon = "✅" if status_key == "Zaliczone" else ("❌" if status_key == "Niezaliczone" else "❓")
+            else:
+                icon = "❓"
+            last_5_results_icons.append(icon)
+            
+        last_5_str = " ".join(last_5_results_icons)
+
+        # <<< ZMIANA: Jednoliniowy string dla kompaktowego widoku >>>
+        stats_str = f"**{participant}** | {_t('summary_current_rank', lang)}: **{current_rank}** | {_t('summary_previous_rank', lang)}: {prev_rank_str} | {_t('summary_wins', lang)}: {wins} | {_t('summary_medals', lang)}: {medals} | {_t('summary_last_5_days', lang)}: {last_5_str}"
+
+        col1, col2 = st.columns([0.8, 0.2])
+        with col1:
+            st.markdown(stats_str, unsafe_allow_html=True)
+        with col2:
+            st.link_button(_t('summary_profile_link', lang), f"https://hive.blog/@{participant}", use_container_width=True)
+        
+        # <<< ZMIANA: Dodawanie dividera tylko jeśli to nie ostatni element >>>
+        if i < num_participants - 1:
+            st.divider()
 
 
+# <<< ZAKTUALIZOWANA FUNKCJA (Poprawki kompletności, link do statystyk) >>>
 def show_current_edition_dashboard(lang):
     """Wyświetla dashboard dla bieżącej edycji."""
     st.header(_t('current_header', lang))
@@ -1017,9 +1096,7 @@ def show_current_edition_dashboard(lang):
     df_raw_data = load_google_sheet_data(sheet, "BiezacaEdycja")
     df_raw_logs = load_google_sheet_data(sheet, "LogWpisow")
     
-    # <<< NOWA SEKCJA: Wczytanie danych historycznych do kontekstu >>>
     df_historical = load_historical_data_from_json()
-    # <<< KONIEC NOWEJ SEKCJI >>>
     
     if df_raw_data.empty:
         st.info(_t('current_no_data', lang))
@@ -1031,32 +1108,43 @@ def show_current_edition_dashboard(lang):
     if not success_data or max_day_reported == 0:
         return
 
-    # --- Klasyfikacja "Na Żywo" ---
     st.subheader(_t('current_ranking_header', lang))
     
+    participant_col_name = _t('ranking_col_participant', lang)
+    
     try:
-        # <<< ZMIANA: Dodano ranking_type='live' >>>
         ranking_df, elimination_map = calculate_ranking(current_data, max_day_reported, lang, ranking_type='live')
         
-        # <<< ZMIANA: Przeniesienie zasad do expandera >>>
         with st.expander(_t('current_ranking_rules_expander_label', lang)):
             st.markdown(_t('current_ranking_rules', lang, max_day_reported))
-            
-        st.dataframe(ranking_df, use_container_width=True, hide_index=True)
         
-        # <<< NOWA SEKCJA: Statystyki historyczne w rankingu >>>
+        st.dataframe(
+            ranking_df, 
+            use_container_width=True, 
+            hide_index=True
+        )
+        
+        # <<< ZMIANA: Dodano odsyłacz do statystyk hist. >>>
+        with st.expander(_t('participant_summary_expander', lang)):
+            caption_text = {
+                'pl': f"Szczegółowe dane historyczne znajdziesz w zakładce: **{_t('nav_historical_stats', lang)}**",
+                'en': f"Detailed historical data can be found in the: **{_t('nav_historical_stats', lang)}** tab"
+            }
+            st.caption(caption_text[lang])
+            show_participant_summary(ranking_df, df_historical, current_data, max_day_reported, lang)
+
         if not df_historical.empty:
             with st.expander(_t('current_ranking_historical_expander', lang)):
                 show_historical_context(df_historical, lang)
-        # <<< KONIEC NOWEJ SEKCJI >>>
         
     except Exception as e:
         st.error(_t('current_ranking_error', lang, e))
+        # <<< ZMIANA: Dodano śledzenie błędu dla debugowania >>>
+        st.exception(e) 
         elimination_map = {} 
         
     st.markdown("---")
 
-    # --- SEKCJA: Klasyfikacja "Oficjalna" ---
     st.subheader(_t('current_official_ranking_header', lang))
     
     complete_stages = find_last_complete_stage(current_data, elimination_map, max_day_reported)
@@ -1073,9 +1161,14 @@ def show_current_edition_dashboard(lang):
         st.info(_t('current_official_ranking_desc', lang, selected_stage))
         
         try:
-            # <<< ZMIANA: Dodano ranking_type='official' >>>
             official_ranking_df, _ = calculate_ranking(current_data, selected_stage, lang, ranking_type='official')
-            st.dataframe(official_ranking_df, use_container_width=True, hide_index=True)
+            
+            st.dataframe(
+                official_ranking_df, 
+                use_container_width=True, 
+                hide_index=True
+            )
+            
         except Exception as e:
             st.error(_t('current_ranking_error', lang, e))
     else:
@@ -1084,10 +1177,11 @@ def show_current_edition_dashboard(lang):
     st.markdown("---")
     
     # --- Kompletność Danych ---
-    days_to_show_count = 15
-    st.subheader(_t('current_completeness_header', lang, days_to_show_count))
+    # <<< ZMIANA: Usunięto limit 15 dni >>>
+    st.subheader(_t('current_completeness_header', lang))
     
     pivot_data = []
+    completeness_participant_col = _t('completeness_col_participant', lang) 
     
     for participant in CURRENT_PARTICIPANTS:
         days_data = current_data.get(participant, {})
@@ -1103,7 +1197,7 @@ def show_current_edition_dashboard(lang):
                 status_icon = "❓" 
 
             pivot_data.append({
-                _t('completeness_col_participant', lang): participant,
+                completeness_participant_col: participant, 
                 _t('completeness_col_day', lang): day,
                 "Status": status_icon
             })
@@ -1114,16 +1208,23 @@ def show_current_edition_dashboard(lang):
 
     df_pivot = pd.DataFrame(pivot_data)
     
-    start_day = max(1, max_day_reported - (days_to_show_count - 1))
-    days_to_show = [day for day in range(start_day, max_day_reported + 1)]
+    # <<< ZMIANA: Pokazywanie wszystkich dni od 1 do max >>>
+    days_to_show = [day for day in range(1, max_day_reported + 1)]
     
     completeness_pivot = df_pivot.pivot(
-        index=_t('completeness_col_participant', lang),
+        index=completeness_participant_col, 
         columns=_t('completeness_col_day', lang),
         values="Status"
     ).reindex(columns=days_to_show, fill_value="").reindex(index=sorted(CURRENT_PARTICIPANTS))
     
-    st.dataframe(completeness_pivot, use_container_width=True)
+    completeness_pivot_display = completeness_pivot.reset_index()
+    
+    st.dataframe(
+        completeness_pivot_display, 
+        hide_index=True
+        # use_container_width=False (usunięte)
+    )
+    # <<< KONIEC ZMIANY >>>
 
     # --- Statystyki Bieżącej Edycji ---
     st.subheader(_t('current_stats_header', lang))
@@ -1144,7 +1245,6 @@ def show_current_edition_dashboard(lang):
                 _t('current_header_check_found', lang): df_raw_logs.columns.tolist()
             })
         else:
-            # <<< NOWA LOGIKA: Filtrowanie admina, liczenie procentu, pełna lista >>>
             df_helpers = df_raw_logs[df_raw_logs['Submitter'] != 'poprzeczka (Admin)']
             
             total_entries = len(df_raw_logs)
@@ -1162,11 +1262,14 @@ def show_current_edition_dashboard(lang):
                 st.info(_t('current_stats_top_submitters_none', lang))
             else:
                 for name, count in all_submitters.items():
-                    mention(label=f"**{name}** ({count} wpisów)", icon="🏆", url=None)
+                    mention(
+                        label=f"**{name}** ({count} wpisów)", 
+                        icon="🏆", 
+                        url=f"https://hive.blog/@{name}"
+                    )
             
             st.markdown("---")
             st.caption(_t('current_stats_top_submitters_percentage', lang, helper_percentage, helper_entries, admin_entries))
-            # <<< KONIEC NOWEJ LOGIKI >>>
 
     with col2:
         st.markdown(f"**{_t('current_stats_streaks', lang)}**")
@@ -1176,7 +1279,11 @@ def show_current_edition_dashboard(lang):
         
         if not df_streaks.empty:
             for _, row in df_streaks.iterrows():
-                mention(label=f"**{row['Uczestnik']}** ({row['Seria']} {_t('current_stats_streaks_days', lang)})", icon="🔥", url=None)
+                mention(
+                    label=f"**{row['Uczestnik']}** ({row['Seria']} {_t('current_stats_streaks_days', lang)})", 
+                    icon="🔥", 
+                    url=f"https://hive.blog/@{row['Uczestnik']}"
+                )
         else:
             st.info("Brak znaczących serii.")
             
@@ -1299,6 +1406,7 @@ def load_historical_data_from_json():
 
     return df
 
+# <<< ZAKTUALIZOWANA FUNKCJA (Wersja bez linków Markdown) >>>
 def show_historical_stats(lang):
     """Cały Twój istniejący kod do wyświetlania statystyk historycznych."""
     
@@ -1309,6 +1417,8 @@ def show_historical_stats(lang):
     if df.empty:
         st.info("Brak danych historycznych do wyświetlenia.")
         st.stop()
+        
+    participant_col_name = _t('participant', lang)
 
     st.sidebar.markdown("---")
     st.sidebar.header(_t('sidebar_header', lang))
@@ -1395,6 +1505,7 @@ def show_historical_stats(lang):
     if len(selected_users) == 1:
         user = selected_users[0]
         user_df = filtered_df[filtered_df['uczestnik'] == user]
+        st.markdown(f"#### {user}") 
         col1, col2, col3, col4 = st.columns(4)
         best_result_row = user_df.loc[user_df['rezultat_numeric'].idxmax()] if not user_df['rezultat_numeric'].isnull().all() else None
         col1.metric(label=_t('best_result', lang), value=f"{best_result_row['rezultat_raw']} ({best_result_row['miesiac_rok_str']})" if best_result_row is not None else "N/A")
@@ -1465,7 +1576,12 @@ def show_historical_stats(lang):
         
         avg_result_sort = summary_data.groupby('uczestnik')['rezultat_numeric'].mean().sort_values(ascending=False)
         monthly_results_pivot = monthly_results_pivot.reindex(index=avg_result_sort.index)
-        st.dataframe(monthly_results_pivot)
+        
+        monthly_results_display = monthly_results_pivot.reset_index().rename(columns={'uczestnik': participant_col_name})
+        st.dataframe(
+            monthly_results_display, 
+            hide_index=True
+        )
 
         st.subheader(_t('monthly_summary_positions', lang))
         monthly_positions_pivot = summary_data.pivot_table(
@@ -1478,7 +1594,12 @@ def show_historical_stats(lang):
         
         avg_pos_sort = summary_data.groupby('uczestnik')['miejsce'].mean().sort_values()
         monthly_positions_pivot = monthly_positions_pivot.reindex(index=avg_pos_sort.index)
-        st.dataframe(monthly_positions_pivot)
+        
+        monthly_positions_display = monthly_positions_pivot.reset_index().rename(columns={'uczestnik': participant_col_name})
+        st.dataframe(
+            monthly_positions_display, 
+            hide_index=True
+        )
     else:
         st.info(_t('no_data_selected', lang))
 
@@ -1722,7 +1843,11 @@ def show_historical_stats(lang):
             sort_cols = [col for col in position_counts.columns if isinstance(col, (int, np.integer))]
             position_counts = position_counts.sort_values(by=sort_cols, ascending=[False]*len(sort_cols))
             
-            st.dataframe(position_counts)
+            position_counts_display = position_counts.reset_index().rename(columns={'uczestnik': participant_col_name})
+            st.dataframe(
+                position_counts_display, 
+                hide_index=True
+            )
         else:
             st.info(_t('no_data_selected', lang))
 
@@ -1745,7 +1870,11 @@ def show_historical_stats(lang):
                 
                 medal_counts = medal_counts.sort_values(by=['1. miejsce', '2. miejsce', '3. miejsce'], ascending=[False, False, False])
                 
-                st.dataframe(medal_counts)
+                medal_counts_display = medal_counts.reset_index().rename(columns={'uczestnik': participant_col_name})
+                st.dataframe(
+                    medal_counts_display, 
+                    hide_index=True
+                )
             else:
                 st.info(_t('no_data_selected', lang))
         else:
@@ -1781,7 +1910,11 @@ def show_historical_stats(lang):
         player_stats[col_mean_pos] = player_stats[col_mean_pos].round(1)
         player_stats[col_median_pos] = player_stats[col_median_pos].round(1)
 
-        st.dataframe(player_stats.set_index(_t('participant', lang)).sort_values(by=col_mean_pos))
+        player_stats_display = player_stats.sort_values(by=col_mean_pos)
+        st.dataframe(
+            player_stats_display, 
+            hide_index=True
+        )
     else:
         st.info(_t('no_data_selected', lang))
 
@@ -1912,7 +2045,7 @@ def show_historical_stats(lang):
                 current_best_result = best_result_in_edition
         
         if overall_records:
-            st.dataframe(pd.DataFrame(overall_records))
+            st.dataframe(pd.DataFrame(overall_records), hide_index=True)
         else:
             st.info(_t('no_data_selected', lang))
     else:
@@ -1943,7 +2076,12 @@ def show_historical_stats(lang):
             personal_records_df = pd.DataFrame(personal_records_timeline)
             personal_records_df['miesiac_sort'] = personal_records_df[_t('edition', lang)].apply(lambda x: datetime.strptime(x, '%m.%Y'))
             personal_records_df = personal_records_df.sort_values(by='miesiac_sort').drop(columns='miesiac_sort')
-            st.dataframe(personal_records_df)
+            
+            personal_records_display = personal_records_df.copy()
+            st.dataframe(
+                personal_records_display, 
+                hide_index=True
+            )
         else:
             st.info(_t('no_data_selected', lang))
     else:
