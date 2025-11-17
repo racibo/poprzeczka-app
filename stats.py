@@ -14,17 +14,26 @@ import io
 import time
 from streamlit_extras.mention import mention # Do podziękowań
 
+# <<< NOWE IMPORTY DLA GOOGLE DRIVE >>>
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaIoBaseUpload
+
 # --- Ustawienia Strony ---
 st.set_page_config(
     layout="wide", 
     page_title="Analiza i Zarządzanie Poprzeczką", 
-    # UWAGA: To jest poprawny "surowy" link do Twojego logo
-    page_icon="https://raw.githubusercontent.com/racibo/poprzeczka-app/faf9f811305e3a4ee11c60345e56c722be5058f0/logo.png" 
+    # UWAGA: Wklej tutaj swój "surowy" link URL do logo z GitHuba
+    page_icon="https://raw.githubusercontent.com/poprzeczka/poprzeczka-app/main/logoP.png" # <--- ZMIEŃ NA SWÓJ LINK
 )
 
 # === Definicje Plików i Uczestników ===
 FILE_HISTORICAL = "historical_results.json" 
 GOOGLE_SHEET_NAME = "Baza Danych Poprzeczki" 
+
+# !!! WAŻNE: KROK 1 - WKLEJ TUTAJ ID SWOJEGO FOLDERU Z GOOGLE DRIVE !!!
+# Znajdziesz go w linku URL, gdy otworzysz ten folder w przeglądarce.
+# (To ten długi ciąg znaków po "folders/")
+GOOGLE_DRIVE_FOLDER_ID = "1b-mUxDmKEUoOyLtTePeb7RaJWGfO_Xre" 
 
 CURRENT_PARTICIPANTS = sorted([
     'ataraksja', 'browery', 'cezary-io', 'edycu007', 'ervin-lemark', 
@@ -35,6 +44,7 @@ SUBMITTER_LIST = CURRENT_PARTICIPANTS + ['poprzeczka (Admin)']
 
 
 # === Słownik Tłumaczeń (PL/EN) ===
+# (Pozostaje bez zmian)
 translations = {
     'pl': {
         'app_title': "Analiza i Zarządzanie Poprzeczką",
@@ -58,13 +68,15 @@ translations = {
         'form_converters_warning': "Jeśli zgłaszasz kroki z aktywności (np. Strava, Garmin), stosujemy poniższe przeliczniki. Upewnij się, że Twój wynik końcowy jest poprawny.",
         'form_notes_label': "Inne (opcjonalnie)",
         'form_notes_placeholder': "Np. 'Dane ze Strava', 'Link do zrzutu ekranu: ...', 'Zapomniałem zegarka'",
-        'form_upload_label': "Zrzut ekranu (opcjonalnie) - na razie tylko informacyjnie",
+        'form_upload_label': "Zrzut ekranu (opcjonalnie)",
         'form_thanks_note': "> W miarę możliwości będę nagradzał za pomoc we współtworzeniu rozgrywki. Z góry dziękuję za pomoc!",
         'form_submit_button': "Zapisz dane",
         'form_ranking_info': 'Bieżące klasyfikacje możesz już teraz sprawdzić w dziale "Ranking Bieżącej Edycji"',
         'form_success_message': "Pomyślnie zapisano: **{0}** - Dzień {1} - Status: **{2}**",
         'form_error_message': "Wystąpił błąd podczas zapisu danych: {0}",
         'form_error_no_participant': "Błąd: Musisz wybrać uczestnika i wprowadzającego.",
+        'form_error_drive_not_configured': "Błąd: Przesyłanie plików jest wyłączone. Administrator musi skonfigurować 'GOOGLE_DRIVE_FOLDER_ID' w kodzie.",
+        'form_error_uploading_file': "Błąd podczas przesyłania pliku '{0}': {1}",
         'form_confirmation_header': "Szczegóły zapisu (potwierdzenie)",
         'form_confirmation_participant': "Uczestnik",
         'form_confirmation_day': "Etap (Dzień)",
@@ -244,13 +256,15 @@ translations = {
         'form_converters_warning': "If you are reporting steps from activities (e.g., Strava, Garmin), we use the converters below. Please ensure your final score is correct.",
         'form_notes_label': "Other (optional)",
         'form_notes_placeholder': "e.g., 'Data from Strava', 'Screenshot link: ...', 'Forgot my watch'",
-        'form_upload_label': "Screenshot (optional) - for info only",
+        'form_upload_label': "Screenshot (optional)",
         'form_thanks_note': "> Where possible, I will reward assistance in co-creating the game. Thank you in advance for your help!",
         'form_submit_button': "Save Data",
         'form_ranking_info': 'You can check the current standings right now in the "Current Edition Ranking" section',
         'form_success_message': "Successfully saved: **{0}** - Day {1} - Status: **{2}**",
         'form_error_message': "An error occurred while saving data: {0}",
         'form_error_no_participant': "Error: You must select a submitter and a participant.",
+        'form_error_drive_not_configured': "Error: File upload is disabled. Administrator must configure 'GOOGLE_DRIVE_FOLDER_ID' in the code.",
+        'form_error_uploading_file': "Error uploading file '{0}': {1}",
         'form_confirmation_header': "Submission Details (Confirmation)",
         'form_confirmation_participant': "Participant",
         'form_confirmation_day': "Stage (Day)",
@@ -297,10 +311,9 @@ translations = {
         'current_stats_streaks_days': "days",
         'current_stats_race_header': "🏁 Highest Stage Race",
         'current_stats_race_desc': "Move the slider to see who was in the lead (had the highest passed stage) at the end of each day.",
-        # <<< POPRAWKA 2 (Missing Key): Usunięto 'CH ' >>>
-        'current_stats_race_mode': "Select Mode:", 
-        'current_stats_race_mode_anim': "Animation", 
-        'current_stats_race_mode_manual': "Manual Control", 
+        'current_stats_race_mode': "Select Mode:",
+        'current_stats_race_mode_anim': "Animation",
+        'current_stats_race_mode_manual': "Manual Control",
         'current_stats_race_button': "Start the Race!",
         'current_stats_race_day': "Stage",
         'current_stats_race_total': "Highest Stage",
@@ -418,10 +431,10 @@ def _t(key, lang, *args):
     return text.format(*args) if args else text
 
 
-# === Połączenie z Google Sheets ===
-@st.cache_resource(ttl=600) 
-def connect_to_google_sheets():
-    """Łączy się z Google Sheets używając st.secrets."""
+# === Połączenie z Google ===
+@st.cache_resource(ttl=600)
+def get_google_credentials():
+    """Pobiera i autoryzuje poświadczenia Google."""
     try:
         creds_json = {
             "type": st.secrets["type"],
@@ -435,19 +448,40 @@ def connect_to_google_sheets():
             "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
             "client_x509_cert_url": st.secrets["client_x509_cert_url"]
         }
-        
         scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/drive']
         creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)
-        client = gspread.authorize(creds)
-        
-        sheet = client.open(GOOGLE_SHEET_NAME)
-        return sheet
+        return creds
     except Exception as e:
         if "No secrets found" in str(e):
              st.error(f"Błąd połączenia: Brak pliku secrets.toml. Uruchamiasz lokalnie? Upewnij się, że plik .streamlit/secrets.toml jest poprawnie skonfigurowany.")
         else:
-            st.error(f"Błąd połączenia z Google Sheets: {e}. Sprawdź 'Secrets' w Streamlit Cloud lub lokalny plik secrets.toml.")
+            st.error(f"Błąd połączenia z Google: {e}. Sprawdź 'Secrets' w Streamlit Cloud lub lokalny plik secrets.toml.")
         return None
+
+@st.cache_resource(ttl=600) 
+def connect_to_google_sheets():
+    """Łączy się z Google Sheets."""
+    creds = get_google_credentials()
+    if creds:
+        try:
+            client = gspread.authorize(creds)
+            sheet = client.open(GOOGLE_SHEET_NAME)
+            return sheet
+        except Exception as e:
+            st.error(f"Błąd otwierania Arkusza Google: {e}")
+    return None
+
+@st.cache_resource(ttl=600)
+def connect_to_google_drive():
+    """Łączy się z Google Drive API."""
+    creds = get_google_credentials()
+    if creds:
+        try:
+            service = build('drive', 'v3', credentials=creds)
+            return service
+        except Exception as e:
+            st.error(f"Błąd łączenia z Google Drive API: {e}")
+    return None
 
 @st.cache_data(ttl=60) 
 def load_google_sheet_data(_sheet, worksheet_name): 
@@ -470,6 +504,36 @@ def load_google_sheet_data(_sheet, worksheet_name):
     except Exception as e:
         st.error(f"Nie można wczytać danych z zakładki '{worksheet_name}': {e}")
         return pd.DataFrame()
+
+# === NOWA FUNKCJA: Przesyłanie Plików ===
+def upload_file_to_drive(service, file_obj, folder_id, lang):
+    """Przesyła plik (file_obj) do folderu Google Drive (folder_id) i zwraca link."""
+    try:
+        file_metadata = {
+            'name': file_obj.name,
+            'parents': [folder_id]
+        }
+        # Wczytaj plik do bufora pamięci
+        file_buffer = io.BytesIO(file_obj.getvalue())
+        media = MediaIoBaseUpload(file_buffer, mimetype=file_obj.type, resumable=True)
+        
+        file = service.files().create(
+            body=file_metadata,
+            media_body=media,
+            fields='id, webViewLink' # Poproś o link do podglądu
+        ).execute()
+        
+        # Udostępnij plik publicznie (tylko do odczytu)
+        file_id = file.get('id')
+        service.permissions().create(
+            fileId=file_id,
+            body={'type': 'anyone', 'role': 'reader'}
+        ).execute()
+        
+        return file.get('webViewLink') # Zwróć link
+    except Exception as e:
+        st.error(_t('form_error_uploading_file', lang, file_obj.name, e))
+        return None
 
 # === Sekcja 1: Formularz Wprowadzania Danych ===
 
@@ -575,9 +639,26 @@ def show_submission_form(lang):
             elif status == _t('form_status_no_report', lang):
                 status_key = "Brak raportu"
             
-            file_info = f"Załączono plik: {uploaded_file.name}" if uploaded_file else ""
-            full_notes = f"{notes} | {file_info}".strip(" | ")
+            # --- Logika Przesyłania Pliku ---
+            file_link_text = ""
+            if uploaded_file is not None:
+                if GOOGLE_DRIVE_FOLDER_ID == "PASTE_YOUR_FOLDER_ID_HERE":
+                    st.error(_t('form_error_drive_not_configured', lang))
+                    file_link_text = f"Błąd konfiguracji (Plik: {uploaded_file.name})"
+                else:
+                    drive_service = connect_to_google_drive()
+                    if drive_service:
+                        file_link = upload_file_to_drive(drive_service, uploaded_file, GOOGLE_DRIVE_FOLDER_ID, lang)
+                        if file_link:
+                            file_link_text = file_link
+                        else:
+                            file_link_text = f"(Błąd przesyłania pliku: {uploaded_file.name})"
+                    else:
+                        file_link_text = "(Błąd połączenia z Google Drive)"
+            
+            full_notes = f"{notes} | {file_link_text}".strip(" | ")
             timestamp = datetime.now().isoformat()
+            # --- Koniec Logiki Przesyłania Pliku ---
 
             try:
                 sheet = connect_to_google_sheets()
@@ -810,7 +891,6 @@ def find_last_complete_stage(data, elimination_map, max_day):
             
     return complete_stages 
 
-# <<< NOWA FUNKCJA POMOCNICZA DLA WYKRESU >>>
 def get_race_data_for_day(data, day_to_show, lang):
     """Oblicza najwyższy zaliczony etap dla każdego gracza na koniec danego dnia."""
     scores = {p: 0 for p in CURRENT_PARTICIPANTS} 
@@ -971,15 +1051,12 @@ def show_current_edition_dashboard(lang):
     st.subheader(_t('current_stats_race_header', lang))
     st.write(_t('current_stats_race_desc', lang))
     
-    # <<< POPRAWKA 3: Przebudowa Wykresu na Radio + Suwak >>>
-    # Miejsce na wykres
     chart_placeholder = st.empty()
     
-    # Kontrolki pod wykresem
     mode = st.radio(
         _t('current_stats_race_mode', lang), 
         (_t('current_stats_race_mode_anim', lang), _t('current_stats_race_mode_manual', lang)), 
-        index=1, # Domyślnie "Kontrola ręczna"
+        index=1, 
         horizontal=True,
     )
     
@@ -1008,9 +1085,8 @@ def show_current_edition_dashboard(lang):
                 with chart_placeholder.container():
                     st.pyplot(fig)
                 plt.close(fig) 
-                time.sleep(0.1)
+                time.sleep(0.1) 
     else:
-        # Tryb Ręczny (domyślny)
         race_day_slider = st.slider(
             _t('current_stats_race_day', lang), 
             1, max_day_reported, max_day_reported
@@ -1028,7 +1104,6 @@ def show_current_edition_dashboard(lang):
         with chart_placeholder.container():
             st.pyplot(fig)
         plt.close(fig)
-    # <<< Koniec Poprawki 3 >>>
 
 
     if st.checkbox(_t('current_log_expander', lang)):
@@ -1841,7 +1916,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
