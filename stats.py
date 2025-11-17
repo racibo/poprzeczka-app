@@ -14,15 +14,12 @@ import io
 import time
 from streamlit_extras.mention import mention # Do podziękowań
 
-# <<< NOWE IMPORTY DLA GOOGLE DRIVE >>>
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaIoBaseUpload
-
 # --- Ustawienia Strony ---
 st.set_page_config(
     layout="wide", 
     page_title="Analiza i Zarządzanie Poprzeczką", 
     # UWAGA: Wklej tutaj swój "surowy" link URL do logo z GitHuba
+    # Przykład: page_icon="https://raw.githubusercontent.com/twoja-nazwa/poprzeczka-app/main/logo.png" 
     page_icon="https://raw.githubusercontent.com/poprzeczka/poprzeczka-app/main/logoP.png" # <--- ZMIEŃ NA SWÓJ LINK
 )
 
@@ -44,7 +41,321 @@ SUBMITTER_LIST = CURRENT_PARTICIPANTS + ['poprzeczka (Admin)']
 
 
 # === Słownik Tłumaczeń (PL/EN) ===
-# (Pozostaje bez zmian)
+translations = {
+    'pl': {
+        'app_title': "Analiza i Zarządzanie Poprzeczką",
+        'nav_header': "Nawigacja",
+        'nav_current_ranking': "📊 Ranking Bieżącej Edycji",
+        'nav_submission_form': "📋 Formularz Wprowadzania Danych",
+        'nav_historical_stats': "📈 Statystyki Historyczne",
+        'form_header': "Formularz wprowadzania danych",
+        'form_info': "Wprowadź dane za konkretny etap (dzień) rywalizacji.",
+        'form_submitter_label': "Twoja nazwa (Kto wprowadza dane?)",
+        'form_submitter_placeholder': "Wybierz, kto wprowadza dane...",
+        'form_participant_label': "Uczestnik, którego dotyczy wpis",
+        'form_participant_placeholder': "Wybierz uczestnika...",
+        'form_day_label': "Etap (numer dnia)",
+        'form_status_label': "Status etapu",
+        'form_status_pass': "Zaliczone",
+        'form_status_fail': "Niezaliczone",
+        'form_status_no_report': "Brak raportu",
+        'form_status_info': "Uwaga: 'Niezaliczone' oraz 'Brak raportu' mają ten sam skutek (etap niezaliczony).",
+        # <<< POPRAWKA 1 (SyntaxError): Dodano brakujący cudzysłów na początku >>>
+        'form_converters_expander': "ℹ️ Informacja o przelicznikach (dla danych ze Strava itp.)",
+        'form_converters_warning': "Jeśli zgłaszasz kroki z aktywności (np. Strava, Garmin), stosujemy poniższe przeliczniki. Upewnij się, że Twój wynik końcowy jest poprawny.",
+        'form_notes_label': "Inne (opcjonalnie)",
+        'form_notes_placeholder': "Np. 'Dane ze Strava', 'Link do zrzutu ekranu: ...', 'Zapomniałem zegarka'",
+        'form_upload_label': "Zrzut ekranu (opcjonalnie)",
+        'form_thanks_note': "> W miarę możliwości będę nagradzał za pomoc we współtworzeniu rozgrywki. Z góry dziękuję za pomoc!",
+        'form_submit_button': "Zapisz dane",
+        'form_ranking_info': 'Bieżące klasyfikacje możesz już teraz sprawdzić w dziale "Ranking Bieżącej Edycji"',
+        'form_success_message': "Pomyślnie zapisano: **{0}** - Dzień {1} - Status: **{2}**",
+        'form_error_message': "Wystąpił błąd podczas zapisu danych: {0}",
+        'form_error_no_participant': "Błąd: Musisz wybrać uczestnika i wprowadzającego.",
+        'form_error_drive_not_configured': "Błąd: Przesyłanie plików jest wyłączone. Administrator musi skonfigurować 'GOOGLE_DRIVE_FOLDER_ID' w kodzie.",
+        'form_error_uploading_file': "Błąd podczas przesyłania pliku '{0}': {1}",
+        'form_confirmation_header': "Szczegóły zapisu (potwierdzenie)",
+        'form_confirmation_participant': "Uczestnik",
+        'form_confirmation_day': "Etap (Dzień)",
+        'form_confirmation_status': "Status",
+        'form_confirmation_notes': "Notatki",
+        'form_confirmation_notes_empty': "Brak",
+        'form_overwrite_info': "W razie pomyłki, po prostu wprowadź dane dla tego samego uczestnika i dnia jeszcze raz. Nowy wpis nadpisze stary w rankingu.",
+        'current_header': "📊 Ranking i Status Bieżącej Edycji",
+        'current_no_data': "Brak danych dla bieżącej edycji. Wprowadź pierwsze dane za pomocą formularza.",
+        'current_ranking_header': "Aktualna Klasyfikacja (Na Żywo)",
+        'current_ranking_rules': """
+        Klasyfikacja jest liczona na żywo do **Etapu {0}** (ostatni zaraportowany dzień).
+        1.  Sortowanie po **najwyższym zaliczonym etapie** (malejąco).
+        2.  Przy remisie, sortowanie odbywa się przez porównanie wyników etap po etapie (zaczynając od góry). Pierwsza różnica decyduje - osoba z 'Niezaliczonym' etapem przegrywa.
+        3.  Odpadnięcie następuje po **3 kolejnych** niepowodzeniach (Niezaliczone / Brak raportu).
+        """,
+        'current_official_ranking_header': "Oficjalna Klasyfikacja (wg kompletnych etapów)",
+        'current_official_stage_selector': "Wybierz etap, aby zobaczyć oficjalną klasyfikację z tego dnia:",
+        'current_official_ranking_desc': "Poniższa klasyfikacja jest oparta o **Etap {0}**. Jest to ostatni (lub wybrany) dzień, dla którego wszyscy aktywni uczestnicy posiadają kompletne dane (jawne lub wywnioskowane).",
+        'current_official_ranking_none': "Nie znaleziono jeszcze żadnego w pełni kompletnego etapu (np. brakuje danych za Etap 1 od wszystkich aktywnych graczy).",
+        'current_ranking_error': "Wystąpił błąd podczas obliczania rankingu: {0}",
+        'current_header_check_error': "BŁĄD KONFIGURACJI: Sprawdź nagłówki w Arkuszu Google!",
+        'current_header_check_details': "Aplikacja nie może odczytać danych, ponieważ nagłówki w zakładce '{0}' są nieprawidłowe.",
+        'current_header_check_expected': "Oczekiwane nagłówki",
+        'current_header_check_found': "Znalezione nagłówki",
+        'ranking_col_rank': "Miejsce", 
+        'ranking_col_participant': "Uczestnik",
+        'ranking_col_highest_pass': "Najw. Zaliczone",
+        'ranking_col_status': "Status",
+        'ranking_col_failed_list': "Niezaliczone (pierwsze 10)",
+        'ranking_status_active': "W grze",
+        'ranking_status_eliminated': "Odpadł (Dzień {0})",
+        'current_completeness_header': "Kompletność Danych (Ostatnie {0} etapów)",
+        'current_completeness_no_data': "Brak danych do wyświetlenia kompletności.",
+        'completeness_col_day': "Dzień",
+        'completeness_col_participant': "Uczestnik",
+        'current_log_expander': "Pokaż log wpisów (dla Admina)",
+        'current_log_empty': "Log wpisów jest pusty.",
+        'current_stats_header': "🏆 Statystyki Bieżącej Edycji",
+        'current_stats_top_submitters': "Najwięksi Pomocnicy (dzięki!)",
+        'current_stats_top_submitters_desc': "Osoby, które najczęściej wprowadzały dane do systemu. Postaram się nagrodzić Was jakimiś tokenami.",
+        'current_stats_streaks': "Najdłuższe Serie Zaliczeń", 
+        'current_stats_streaks_desc': "Uczestnicy z najdłuższą nieprzerwaną serią zaliczonych etapów (w dowolnym momencie edycji).", 
+        'current_stats_streaks_days': "dni",
+        'current_stats_race_header': "🏁 Wyścig o Najwyższy Etap",
+        'current_stats_race_desc': "Przesuń suwak, aby zobaczyć, kto prowadził (miał najwyższy zaliczony etap) na koniec wybranego dnia.",
+        'current_stats_race_mode': "Wybierz tryb:",
+        'current_stats_race_mode_anim': "Animacja",
+        'current_stats_race_mode_manual': "Kontrola ręczna",
+        'current_stats_race_button': "Uruchom Wyścig!", 
+        'current_stats_race_day': "Etap",
+        'current_stats_race_total': "Najwyższy Etap",
+        'title': "Interaktywna analiza rywalizacji krokowej",
+        'sidebar_header': "🎛️ Filtry i opcje",
+        'select_period': "Wybierz okres",
+        'manual_select': "Wybierz miesiące ręcznie",
+        'last_n_editions': "Ostatnie {0} edycji",
+        'all_editions': "Wszystkie edycje",
+        'select_users': "Wybierz uczestników",
+        'select_all_users': "Wszyscy uczestnicy",
+        'min_editions': "Minimalna liczba edycji",
+        'chart_type': "Wybierz typ wykresu",
+        'results': "Wyniki",
+        'positions': "Miejsca",
+        'comparison_chart_title_results': "Porównanie wyników graczy",
+        'comparison_chart_title_positions': "Porównanie pozycji graczy",
+        'y_axis_results': "Wynik",
+        'y_axis_positions': "Miejsce",
+        'x_axis_month': "Miesiąc",
+        'x_axis_edition': "Numer edycji",
+        'personal_records': "🏅 Rekordy osobiste",
+        'best_result': "Najlepszy wynik",
+        'worst_result': "Najgorszy wynik",
+        'best_position': "Najlepsze miejsce",
+        'worst_position': "Najgorsze miejsce",
+        'avg_result': "Średni wynik",
+        'avg_position': "Średnie miejsce",
+        'edition': "Edycja",
+        'participant': "Uczestnik",
+        'result': "Wynik",
+        'position': "Miejsce",
+        'no_data_selected': "Brak danych dla wybranych filtrów.",
+        'monthly_summary': "Zestawienie miesięczne",
+        'monthly_summary_results': "Zestawienie miesięczne (Wyniki)",
+        'monthly_summary_positions': "Zestawienie miesięczne (Miejsca)",
+        'monthly_summary_desc': "Tabela przedstawia wyniki i zajęte miejsca w poszczególnych edycjach.",
+        'distribution_of_results': "Rozkład wyników",
+        'histogram_title_results': "Histogram wyników",
+        'histogram_title_positions': "Histogram miejsc",
+        'player_stats': "Statystyki graczy (min. edycji)",
+        'count_col': "Liczba edycji",
+        'mean_col': "Średnia",
+        'min_col': "Minimum",
+        'max_col': "Maksimum",
+        'median_col': "Mediana",
+        'std_col': "Odch. std.",
+        'correlation_analysis': "Analiza korelacji (Wynik vs Miejsce)",
+        'correlation_r': "Współczynnik korelacji (r):",
+        'correlation_p': "Wartość p:",
+        'correlation_desc_strong_neg': "Silna ujemna korelacja: Wzrost wyniku wiąże się z lepszą pozycją (niższy numer miejsca).",
+        'correlation_desc_weak_neg': "Słaba ujemna korelacja: Wzrost wyniku może wiązać się z lepszą pozycją (niższy numer miejsca).",
+        'correlation_desc_no': "Brak korelacji: Wynik nie ma związku z miejscem.",
+        'correlation_desc_not_significant': "Korelacja nie jest statystycznie istotna (p > 0.05).",
+        'medal_classification_title': "Klasyfikacja miejsc",
+        'position_col': "Pozycja",
+        'medals_col': "Medale",
+        'total_medals_col': "Suma medali",
+        'total_participations': "Liczba startów",
+        'user_details_header': "Szczegółowe statystyki uczestnika",
+        'select_single_user': "Wybierz jednego uczestnika z filtrów, aby zobaczyć jego rekordy osobiste.",
+        'heatmap_title': "Mapa cieplna zajmowanych miejsc",
+        'heatmap_desc': "Wizualizacja miejsc zajmowanych przez uczestników. Jaśniejszy kolor oznacza lepsze (niższe) miejsce.",
+        'medal_race_title': "Historyczny wyścig medalowy",
+        'medal_race_desc': "Wykres pokazuje skumulowaną liczbę medali (miejsca 1-3) dla uczestników po każdej edycji.",
+        'cumulative_medals': "Łączna liczba medali (Top {0})",
+        'about_app': "O aplikacji",
+        'about_app_text': "Ta aplikacja Streamlit służy do interaktywnej wizualizacji, analizy danych historycznych oraz zarządzania bieżącą edycją rywalizacji krokowej.",
+        'participants_per_edition': "Liczba uczestników w poszczególnych edycjach",
+        'avg_result_pos_per_edition': "Średni wynik i pozycja w poszczególnych edycjach",
+        'avg_result_edition': "Średni wynik",
+        'avg_position_edition': "Średnia pozycja",
+        'select_medal_range': "Wybierz zakres miejsc medalowych",
+        'top_1': "Tylko 1. miejsce",
+        'top_3': "Top 3 (1-3)",
+        'top_5': "Top 5 (1-5)",
+        'top_10': "Top 10 (1-10)",
+        'custom_range': "Zakres niestandardowy",
+        'min_medal_position': "Minimalna pozycja medalowa",
+        'max_medal_position': "Maksymalna pozycja medalowa",
+        'scatter_plot_title': "Wyniki uczestników w poszczególnych edycjach (z miejscami)",
+        'scatter_plot_desc': "Wykres punktowy przedstawiający wyniki każdego uczestnika w kolejnych edycjach. Kolor punktu oznacza zajęte miejsce.",
+        'position_legend': "Miejsce",
+        'participants_chart_title': "Liczba uczestników w poszczególnych edycjach",
+        'participants_chart_ylabel': "Liczba uczestników",
+        'edition_ranking_title': "Ranking edycji rozgrywki",
+        'edition_ranking_desc': "Tabela przedstawia ranking edycji od najlepszej do najgorszej, na podstawie średniego wyniku i średniej pozycji.",
+        'overall_records_title': "Chronologiczna tablica rekordów całej rozgrywki",
+        'overall_records_desc': "Tabela przedstawia najwyższe wyniki osiągnięte w całej rozgrywce po każdej edycji.",
+        'personal_records_timeline_title': "Chronologiczna tablica rekordów osobistych uczestników",
+        'personal_records_timeline_desc': "Tabela przedstawia, kiedy poszczególni uczestnicy pobijali swoje rekordy osobiste.",
+        'record_holder': "Rekordzista",
+        'record_value': "Wartość rekordu",
+        'previous_record': "Poprzedni rekord",
+        'record_broken_by': "Rekord pobity przez",
+        'new_record': "Nowy rekord",
+        'old_record': "Stary rekord",
+        'edition_winner': "Zwycięzca edycji",
+        'medal_classification_classic_title': "Klasyfikacja medalowa (Top 3)",
+        'survival_analysis_title': "Analiza przetrwania uczestników",
+        'survival_analysis_desc': "Wykres pokazuje, ilu uczestników pozostało w grze każdego dnia. Uczestnik odpada 3 dni po ostatnim zaliczonym etapie (np. wynik 10 oznacza odpadnięcie 13. dnia).",
+        'survival_analysis_select_editions': "Wybierz edycje do porównania",
+        'survival_analysis_x_axis': "Dzień rozgrywki",
+        'survival_analysis_y_axis': "Liczba aktywnych uczestników",
+        'survival_analysis_legend': "Edycja",
+        'survival_analysis_no_selection': "Wybierz co najmniej jedną edycję, aby zobaczyć analizę przetrwania.",
+    },
+    'en': {
+        # ... (Tłumaczenia EN) ...
+        'app_title': "Step Challenge Analysis & Management",
+        'nav_header': "Navigation",
+        'nav_current_ranking': "📊 Current Edition Ranking",
+        'nav_submission_form': "📋 Data Entry Form",
+        'nav_historical_stats': "📈 Historical Stats",
+        'form_header': "Data Entry Form",
+        'form_info': "Enter data for a specific stage (day) of the competition.",
+        'form_submitter_label': "Your Name (Who is entering the data?)",
+        'form_submitter_placeholder': "Select submitter...",
+        'form_participant_label': "Participant (Data subject)",
+        'form_participant_placeholder': "Select participant...",
+        'form_day_label': "Stage (Day number)",
+        'form_status_label': "Stage Status",
+        'form_status_pass': "Passed",
+        'form_status_fail': "Failed",
+        'form_status_no_report': "No Report",
+        'form_status_info': "Note: 'Failed' and 'No Report' have the same effect (stage failed).",
+        'form_converters_expander': "ℹ️ Info about converters (for Strava data, etc.)",
+        'form_converters_warning': "If you are reporting steps from activities (e.g., Strava, Garmin), we use the converters below. Please ensure your final score is correct.",
+        'form_notes_label': "Other (optional)",
+        'form_notes_placeholder': "e.g., 'Data from Strava', 'Screenshot link: ...', 'Forgot my watch'",
+        'form_upload_label': "Screenshot (optional)",
+        'form_thanks_note': "> Where possible, I will reward assistance in co-creating the game. Thank you in advance for your help!",
+        'form_submit_button': "Save Data",
+        'form_ranking_info': 'You can check the current standings right now in the "Current Edition Ranking" section',
+        'form_success_message': "Successfully saved: **{0}** - Day {1} - Status: **{2}**",
+        'form_error_message': "An error occurred while saving data: {0}",
+        'form_error_no_participant': "Error: You must select a submitter and a participant.",
+        'form_error_drive_not_configured': "Error: File upload is disabled. Administrator must configure 'GOOGLE_DRIVE_FOLDER_ID' in the code.",
+        'form_error_uploading_file': "Error uploading file '{0}': {1}",
+        'form_confirmation_header': "Submission Details (Confirmation)",
+        'form_confirmation_participant': "Participant",
+        'form_confirmation_day': "Stage (Day)",
+        'form_confirmation_status': "Status",
+        'form_confirmation_notes': "Notes",
+        'form_confirmation_notes_empty': "None",
+        'form_overwrite_info': "If you make a mistake, just re-enter the data for the same participant and day. The new entry will overwrite the old one in the ranking.",
+        'current_header': "📊 Current Edition Ranking & Status",
+        'current_no_data': "No data for the current edition. Please enter the first data using the form.",
+        'current_ranking_header': "Current Standings (Live)",
+        'current_ranking_rules': """
+        Standings are calculated live up to **Stage {0}** (last reported day).
+        1.  Sorted by the **highest completed stage** (descending).
+        2.  On a tie, sorted by comparing stage results top-down. The first difference decides - the participant with a 'Failed' stage loses.
+        3.  Elimination occurs after **3 consecutive failures** (Failed / No Report).
+        """,
+        'current_official_ranking_header': "Official Standings (by Complete Stage)",
+        'current_official_stage_selector': "Select a stage to see the official standings from that day:",
+        'current_official_ranking_desc': "The following standings are based on **Stage {0}**. This is the last (or selected) day for which all active participants have complete data (explicit or inferred).",
+        'current_official_ranking_none': "No fully complete stage has been found yet (e.g., data for Stage 1 is missing from all active players).",
+        'current_ranking_error': "An error occurred while calculating the ranking: {0}",
+        'current_header_check_error': "CONFIG ERROR: Check Google Sheet Headers!",
+        'current_header_check_details': "The app cannot read data because the headers in the '{0}' worksheet are incorrect.",
+        'current_header_check_expected': "Expected Headers",
+        'current_header_check_found': "Found Headers",
+        'ranking_col_rank': "Rank", 
+        'ranking_col_participant': "Participant",
+        'ranking_col_highest_pass': "Highest Pass",
+        'ranking_col_status': "Status",
+        'ranking_col_failed_list': "Failed Stages (first 10)",
+        'ranking_status_active': "In Game",
+        'ranking_status_eliminated': "Eliminated (Day {0})",
+        'current_completeness_header': "Data Completeness (Last {0} stages)",
+        'current_completeness_no_data': "No data to display completeness.",
+        'completeness_col_day': "Day",
+        'completeness_col_participant': "Participant",
+        'current_log_expander': "Show submission log (for Admin)",
+        'current_log_empty': "Submission log is empty.",
+        'current_stats_header': "🏆 Current Edition Stats",
+        'current_stats_top_submitters': "Top Helpers (Thank You!)",
+        'current_stats_top_submitters_desc': "The people who submitted data most often. I will try to reward you with some tokens.",
+        'current_stats_streaks': "Longest Pass Streaks",
+        'current_stats_streaks_desc': "Participants with the longest unbroken streak of passed stages (at any point in the edition).",
+        'current_stats_streaks_days': "days",
+        'current_stats_race_header': "🏁 Highest Stage Race",
+        'current_stats_race_desc': "Move the slider to see who was in the lead (had the highest passed stage) at the end of each day.",
+        'current_stats_race_mode': "Select Mode:",
+        'current_stats_race_mode_anim': "Animation",
+        'current_stats_race_mode_manual': "Manual Control",
+Next Message:
+```python
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import json
+from datetime import datetime
+import numpy as np
+import os
+from scipy.stats import pearsonr
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+import gspread # Do obsługi Google Sheets
+from oauth2client.service_account import ServiceAccountCredentials
+import io
+import time
+from streamlit_extras.mention import mention # Do podziękowań
+
+# --- Ustawienia Strony ---
+st.set_page_config(
+    layout="wide", 
+    page_title="Analiza i Zarządzanie Poprzeczką", 
+    # UWAGA: Wklej tutaj swój "surowy" link URL do logo z GitHuba
+    # Przykład: page_icon="[https://raw.githubusercontent.com/twoja-nazwa/poprzeczka-app/main/logo.png](https://raw.githubusercontent.com/twoja-nazwa/poprzeczka-app/main/logo.png)" 
+    page_icon="[https://raw.githubusercontent.com/poprzeczka/poprzeczka-app/main/logoP.png](https://raw.githubusercontent.com/poprzeczka/poprzeczka-app/main/logoP.png)" # <--- ZMIEŃ NA SWÓJ LINK
+)
+
+# === Definicje Plików i Uczestników ===
+FILE_HISTORICAL = "historical_results.json" 
+GOOGLE_SHEET_NAME = "Baza Danych Poprzeczki" 
+
+# !!! WAŻNE: KROK 1 - WKLEJ TUTAJ ID SWOJEGO FOLDERU Z GOOGLE DRIVE !!!
+# Znajdziesz go w linku URL, gdy otworzysz ten folder w przeglądarce.
+# (To ten długi ciąg znaków po "folders/")
+GOOGLE_DRIVE_FOLDER_ID = "PASTE_YOUR_FOLDER_ID_HERE" 
+
+CURRENT_PARTICIPANTS = sorted([
+    'ataraksja', 'browery', 'cezary-io', 'edycu007', 'ervin-lemark', 
+    'fredkese', 'homesteadlt', 'manuvert', 'marianomariano', 'merthin', 
+    'navidjahanshahi', 'new.things', 'patif2025', 'racibo', 'sk1920'
+])
+SUBMITTER_LIST = CURRENT_PARTICIPANTS + ['poprzeczka (Admin)']
+
+
+# === Słownik Tłumaczeń (PL/EN) ===
 translations = {
     'pl': {
         'app_title': "Analiza i Zarządzanie Poprzeczką",
@@ -448,7 +759,8 @@ def get_google_credentials():
             "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
             "client_x509_cert_url": st.secrets["client_x509_cert_url"]
         }
-        scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/drive']
+        
+        scope = ["[https://spreadsheets.google.com/feeds](https://spreadsheets.google.com/feeds)", '[https://www.googleapis.com/auth/drive](https://www.googleapis.com/auth/drive)']
         creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)
         return creds
     except Exception as e:
@@ -513,24 +825,22 @@ def upload_file_to_drive(service, file_obj, folder_id, lang):
             'name': file_obj.name,
             'parents': [folder_id]
         }
-        # Wczytaj plik do bufora pamięci
         file_buffer = io.BytesIO(file_obj.getvalue())
         media = MediaIoBaseUpload(file_buffer, mimetype=file_obj.type, resumable=True)
         
         file = service.files().create(
             body=file_metadata,
             media_body=media,
-            fields='id, webViewLink' # Poproś o link do podglądu
+            fields='id, webViewLink' 
         ).execute()
         
-        # Udostępnij plik publicznie (tylko do odczytu)
         file_id = file.get('id')
         service.permissions().create(
             fileId=file_id,
             body={'type': 'anyone', 'role': 'reader'}
         ).execute()
         
-        return file.get('webViewLink') # Zwróć link
+        return file.get('webViewLink') 
     except Exception as e:
         st.error(_t('form_error_uploading_file', lang, file_obj.name, e))
         return None
@@ -642,7 +952,7 @@ def show_submission_form(lang):
             # --- Logika Przesyłania Pliku ---
             file_link_text = ""
             if uploaded_file is not None:
-                if GOOGLE_DRIVE_FOLDER_ID == "PASTE_YOUR_FOLDER_ID_HERE":
+                if GOOGLE_DRIVE_FOLDER_ID == "PASTE_YOUR_FOLDER_ID_HERE" or not GOOGLE_DRIVE_FOLDER_ID:
                     st.error(_t('form_error_drive_not_configured', lang))
                     file_link_text = f"Błąd konfiguracji (Plik: {uploaded_file.name})"
                 else:
@@ -1051,6 +1361,7 @@ def show_current_edition_dashboard(lang):
     st.subheader(_t('current_stats_race_header', lang))
     st.write(_t('current_stats_race_desc', lang))
     
+    # <<< POPRAWKA 3: Przebudowa Wykresu na Radio + Suwak >>>
     chart_placeholder = st.empty()
     
     mode = st.radio(
@@ -1068,6 +1379,7 @@ def show_current_edition_dashboard(lang):
             scores = {p: 0 for p in CURRENT_PARTICIPANTS} 
             for day in range(1, max_day_reported + 1):
                 for p in CURRENT_PARTICIPANTS:
+                    # Poprawiona linia:
                     if p in current_data and day in current_data.get(p, {}) and current_data[p][day]["status"] == "Zaliczone":
                         scores[p] = day 
                 
@@ -1104,6 +1416,7 @@ def show_current_edition_dashboard(lang):
         with chart_placeholder.container():
             st.pyplot(fig)
         plt.close(fig)
+    # <<< Koniec Poprawki 3 >>>
 
 
     if st.checkbox(_t('current_log_expander', lang)):
