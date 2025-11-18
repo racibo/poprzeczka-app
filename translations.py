@@ -207,9 +207,16 @@ translations = {
         'survival_analysis_y_axis': "Liczba aktywnych uczestników",
         'survival_analysis_legend': "Edycja",
         'survival_analysis_no_selection': "Wybierz co najmniej jedną edycję, aby zobaczyć analizę przetrwania.",
+        
+        # <<< NOWE TŁUMACZENIA >>>
+        'stats_rabbits_title': "🐰 Najwięksi spryciarze",
+        'stats_rabbits_desc': "Najwięcej niezliczonych etapów, a wciąż w grze!",
+        'card_hist_stats_header': "📊 Statystyki Historyczne:",
+        'card_avg_total': "Śr. wynik (Ogółem)",
+        'card_avg_l3': "Śr. wynik (Ost. 3 edycje)",
+        'card_avg_pos': "Zazwyczaj zajmowane miejsce",
     },
     'en': {
-        # ... (Wklej tutaj całą sekcję 'en' ze swojego oryginalnego pliku) ...
         'app_title': "Step Challenge Analysis & Management",
         'nav_header': "Navigation",
         'nav_current_ranking': "📊 Current Edition Ranking",
@@ -416,6 +423,14 @@ translations = {
         'survival_analysis_y_axis': "Number of active participants",
         'survival_analysis_legend': "Edition",
         'survival_analysis_no_selection': "Select at least one edition to see the survival analysis.",
+        
+        # <<< NOWE TŁUMACZENIA >>>
+        'stats_rabbits_title': "🐰 The Biggest Rabbits (Smartest)",
+        'stats_rabbits_desc': "Most failed stages, but still in the game!",
+        'card_hist_stats_header': "📊 Historical Stats:",
+        'card_avg_total': "Avg. Result (Total)",
+        'card_avg_l3': "Avg. Result (Last 3 ed.)",
+        'card_avg_pos': "Avg. Position",
     }
 }
 
