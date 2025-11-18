@@ -53,9 +53,12 @@ def calculate_ranking(data, max_day_reported, lang, ranking_type='live'):
                 start_day = eliminated_on_day
             return tuple(1 if d in p_failures else 0 for d in range(start_day, 0, -1))
 
+        failed_stages_str = ", ".join(map(str, sorted(failed_stages)[:10])) + ("..." if len(failed_stages) > 10 else "")
+
         if ranking_type == 'live':
             failed_col_key = 'ranking_col_failed_list_live'
-            failed_stages_str = ", ".join(map(str, sorted(failed_stages)[:10])) + ("..." if len(failed_stages) > 10 else "")
+            if not eliminated_on_day and consecutive_fails == 2:
+                failed_stages_str += " ❗"
         else: # 'official'
             failed_col_key = 'ranking_col_failed_list_official'
             failed_stages_str = ", ".join(map(str, sorted(failed_stages)))
@@ -139,6 +142,30 @@ def calculate_current_stats(data, max_day, lang):
     top_3_values = sorted(top_streaks_values, reverse=True)[:3]
     
     return df_streaks[df_streaks["Seria"].isin(top_3_values) & (df_streaks["Seria"] > 0)] 
+
+def calculate_rabbit_stats(data, max_day, elimination_map, lang):
+    """Oblicza 'Zające' - aktywni uczestnicy z największą liczbą potknięć."""
+    stumbles = []
+    for participant in CURRENT_PARTICIPANTS:
+        is_active = elimination_map.get(participant) is None or elimination_map.get(participant) > max_day
+        
+        if is_active:
+            days_data = data.get(participant, {})
+            fails_count = 0
+            for day in range(1, max_day + 1):
+                if day not in days_data or days_data[day]["status"] != "Zaliczone":
+                    fails_count += 1
+            
+            if fails_count > 0:
+                stumbles.append({"Uczestnik": participant, "Potknięcia": fails_count})
+    
+    df_stumbles = pd.DataFrame(stumbles).sort_values(by="Potknięcia", ascending=False)
+    
+    if df_stumbles.empty:
+        return pd.DataFrame(columns=["Uczestnik", "Potknięcia"])
+
+    top_values = sorted(df_stumbles["Potknięcia"].unique(), reverse=True)[:3]
+    return df_stumbles[df_stumbles["Potknięcia"].isin(top_values)]
 
 def find_last_complete_stage(data, elimination_map, max_day):
     """Znajduje ostatni dzień z kompletnymi danymi."""
@@ -234,21 +261,30 @@ def show_historical_context(df_historical, lang):
 def show_selected_participant_details(participant, rank, df_historical, current_data, max_day_reported, lang):
     """Wyświetla szczegóły dla JEDNEGO wybranego uczestnika."""
     
-    # Oblicz statystyki historyczne (tylko dla tego gracza)
     wins, medals, prev_rank_str = 0, 0, _t('summary_no_hist_data', lang)
-    
+    avg_res_all, avg_res_l3, avg_pos_all = "—", "—", "—"
+
     if not df_historical.empty and participant in df_historical['uczestnik'].values:
         p_hist = df_historical[df_historical['uczestnik'] == participant]
         wins = (p_hist['miejsce'] == 1).sum()
         medals = (p_hist['miejsce'] <= 3).sum()
         
-        # Ostatnie miejsce
         last_edition_nr = p_hist['edycja_nr'].max()
-        last_rank = p_hist[p_hist['edycja_nr'] == last_edition_nr]['miejsce'].min() # min bo może być kilka wpisów (teoretycznie)
+        last_rank = p_hist[p_hist['edycja_nr'] == last_edition_nr]['miejsce'].min()
         if pd.notna(last_rank):
             prev_rank_str = str(int(last_rank))
+            
+        if not p_hist['rezultat_numeric'].isnull().all():
+            avg_res_all = f"{p_hist['rezultat_numeric'].mean():.1f}"
+            
+        last_3_ed = sorted(df_historical['edycja_nr'].unique())[-3:]
+        p_hist_l3 = p_hist[p_hist['edycja_nr'].isin(last_3_ed)]
+        if not p_hist_l3['rezultat_numeric'].isnull().all():
+            avg_res_l3 = f"{p_hist_l3['rezultat_numeric'].mean():.1f}"
+            
+        if not p_hist['miejsce'].isnull().all():
+            avg_pos_all = f"{p_hist['miejsce'].mean():.1f}"
 
-    # Ostatnie 5 dni
     last_5_results_icons = []
     participant_days = current_data.get(participant, {})
     for day in range(max_day_reported, max(0, max_day_reported - 5), -1):
@@ -260,7 +296,6 @@ def show_selected_participant_details(participant, rank, df_historical, current_
         last_5_results_icons.append(icon)
     last_5_str = " ".join(last_5_results_icons)
 
-    # === WYGLĄD KARTY UCZESTNIKA ===
     with st.container(border=True):
         col_info, col_link = st.columns([0.8, 0.2])
         with col_info:
@@ -272,10 +307,14 @@ def show_selected_participant_details(participant, rank, df_historical, current_
             🥇 **{_t('summary_wins', lang)}:** {wins} | 
             🏅 **{_t('summary_medals', lang)}:** {medals}
             
+            **{_t('card_hist_stats_header', lang)}**
+            * {_t('card_avg_total', lang)}: **{avg_res_all}**
+            * {_t('card_avg_l3', lang)}: **{avg_res_l3}**
+            * {_t('card_avg_pos', lang)}: **{avg_pos_all}**
+            
             📅 **{_t('summary_last_5_days', lang)}:** {last_5_str}
             """)
             
-            # Odsyłacz do pełnej historii
             caption_text = {
                 'pl': f"👉 Więcej danych w zakładce: **{_t('nav_historical_stats', lang)}**",
                 'en': f"👉 More data in: **{_t('nav_historical_stats', lang)}** tab"
@@ -283,8 +322,168 @@ def show_selected_participant_details(participant, rank, df_historical, current_
             st.caption(caption_text[lang])
             
         with col_link:
-            st.write("") # Spacer
+            st.write("")
             st.link_button(f"Hive\n@{participant}", f"https://hive.blog/@{participant}", use_container_width=True)
+
+def show_daily_rank_progression(current_data, max_day_reported, lang):
+    """Generuje wykres liniowy pokazujący zmiany miejsca w rankingu dzień po dniu."""
+    labels = {
+        'pl': {'loading': "Generowanie wykresu historycznego...", 'title': "📉 Przebieg rywalizacji (Zmiana miejsc)", 'day': "Dzień", 'rank': "Miejsce"},
+        'en': {'loading': "Generating history chart...", 'title': "📉 Competition Progress (Rank History)", 'day': "Day", 'rank': "Rank"}
+    }
+    txt = labels.get(lang, labels['pl'])
+
+    with st.spinner(txt['loading']):
+        progress_data = {}
+        for day in range(1, max_day_reported + 1):
+            df_daily, _ = calculate_ranking(current_data, day, lang, ranking_type='live')
+            part_col = _t('ranking_col_participant', lang)
+            rank_col = _t('ranking_col_rank', lang)
+            progress_data[day] = df_daily.set_index(part_col)[rank_col].to_dict()
+            
+        df_progress = pd.DataFrame.from_dict(progress_data, orient='index')
+        
+        if df_progress.empty:
+            st.info("Brak danych do wyświetlenia wykresu.")
+            return
+
+        fig, ax = plt.subplots(figsize=(12, 8))
+        plt.style.use('dark_background')
+        ax.set_facecolor('#0e1117')
+        fig.patch.set_facecolor('#0e1117')
+        
+        colors = plt.cm.tab20(np.linspace(0, 1, len(df_progress.columns)))
+        
+        for i, participant in enumerate(df_progress.columns):
+            ax.plot(df_progress.index, df_progress[participant], marker='o', markersize=4, label=participant, color=colors[i], linewidth=1.5)
+            last_val = df_progress[participant].iloc[-1]
+            if pd.notna(last_val):
+                ax.text(max_day_reported + 0.2, last_val, f" {participant}", verticalalignment='center', fontsize=9, color=colors[i], fontweight='bold')
+
+        ax.invert_yaxis()
+        ax.set_title(txt['title'], color='white')
+        ax.set_xlabel(txt['day'], color='white')
+        ax.set_ylabel(txt['rank'], color='white')
+        ax.grid(True, which='both', linestyle='--', linewidth=0.3, alpha=0.5)
+        ax.set_xticks(df_progress.index)
+        ax.tick_params(axis='x', colors='white')
+        ax.tick_params(axis='y', colors='white')
+        for spine in ax.spines.values():
+            spine.set_color('#444444')
+
+        st.pyplot(fig)
+
+# <<< ZAKTUALIZOWANA FUNKCJA: Analiza etapów (z Elimination Map i formularzem) >>>
+def show_stage_analysis(current_data, max_day_reported, elimination_map, lang):
+    """Wyświetla statystyki trudności etapów i listę osób, które nie zaliczyły."""
+    
+    lbl = {
+        'pl': {
+            'expander': "📊 Analiza Etapów (Najtrudniejsze/Najłatwiejsze)",
+            'hardest': "🔥 Najtrudniejsze Etapy",
+            'easiest': "🍀 Najłatwiejsze Etapy",
+            'fails': "niezaliczeń",
+            'tool_header': "🔎 Sprawdź, kto zaliczył / nie zaliczył",
+            'select_stage': "Wybierz numer etapu:",
+            'check_btn': "Pokaż listę",
+            'pass_header': "✅ Zaliczyli:",
+            'fail_header': "❌ Nie zaliczyli:",
+            'no_one': "Brak",
+            'everyone_passed': "Wszyscy (aktywni) zaliczyli!",
+            'everyone_failed': "Nikt nie zaliczył!"
+        },
+        'en': {
+            'expander': "📊 Stage Analysis (Hardest/Easiest)",
+            'hardest': "🔥 Hardest Stages",
+            'easiest': "🍀 Easiest Stages",
+            'fails': "failures",
+            'tool_header': "🔎 Check pass/fail list",
+            'select_stage': "Select stage number:",
+            'check_btn': "Show list",
+            'pass_header': "✅ Passed:",
+            'fail_header': "❌ Failed:",
+            'no_one': "None",
+            'everyone_passed': "Everyone (active) passed!",
+            'everyone_failed': "No one passed!"
+        }
+    }
+    txt = lbl.get(lang, lbl['pl'])
+
+    with st.expander(txt['expander']):
+        # --- Statystyki trudności (tylko aktywni w danym dniu) ---
+        stage_stats = []
+        for day in range(1, max_day_reported + 1):
+            fails = 0
+            total_active_at_stage = 0
+            
+            for p in CURRENT_PARTICIPANTS:
+                elim_day = elimination_map.get(p)
+                # Jeśli odpadł WCZEŚNIEJ niż ten dzień, nie liczymy go do statystyk
+                if elim_day is not None and elim_day < day:
+                    continue
+                
+                total_active_at_stage += 1
+                p_data = current_data.get(p, {})
+                if day not in p_data or p_data[day]['status'] != "Zaliczone":
+                    fails += 1
+            
+            stage_stats.append({'Etap': day, 'Niezaliczenia': fails})
+        
+        df_stages = pd.DataFrame(stage_stats)
+        
+        if not df_stages.empty:
+            col1, col2 = st.columns(2)
+            with col1:
+                st.markdown(f"**{txt['hardest']}**")
+                top_hard = df_stages.sort_values(by='Niezaliczenia', ascending=False).head(5)
+                for _, row in top_hard.iterrows():
+                    st.write(f"**Etap {row['Etap']}**: {row['Niezaliczenia']} {txt['fails']}")
+            
+            with col2:
+                st.markdown(f"**{txt['easiest']}**")
+                top_easy = df_stages.sort_values(by='Niezaliczenia', ascending=True).head(5)
+                for _, row in top_easy.iterrows():
+                    st.write(f"**Etap {row['Etap']}**: {row['Niezaliczenia']} {txt['fails']}")
+            
+            st.divider()
+            
+            # --- Narzędzie interaktywne (w Formularzu) ---
+            st.markdown(f"**{txt['tool_header']}**")
+            
+            with st.form("stage_check_form"):
+                selected_day = st.selectbox(txt['select_stage'], options=range(1, max_day_reported + 1), index=max_day_reported-1)
+                submitted = st.form_submit_button(txt['check_btn'])
+                
+                if submitted:
+                    passed_list = []
+                    failed_list = []
+                    
+                    for p in CURRENT_PARTICIPANTS:
+                        elim_day = elimination_map.get(p)
+                        # Ignorujemy wyeliminowanych wcześniej
+                        if elim_day is not None and elim_day < selected_day:
+                            continue
+                        
+                        p_data = current_data.get(p, {})
+                        if selected_day in p_data and p_data[selected_day]['status'] == "Zaliczone":
+                            passed_list.append(f"@{p}")
+                        else:
+                            failed_list.append(f"@{p}")
+                    
+                    c_pass, c_fail = st.columns(2)
+                    with c_pass:
+                        st.write(txt['pass_header'])
+                        if passed_list:
+                            st.code(" ".join(passed_list), language=None)
+                        else:
+                            st.write(f"_{txt['everyone_failed']}_")
+                            
+                    with c_fail:
+                        st.write(txt['fail_header'])
+                        if failed_list:
+                            st.code(" ".join(failed_list), language=None)
+                        else:
+                            st.write(f"_{txt['everyone_passed']}_")
 
 
 # === Główna Funkcja Strony ===
@@ -318,34 +517,26 @@ def show_current_edition_dashboard(lang):
     try:
         ranking_df, elimination_map = calculate_ranking(current_data, max_day_reported, lang, ranking_type='live')
         
-        # Instrukcja dla użytkownika
         st.info("💡 **Kliknij na wiersz w tabeli poniżej**, aby zobaczyć szczegółowe statystyki uczestnika!")
 
-        # Przygotowanie tabeli do wyświetlenia
         ranking_df_display = ranking_df.copy()
         
-        # Wyświetlanie tabeli z włączoną selekcją
         selection = st.dataframe(
             ranking_df_display, 
             use_container_width=True, 
             hide_index=True,
-            on_select="rerun",      # To kluczowa linia - odświeża appkę po kliknięciu
+            on_select="rerun",
             selection_mode="single-row"
         )
         
-        # --- OBSŁUGA KLIKNIĘCIA ---
         if selection.selection.rows:
-            # Pobieramy indeks klikniętego wiersza
             selected_index = selection.selection.rows[0]
-            
-            # Pobieramy dane z dataframe'a na podstawie indeksu
             participant_col = _t('ranking_col_participant', lang)
             rank_col = _t('ranking_col_rank', lang)
             
             selected_participant = ranking_df_display.iloc[selected_index][participant_col]
             selected_rank = ranking_df_display.iloc[selected_index][rank_col]
             
-            # Wyświetlamy kartę szczegółów
             show_selected_participant_details(
                 selected_participant, 
                 selected_rank, 
@@ -355,6 +546,10 @@ def show_current_edition_dashboard(lang):
                 lang
             )
         
+        expander_title = "📉 Pokaż wykres przebiegu rywalizacji (Historia miejsc)" if lang == 'pl' else "📉 Show Competition Progress (Rank History)"
+        with st.expander(expander_title):
+            show_daily_rank_progression(current_data, max_day_reported, lang)
+
         with st.expander(_t('current_ranking_rules_expander_label', lang)):
             st.markdown(_t('current_ranking_rules', lang, max_day_reported))
 
@@ -369,7 +564,7 @@ def show_current_edition_dashboard(lang):
         
     st.markdown("---")
 
-    # --- Reszta strony (Ranking oficjalny, Kompletność, Statystyki) ---
+    # --- Reszta strony ---
     
     st.subheader(_t('current_official_ranking_header', lang))
     complete_stages = find_last_complete_stage(current_data, elimination_map, max_day_reported)
@@ -393,7 +588,6 @@ def show_current_edition_dashboard(lang):
     st.markdown("---")
     st.subheader(_t('current_completeness_header', lang))
     
-    # Logika kompletności (bez zmian logicznych, tylko wyświetlanie)
     pivot_data = []
     completeness_participant_col = _t('completeness_col_participant', lang) 
     for participant in CURRENT_PARTICIPANTS:
@@ -425,11 +619,17 @@ def show_current_edition_dashboard(lang):
         completeness_pivot_display = completeness_pivot.reset_index()
         completeness_pivot_display.columns = completeness_pivot_display.columns.astype(str)
         st.dataframe(completeness_pivot_display, hide_index=True)
+        
+        # <<< WYWOŁANIE NOWEJ ANALIZY Z ELIMINATION_MAP >>>
+        show_stage_analysis(current_data, max_day_reported, elimination_map, lang)
+        
     else:
         st.info(_t('current_completeness_no_data', lang))
 
     st.subheader(_t('current_stats_header', lang))
-    col1, col2 = st.columns(2)
+    
+    # Zmiana na 3 kolumny, żeby zmieścić "Zające"
+    col1, col2, col3 = st.columns(3)
 
     with col1:
         st.markdown(f"**{_t('current_stats_top_submitters', lang)}**")
@@ -451,7 +651,8 @@ def show_current_edition_dashboard(lang):
                 st.info(_t('current_stats_top_submitters_none', lang))
             else:
                 for name, count in all_submitters.items():
-                    mention(label=f"**{name}** ({count} wpisów)", icon="🏆", url=f"https://hive.blog/@{name}")
+                    # <<< ZMIANA IKONY: Z pucharu na notatnik (praca) >>>
+                    mention(label=f"**{name}** ({count} wpisów)", icon="📝", url=f"https://hive.blog/@{name}")
             st.markdown("---")
             st.caption(_t('current_stats_top_submitters_percentage', lang, helper_percentage, helper_entries, admin_entries))
 
@@ -464,7 +665,18 @@ def show_current_edition_dashboard(lang):
                 mention(label=f"**{row['Uczestnik']}** ({row['Seria']} {_t('current_stats_streaks_days', lang)})", icon="🔥", url=f"https://hive.blog/@{row['Uczestnik']}")
         else:
             st.info("Brak znaczących serii.")
-            
+    
+    # <<< NOWA KOLUMNA: Zające (Najwięksi spryciarze) >>>
+    with col3:
+        st.markdown(f"**{_t('stats_rabbits_title', lang)}**")
+        st.caption(_t('stats_rabbits_desc', lang))
+        df_rabbits = calculate_rabbit_stats(current_data, max_day_reported, elimination_map, lang)
+        if not df_rabbits.empty:
+            for _, row in df_rabbits.iterrows():
+                mention(label=f"**{row['Uczestnik']}** ({row['Potknięcia']} wpadek)", icon="🐰", url=f"https://hive.blog/@{row['Uczestnik']}")
+        else:
+            st.info("Brak wybitnych zająców.")
+
     st.markdown("---")
 
     st.subheader(_t('current_stats_race_header', lang))
