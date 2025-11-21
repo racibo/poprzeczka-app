@@ -2,14 +2,14 @@
 translations = {
     'pl': {
         'app_title': "Analiza i Zarządzanie Poprzeczką",
-        # === NAWIGACJA ===
+        
+        # === NAWIGACJA I SIDEBAR ===
         'nav_header': "Edycje i Menu",
         'nav_november_ranking': "🍂 Ranking Listopad (Bieżący)",
         'nav_december_ranking': "❄️ Ranking Grudzień (Wkrótce)",
         'nav_submission_form': "📋 Formularz Wprowadzania",
         'nav_historical_stats': "📈 Statystyki Historyczne",
         
-        # === PASEK BOCZNY ===
         'about_app': "O projekcie",
         'about_app_text': "Aplikacja wspierająca rywalizację 'Poprzeczka' na Hive Blog. Analiza wyników, wykresy przetrwania i statystyki.",
         'sidebar_hive_link': "🐝 Przejdź do Hive.blog",
@@ -20,6 +20,8 @@ translations = {
         3. **Eliminacja:** 3 niezaliczone etapy z rzędu oznaczają koniec gry.
         4. **Ranking:** Decyduje najwyższy zaliczony etap.
         """,
+        'sidebar_admin_log': "🔒 Log wpisów (Admin)",
+        'sidebar_log_empty': "Log jest pusty.",
 
         # === FORMULARZ ===
         'form_header': "Formularz wprowadzania danych",
@@ -137,7 +139,8 @@ translations = {
         'survival_y_axis': "% Graczy w grze",
         'survival_current_legend': "Obecna Edycja",
 
-        # === STATYSTYKI HISTORYCZNE (TE PRZYWRÓCONE) ===
+        # === STATYSTYKI HISTORYCZNE (PRZYWRÓCONE KLUCZE) ===
+        'title': "Interaktywna analiza rywalizacji krokowej", # <<< TO JEST KLUCZOWY BRAK
         'sidebar_header': "🎛️ Filtry i opcje",
         'select_period': "Wybierz okres",
         'manual_select': "Wybierz miesiące ręcznie",
@@ -259,6 +262,8 @@ translations = {
         3. **Elimination:** 3 failed stages in a row mean game over.
         4. **Ranking:** Highest passed stage decides.
         """,
+        'sidebar_admin_log': "🔒 Admin Log",
+        'sidebar_log_empty': "Log is empty.",
 
         # === FORM ===
         'form_header': "Data Entry Form",
@@ -377,7 +382,8 @@ translations = {
         'survival_y_axis': "% Players Active",
         'survival_current_legend': "Current Edition",
 
-        # === HISTORICAL STATS (RESTORED) ===
+        # === HISTORICAL STATS ===
+        'title': "Interactive Step Challenge Analysis",
         'sidebar_header': "🎛️ Filters & Options",
         'select_period': "Select period",
         'manual_select': "Select months manually",
