@@ -1,8 +1,10 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 import time
 import numpy as np
+from datetime import datetime
 from streamlit_extras.mention import mention
 from translations import _t
 from config import CURRENT_PARTICIPANTS
@@ -328,8 +330,8 @@ def show_selected_participant_details(participant, rank, df_historical, current_
 def show_daily_rank_progression(current_data, max_day_reported, lang):
     """Generuje wykres liniowy pokazujący zmiany miejsca w rankingu dzień po dniu."""
     labels = {
-        'pl': {'loading': "Generowanie wykresu historycznego...", 'title': "📉 Przebieg rywalizacji (Zmiana miejsc)", 'day': "Dzień", 'rank': "Miejsce"},
-        'en': {'loading': "Generating history chart...", 'title': "📉 Competition Progress (Rank History)", 'day': "Day", 'rank': "Rank"}
+        'pl': {'loading': "Generowanie wykresu historycznego...", 'title': "Przebieg rywalizacji (Zmiana miejsc)", 'day': "Dzień", 'rank': "Miejsce"},
+        'en': {'loading': "Generating history chart...", 'title': "Competition Progress (Rank History)", 'day': "Day", 'rank': "Rank"}
     }
     txt = labels.get(lang, labels['pl'])
 
@@ -366,6 +368,9 @@ def show_daily_rank_progression(current_data, max_day_reported, lang):
         ax.set_ylabel(txt['rank'], color='white')
         ax.grid(True, which='both', linestyle='--', linewidth=0.3, alpha=0.5)
         ax.set_xticks(df_progress.index)
+        # <<< ZMIANA: Wymuszenie liczb całkowitych na osi X >>>
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+        
         ax.tick_params(axis='x', colors='white')
         ax.tick_params(axis='y', colors='white')
         for spine in ax.spines.values():
@@ -373,16 +378,15 @@ def show_daily_rank_progression(current_data, max_day_reported, lang):
 
         st.pyplot(fig)
 
-# <<< ZAKTUALIZOWANA FUNKCJA: Analiza etapów (z Elimination Map i formularzem) >>>
 def show_stage_analysis(current_data, max_day_reported, elimination_map, lang):
-    """Wyświetla statystyki trudności etapów i listę osób, które nie zaliczyły."""
+    """Wyświetla statystyki trudności etapów (wykres + tekst)."""
     
+    if 'stage_analysis_expanded' not in st.session_state:
+        st.session_state.stage_analysis_expanded = False
+
     lbl = {
         'pl': {
-            'expander': "📊 Analiza Etapów (Najtrudniejsze/Najłatwiejsze)",
-            'hardest': "🔥 Najtrudniejsze Etapy",
-            'easiest': "🍀 Najłatwiejsze Etapy",
-            'fails': "niezaliczeń",
+            'expander': "📊 Analiza Etapów (Trudność)",
             'tool_header': "🔎 Sprawdź, kto zaliczył / nie zaliczył",
             'select_stage': "Wybierz numer etapu:",
             'check_btn': "Pokaż listę",
@@ -393,10 +397,7 @@ def show_stage_analysis(current_data, max_day_reported, elimination_map, lang):
             'everyone_failed': "Nikt nie zaliczył!"
         },
         'en': {
-            'expander': "📊 Stage Analysis (Hardest/Easiest)",
-            'hardest': "🔥 Hardest Stages",
-            'easiest': "🍀 Easiest Stages",
-            'fails': "failures",
+            'expander': "📊 Stage Analysis (Difficulty)",
             'tool_header': "🔎 Check pass/fail list",
             'select_stage': "Select stage number:",
             'check_btn': "Show list",
@@ -409,81 +410,199 @@ def show_stage_analysis(current_data, max_day_reported, elimination_map, lang):
     }
     txt = lbl.get(lang, lbl['pl'])
 
-    with st.expander(txt['expander']):
-        # --- Statystyki trudności (tylko aktywni w danym dniu) ---
-        stage_stats = []
+    def toggle_stage_analysis():
+        st.session_state.stage_analysis_expanded = True
+
+    with st.expander(txt['expander'], expanded=st.session_state.stage_analysis_expanded):
+        stage_fail_rates = {}
+        max_fail_rate = -1
+        hardest_stage_num = -1
+        
         for day in range(1, max_day_reported + 1):
             fails = 0
-            total_active_at_stage = 0
+            total_active = 0
             
             for p in CURRENT_PARTICIPANTS:
                 elim_day = elimination_map.get(p)
-                # Jeśli odpadł WCZEŚNIEJ niż ten dzień, nie liczymy go do statystyk
                 if elim_day is not None and elim_day < day:
-                    continue
+                    continue 
                 
-                total_active_at_stage += 1
+                total_active += 1
                 p_data = current_data.get(p, {})
                 if day not in p_data or p_data[day]['status'] != "Zaliczone":
                     fails += 1
             
-            stage_stats.append({'Etap': day, 'Niezaliczenia': fails})
+            rate = (fails / total_active * 100) if total_active > 0 else 0
+            stage_fail_rates[day] = rate
+            
+            if rate > max_fail_rate:
+                max_fail_rate = rate
+                hardest_stage_num = day
         
-        df_stages = pd.DataFrame(stage_stats)
+        if hardest_stage_num != -1:
+            st.markdown(_t('stage_analysis_hardest', lang, hardest_stage_num, max_fail_rate))
         
-        if not df_stages.empty:
-            col1, col2 = st.columns(2)
-            with col1:
-                st.markdown(f"**{txt['hardest']}**")
-                top_hard = df_stages.sort_values(by='Niezaliczenia', ascending=False).head(5)
-                for _, row in top_hard.iterrows():
-                    st.write(f"**Etap {row['Etap']}**: {row['Niezaliczenia']} {txt['fails']}")
+        if stage_fail_rates:
+            days = list(stage_fail_rates.keys())
+            rates = list(stage_fail_rates.values())
             
-            with col2:
-                st.markdown(f"**{txt['easiest']}**")
-                top_easy = df_stages.sort_values(by='Niezaliczenia', ascending=True).head(5)
-                for _, row in top_easy.iterrows():
-                    st.write(f"**Etap {row['Etap']}**: {row['Niezaliczenia']} {txt['fails']}")
+            fig, ax = plt.subplots(figsize=(10, 4))
+            plt.style.use('dark_background')
+            ax.set_facecolor('#0e1117')
+            fig.patch.set_facecolor('#0e1117')
             
-            st.divider()
+            ax.plot(days, rates, marker='o', color='#ff4b4b', linewidth=2)
+            ax.fill_between(days, rates, color='#ff4b4b', alpha=0.2)
             
-            # --- Narzędzie interaktywne (w Formularzu) ---
-            st.markdown(f"**{txt['tool_header']}**")
+            ax.set_title(_t('stage_analysis_title', lang), color='white')
+            ax.set_ylabel(_t('stage_analysis_y_axis', lang), color='white')
+            ax.set_xlabel("Dzień / Stage", color='white')
+            ax.grid(True, linestyle='--', alpha=0.3)
+            ax.set_ylim(0, 105)
+            ax.set_xticks(days)
+            # <<< ZMIANA: Wymuszenie liczb całkowitych na osi X >>>
+            ax.xaxis.set_major_locator(MaxNLocator(integer=True))
             
-            with st.form("stage_check_form"):
-                selected_day = st.selectbox(txt['select_stage'], options=range(1, max_day_reported + 1), index=max_day_reported-1)
-                submitted = st.form_submit_button(txt['check_btn'])
+            for spine in ax.spines.values():
+                spine.set_color('#444444')
+            ax.tick_params(axis='x', colors='white')
+            ax.tick_params(axis='y', colors='white')
+            
+            st.pyplot(fig)
+            
+        st.divider()
+        
+        st.markdown(f"**{txt['tool_header']}**")
+        
+        col_sel, col_btn = st.columns([3, 1])
+        with col_sel:
+            selected_day_check = st.selectbox(txt['select_stage'], options=range(1, max_day_reported + 1), index=max_day_reported-1, key="stage_checker_select")
+        with col_btn:
+            st.write("") 
+            st.write("") 
+            check_clicked = st.button(txt['check_btn'], on_click=toggle_stage_analysis)
+
+        if selected_day_check:
+            passed_list = []
+            failed_list = []
+            
+            for p in CURRENT_PARTICIPANTS:
+                elim_day = elimination_map.get(p)
+                if elim_day is not None and elim_day < selected_day_check:
+                    continue
                 
-                if submitted:
-                    passed_list = []
-                    failed_list = []
+                p_data = current_data.get(p, {})
+                if selected_day_check in p_data and p_data[selected_day_check]['status'] == "Zaliczone":
+                    passed_list.append(f"@{p}")
+                else:
+                    failed_list.append(f"@{p}")
+            
+            c_pass, c_fail = st.columns(2)
+            with c_pass:
+                st.write(txt['pass_header'])
+                if passed_list:
+                    st.code(" ".join(passed_list), language=None)
+                else:
+                    st.write(f"_{txt['everyone_failed']}_")
                     
-                    for p in CURRENT_PARTICIPANTS:
-                        elim_day = elimination_map.get(p)
-                        # Ignorujemy wyeliminowanych wcześniej
-                        if elim_day is not None and elim_day < selected_day:
-                            continue
-                        
-                        p_data = current_data.get(p, {})
-                        if selected_day in p_data and p_data[selected_day]['status'] == "Zaliczone":
-                            passed_list.append(f"@{p}")
-                        else:
-                            failed_list.append(f"@{p}")
-                    
-                    c_pass, c_fail = st.columns(2)
-                    with c_pass:
-                        st.write(txt['pass_header'])
-                        if passed_list:
-                            st.code(" ".join(passed_list), language=None)
-                        else:
-                            st.write(f"_{txt['everyone_failed']}_")
-                            
-                    with c_fail:
-                        st.write(txt['fail_header'])
-                        if failed_list:
-                            st.code(" ".join(failed_list), language=None)
-                        else:
-                            st.write(f"_{txt['everyone_passed']}_")
+            with c_fail:
+                st.write(txt['fail_header'])
+                if failed_list:
+                    st.code(" ".join(failed_list), language=None)
+                else:
+                    st.write(f"_{txt['everyone_passed']}_")
+
+# <<< ZAKTUALIZOWANA FUNKCJA: Wykres Przetrwania (Poprawione Oś X i Limity) >>>
+def show_survival_comparison(current_data, max_day_reported, df_historical, lang, elimination_map, complete_stages):
+    """Porównuje krzywą przetrwania obecnej edycji z 3 ostatnimi."""
+    
+    # 1. Ustalenie limitu dla obecnej edycji (ostatni kompletny etap)
+    current_limit_day = complete_stages[-1] if complete_stages else 1
+    
+    # 2. Obliczenie osi czasu dla obecnej edycji
+    current_days_axis = range(1, current_limit_day + 1)
+    
+    total_participants = len(CURRENT_PARTICIPANTS)
+    current_percentages = []
+    
+    # Logika dla obecnej edycji
+    for d in current_days_axis:
+        active_count = 0
+        for p in CURRENT_PARTICIPANTS:
+            e_day = elimination_map.get(p)
+            # Uznajemy za aktywnego, jeśli nie odpadł WCZEŚNIEJ
+            if e_day is None or e_day >= d:
+                active_count += 1
+        current_percentages.append((active_count / total_participants) * 100)
+
+    hist_data = {}
+    max_hist_day = 0
+    
+    if not df_historical.empty:
+        editions = sorted(df_historical['miesiac_rok_str'].unique(), key=lambda x: datetime.strptime(x, '%m.%Y'), reverse=True)
+        last_3_editions = editions[:3]
+        
+        for ed in last_3_editions:
+            ed_df = df_historical[df_historical['miesiac_rok_str'] == ed].copy()
+            if ed_df.empty: continue
+            
+            ed_df['dropout_day'] = ed_df['rezultat_numeric'] + 3
+            total_in_ed = len(ed_df)
+            
+            percentages = []
+            # Szukamy maksymalnego dnia w tej historycznej edycji
+            max_day_in_ed = int(ed_df['dropout_day'].max())
+            # Dajemy mały margines, żeby wykres doszedł do zera
+            plot_days_hist = max_day_in_ed + 2 
+            
+            if plot_days_hist > max_hist_day:
+                max_hist_day = plot_days_hist
+            
+            for d in range(1, plot_days_hist + 1):
+                active = (ed_df['dropout_day'] > d).sum()
+                pct = (active / total_in_ed) * 100
+                percentages.append(pct)
+                # Jeśli spadło do zera, możemy przerwać (opcjonalne)
+                if pct == 0 and len(percentages) > 5: # >5 żeby nie ucięło za wcześnie błędnych danych
+                    break
+            
+            hist_data[ed] = percentages
+
+    with st.expander(_t('survival_chart_header', lang)):
+        fig, ax = plt.subplots(figsize=(10, 6))
+        plt.style.use('dark_background')
+        ax.set_facecolor('#0e1117')
+        fig.patch.set_facecolor('#0e1117')
+        
+        # Rysuj historię
+        for ed_name, pct_list in hist_data.items():
+            x_hist = range(1, len(pct_list) + 1)
+            ax.plot(x_hist, pct_list, linestyle='--', alpha=0.6, label=ed_name)
+            
+        # Rysuj obecną (tylko do limitu kompletności)
+        ax.plot(current_days_axis, current_percentages, color='#00ff00', linewidth=3, marker='o', label=_t('survival_current_legend', lang))
+        
+        ax.set_title(_t('survival_chart_title', lang), color='white')
+        ax.set_xlabel("Dzień / Stage", color='white')
+        ax.set_ylabel(_t('survival_y_axis', lang), color='white')
+        ax.set_ylim(0, 105)
+        
+        # Ustawienie limitu osi X na max z historii lub obecnej
+        global_max_x = max(max_hist_day, current_limit_day)
+        ax.set_xlim(1, global_max_x + 1)
+        
+        ax.grid(True, linestyle='--', alpha=0.3)
+        ax.legend()
+        
+        # <<< ZMIANA: Wymuszenie liczb całkowitych na osi X >>>
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+        
+        for spine in ax.spines.values():
+            spine.set_color('#444444')
+        ax.tick_params(axis='x', colors='white')
+        ax.tick_params(axis='y', colors='white')
+
+        st.pyplot(fig)
 
 
 # === Główna Funkcja Strony ===
@@ -545,17 +664,6 @@ def show_current_edition_dashboard(lang):
                 max_day_reported, 
                 lang
             )
-        
-        expander_title = "📉 Pokaż wykres przebiegu rywalizacji (Historia miejsc)" if lang == 'pl' else "📉 Show Competition Progress (Rank History)"
-        with st.expander(expander_title):
-            show_daily_rank_progression(current_data, max_day_reported, lang)
-
-        with st.expander(_t('current_ranking_rules_expander_label', lang)):
-            st.markdown(_t('current_ranking_rules', lang, max_day_reported))
-
-        if not df_historical.empty:
-            with st.expander(_t('current_ranking_historical_expander', lang)):
-                show_historical_context(df_historical, lang)
         
     except Exception as e:
         st.error(_t('current_ranking_error', lang, e))
@@ -620,43 +728,14 @@ def show_current_edition_dashboard(lang):
         completeness_pivot_display.columns = completeness_pivot_display.columns.astype(str)
         st.dataframe(completeness_pivot_display, hide_index=True)
         
-        # <<< WYWOŁANIE NOWEJ ANALIZY Z ELIMINATION_MAP >>>
-        show_stage_analysis(current_data, max_day_reported, elimination_map, lang)
-        
     else:
         st.info(_t('current_completeness_no_data', lang))
 
     st.subheader(_t('current_stats_header', lang))
     
-    # Zmiana na 3 kolumny, żeby zmieścić "Zające"
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
 
     with col1:
-        st.markdown(f"**{_t('current_stats_top_submitters', lang)}**")
-        st.caption(_t('current_stats_top_submitters_desc', lang))
-        expected_log_cols = ['Submitter', 'Participant', 'Day', 'Status_Reported', 'Timestamp']
-        if df_raw_logs.empty:
-            st.info(_t('current_log_empty', lang))
-        elif not all(col in df_raw_logs.columns for col in expected_log_cols):
-            st.error(_t('current_header_check_error', lang))
-        else:
-            df_helpers = df_raw_logs[df_raw_logs['Submitter'] != 'poprzeczka (Admin)']
-            total_entries = len(df_raw_logs)
-            helper_entries = len(df_helpers)
-            admin_entries = total_entries - helper_entries
-            helper_percentage = (helper_entries / total_entries) * 100 if total_entries > 0 else 0
-            all_submitters = df_helpers['Submitter'].value_counts() 
-            
-            if all_submitters.empty:
-                st.info(_t('current_stats_top_submitters_none', lang))
-            else:
-                for name, count in all_submitters.items():
-                    # <<< ZMIANA IKONY: Z pucharu na notatnik (praca) >>>
-                    mention(label=f"**{name}** ({count} wpisów)", icon="📝", url=f"https://hive.blog/@{name}")
-            st.markdown("---")
-            st.caption(_t('current_stats_top_submitters_percentage', lang, helper_percentage, helper_entries, admin_entries))
-
-    with col2:
         st.markdown(f"**{_t('current_stats_streaks', lang)}**")
         st.caption(_t('current_stats_streaks_desc', lang))
         df_streaks = calculate_current_stats(current_data, max_day_reported, lang)
@@ -666,8 +745,7 @@ def show_current_edition_dashboard(lang):
         else:
             st.info("Brak znaczących serii.")
     
-    # <<< NOWA KOLUMNA: Zające (Najwięksi spryciarze) >>>
-    with col3:
+    with col2:
         st.markdown(f"**{_t('stats_rabbits_title', lang)}**")
         st.caption(_t('stats_rabbits_desc', lang))
         df_rabbits = calculate_rabbit_stats(current_data, max_day_reported, elimination_map, lang)
@@ -724,3 +802,23 @@ def show_current_edition_dashboard(lang):
             st.dataframe(df_log_sorted, use_container_width=True)
         else:
             st.info(_t('current_log_empty', lang))
+
+    # <<< WSZYSTKIE EXPANDERY NA SAMYM DOLE >>>
+    
+    st.markdown("---")
+    
+    expander_title = "📉 Pokaż wykres przebiegu rywalizacji (Historia miejsc)" if lang == 'pl' else "📉 Show Competition Progress (Rank History)"
+    with st.expander(expander_title):
+        show_daily_rank_progression(current_data, max_day_reported, lang)
+        
+    # <<< PRZEKAZANIE COMPLETE_STAGES DO SURVIVAL >>>
+    show_survival_comparison(current_data, max_day_reported, df_historical, lang, elimination_map, complete_stages)
+    
+    show_stage_analysis(current_data, max_day_reported, elimination_map, lang)
+
+    with st.expander(_t('current_ranking_rules_expander_label', lang)):
+        st.markdown(_t('current_ranking_rules', lang, max_day_reported))
+
+    if not df_historical.empty:
+        with st.expander(_t('current_ranking_historical_expander', lang)):
+            show_historical_context(df_historical, lang)
