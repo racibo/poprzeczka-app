@@ -368,7 +368,6 @@ def show_daily_rank_progression(current_data, max_day_reported, lang):
         ax.set_ylabel(txt['rank'], color='white')
         ax.grid(True, which='both', linestyle='--', linewidth=0.3, alpha=0.5)
         ax.set_xticks(df_progress.index)
-        # <<< ZMIANA: Wymuszenie liczb całkowitych na osi X >>>
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
         
         ax.tick_params(axis='x', colors='white')
@@ -378,7 +377,8 @@ def show_daily_rank_progression(current_data, max_day_reported, lang):
 
         st.pyplot(fig)
 
-def show_stage_analysis(current_data, max_day_reported, elimination_map, lang):
+# <<< ZAKTUALIZOWANA FUNKCJA: Analiza etapów (tylko kompletne etapy dla wykresu) >>>
+def show_stage_analysis(current_data, max_day_reported, elimination_map, complete_stages, lang):
     """Wyświetla statystyki trudności etapów (wykres + tekst)."""
     
     if 'stage_analysis_expanded' not in st.session_state:
@@ -418,14 +418,15 @@ def show_stage_analysis(current_data, max_day_reported, elimination_map, lang):
         max_fail_rate = -1
         hardest_stage_num = -1
         
-        for day in range(1, max_day_reported + 1):
+        # <<< ZMIANA: Liczymy statystyki tylko dla KOMPLETNYCH etapów >>>
+        for day in complete_stages:
             fails = 0
             total_active = 0
             
             for p in CURRENT_PARTICIPANTS:
                 elim_day = elimination_map.get(p)
                 if elim_day is not None and elim_day < day:
-                    continue 
+                    continue # Odpadł wcześniej
                 
                 total_active += 1
                 p_data = current_data.get(p, {})
@@ -460,7 +461,6 @@ def show_stage_analysis(current_data, max_day_reported, elimination_map, lang):
             ax.grid(True, linestyle='--', alpha=0.3)
             ax.set_ylim(0, 105)
             ax.set_xticks(days)
-            # <<< ZMIANA: Wymuszenie liczb całkowitych na osi X >>>
             ax.xaxis.set_major_locator(MaxNLocator(integer=True))
             
             for spine in ax.spines.values():
@@ -472,6 +472,7 @@ def show_stage_analysis(current_data, max_day_reported, elimination_map, lang):
             
         st.divider()
         
+        # --- Narzędzie interaktywne (Dla wszystkich dni, bo to narzędzie) ---
         st.markdown(f"**{txt['tool_header']}**")
         
         col_sel, col_btn = st.columns([3, 1])
@@ -512,25 +513,20 @@ def show_stage_analysis(current_data, max_day_reported, elimination_map, lang):
                 else:
                     st.write(f"_{txt['everyone_passed']}_")
 
-# <<< ZAKTUALIZOWANA FUNKCJA: Wykres Przetrwania (Poprawione Oś X i Limity) >>>
+# <<< FUNKCJA: Wykres Przetrwania (Bez zmian, już poprawiona) >>>
 def show_survival_comparison(current_data, max_day_reported, df_historical, lang, elimination_map, complete_stages):
     """Porównuje krzywą przetrwania obecnej edycji z 3 ostatnimi."""
     
-    # 1. Ustalenie limitu dla obecnej edycji (ostatni kompletny etap)
     current_limit_day = complete_stages[-1] if complete_stages else 1
-    
-    # 2. Obliczenie osi czasu dla obecnej edycji
     current_days_axis = range(1, current_limit_day + 1)
     
     total_participants = len(CURRENT_PARTICIPANTS)
     current_percentages = []
     
-    # Logika dla obecnej edycji
     for d in current_days_axis:
         active_count = 0
         for p in CURRENT_PARTICIPANTS:
             e_day = elimination_map.get(p)
-            # Uznajemy za aktywnego, jeśli nie odpadł WCZEŚNIEJ
             if e_day is None or e_day >= d:
                 active_count += 1
         current_percentages.append((active_count / total_participants) * 100)
@@ -550,9 +546,7 @@ def show_survival_comparison(current_data, max_day_reported, df_historical, lang
             total_in_ed = len(ed_df)
             
             percentages = []
-            # Szukamy maksymalnego dnia w tej historycznej edycji
             max_day_in_ed = int(ed_df['dropout_day'].max())
-            # Dajemy mały margines, żeby wykres doszedł do zera
             plot_days_hist = max_day_in_ed + 2 
             
             if plot_days_hist > max_hist_day:
@@ -562,8 +556,7 @@ def show_survival_comparison(current_data, max_day_reported, df_historical, lang
                 active = (ed_df['dropout_day'] > d).sum()
                 pct = (active / total_in_ed) * 100
                 percentages.append(pct)
-                # Jeśli spadło do zera, możemy przerwać (opcjonalne)
-                if pct == 0 and len(percentages) > 5: # >5 żeby nie ucięło za wcześnie błędnych danych
+                if pct == 0 and len(percentages) > 5:
                     break
             
             hist_data[ed] = percentages
@@ -574,12 +567,10 @@ def show_survival_comparison(current_data, max_day_reported, df_historical, lang
         ax.set_facecolor('#0e1117')
         fig.patch.set_facecolor('#0e1117')
         
-        # Rysuj historię
         for ed_name, pct_list in hist_data.items():
             x_hist = range(1, len(pct_list) + 1)
             ax.plot(x_hist, pct_list, linestyle='--', alpha=0.6, label=ed_name)
             
-        # Rysuj obecną (tylko do limitu kompletności)
         ax.plot(current_days_axis, current_percentages, color='#00ff00', linewidth=3, marker='o', label=_t('survival_current_legend', lang))
         
         ax.set_title(_t('survival_chart_title', lang), color='white')
@@ -587,14 +578,11 @@ def show_survival_comparison(current_data, max_day_reported, df_historical, lang
         ax.set_ylabel(_t('survival_y_axis', lang), color='white')
         ax.set_ylim(0, 105)
         
-        # Ustawienie limitu osi X na max z historii lub obecnej
         global_max_x = max(max_hist_day, current_limit_day)
         ax.set_xlim(1, global_max_x + 1)
         
         ax.grid(True, linestyle='--', alpha=0.3)
         ax.legend()
-        
-        # <<< ZMIANA: Wymuszenie liczb całkowitych na osi X >>>
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
         
         for spine in ax.spines.values():
@@ -811,10 +799,10 @@ def show_current_edition_dashboard(lang):
     with st.expander(expander_title):
         show_daily_rank_progression(current_data, max_day_reported, lang)
         
-    # <<< PRZEKAZANIE COMPLETE_STAGES DO SURVIVAL >>>
     show_survival_comparison(current_data, max_day_reported, df_historical, lang, elimination_map, complete_stages)
     
-    show_stage_analysis(current_data, max_day_reported, elimination_map, lang)
+    # <<< PRZEKAZANIE COMPLETE_STAGES DO ANALIZY TRUDNOŚCI >>>
+    show_stage_analysis(current_data, max_day_reported, elimination_map, complete_stages, lang)
 
     with st.expander(_t('current_ranking_rules_expander_label', lang)):
         st.markdown(_t('current_ranking_rules', lang, max_day_reported))
