@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 import time
 import numpy as np
-from datetime import datetime
+from datetime import datetime 
 from streamlit_extras.mention import mention
 from translations import _t
 from config import CURRENT_PARTICIPANTS
@@ -783,13 +783,7 @@ def show_current_edition_dashboard(lang):
             st.pyplot(fig)
         plt.close(fig)
 
-    if st.checkbox(_t('current_log_expander', lang)):
-        expected_log_cols = ['Submitter', 'Participant', 'Day', 'Status_Reported', 'Timestamp']
-        if not df_raw_logs.empty and all(col in df_raw_logs.columns for col in expected_log_cols):
-            df_log_sorted = df_raw_logs.sort_values("Timestamp", ascending=False)
-            st.dataframe(df_log_sorted, use_container_width=True)
-        else:
-            st.info(_t('current_log_empty', lang))
+    # <<< KASUJEMY STARE MIEJSCE WYŚWIETLANIA LOGÓW, BO SĄ TERAZ W SIDEBARZE >>>
 
     # <<< WSZYSTKIE EXPANDERY NA SAMYM DOLE >>>
     
@@ -799,6 +793,7 @@ def show_current_edition_dashboard(lang):
     with st.expander(expander_title):
         show_daily_rank_progression(current_data, max_day_reported, lang)
         
+    # <<< PRZEKAZANIE COMPLETE_STAGES DO SURVIVAL >>>
     show_survival_comparison(current_data, max_day_reported, df_historical, lang, elimination_map, complete_stages)
     
     # <<< PRZEKAZANIE COMPLETE_STAGES DO ANALIZY TRUDNOŚCI >>>
