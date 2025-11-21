@@ -1,9 +1,12 @@
 import streamlit as st
 from datetime import datetime
+import pandas as pd
 import io
+from streamlit_extras.mention import mention 
 from translations import _t
 from config import CURRENT_PARTICIPANTS, SUBMITTER_LIST, GOOGLE_DRIVE_FOLDER_ID
 from google_connect import connect_to_google_sheets, connect_to_google_drive, upload_file_to_drive
+from data_loader import load_google_sheet_data
 
 def show_submission_form(lang):
     """Wyświetla formularz do wprowadzania danych bieżącej edycji."""
@@ -12,6 +15,7 @@ def show_submission_form(lang):
     users_list = sorted(CURRENT_PARTICIPANTS)
     submitters_list_sorted = sorted(SUBMITTER_LIST)
     
+    # Wyświetlanie komunikatu o sukcesie (jeśli jest w sesji)
     if 'last_submission' in st.session_state and st.session_state.last_submission:
         details = st.session_state.last_submission
         st.success(_t('form_success_message', lang, details['participant'], details['day'], details['status_translated']))
@@ -102,56 +106,135 @@ def show_submission_form(lang):
         if not submitter or not participant:
             st.error(_t('form_error_no_participant', lang))
         else:
+            # Zapamiętaj wprowadzającego i następny dzień
             st.session_state.submitter_index_plus_one = ([None] + submitters_list_sorted).index(submitter)
             st.session_state.last_day_entered = day + 1 if day < 31 else 31 
 
+            # Tłumaczenie statusu na bazowy
             status_key = "Zaliczone"
             if status == _t('form_status_fail', lang):
                 status_key = "Niezaliczone"
             elif status == _t('form_status_no_report', lang):
                 status_key = "Brak raportu"
             
-            # --- Logika Przesyłania Pliku ---
-            file_link_text = ""
-            if uploaded_file is not None:
-                if GOOGLE_DRIVE_FOLDER_ID == "PASTE_YOUR_FOLDER_ID_HERE" or not GOOGLE_DRIVE_FOLDER_ID:
-                    st.error(_t('form_error_drive_not_configured', lang))
-                    file_link_text = f"Błąd konfiguracji (Plik: {uploaded_file.name})"
-                else:
-                    drive_service = connect_to_google_drive()
-                    if drive_service:
-                        file_link = upload_file_to_drive(drive_service, uploaded_file, GOOGLE_DRIVE_FOLDER_ID, lang)
-                        if file_link:
-                            file_link_text = file_link
-                        else:
-                            file_link_text = f"(Błąd przesyłania pliku: {uploaded_file.name})"
-                    else:
-                        file_link_text = "(Błąd połączenia z Google Drive)"
-            
-            full_notes = f"{notes} | {file_link_text}".strip(" | ")
-            timestamp = datetime.now().isoformat()
-            # --- Koniec Logiki Przesyłania Pliku ---
-
             try:
                 sheet = connect_to_google_sheets()
                 if sheet:
-                    worksheet_data = sheet.worksheet("BiezacaEdycja")
-                    worksheet_data.append_row([participant, day, status_key, full_notes, timestamp])
+                    # 1. Sprawdź czy dane już istnieją
+                    df_current = load_google_sheet_data(sheet, "BiezacaEdycja")
                     
-                    worksheet_log = sheet.worksheet("LogWpisow")
-                    worksheet_log.append_row([submitter, participant, day, status_key, timestamp])
+                    is_duplicate = False
+                    duplicate_author = "Ktoś"
                     
-                    st.session_state.last_submission = {
-                        'participant': participant,
-                        'day': day,
-                        'status_translated': status,
-                        'full_notes': full_notes
-                    }
-                    
-                    st.cache_data.clear() 
+                    if not df_current.empty:
+                        # Sprawdzamy czy istnieje wpis dla tego uczestnika w tym dniu
+                        existing_entry = df_current[
+                            (df_current['Participant'] == participant) & 
+                            (df_current['Day'] == day)
+                        ]
+                        
+                        if not existing_entry.empty:
+                            # Pobieramy ostatni status (zakładamy, że ostatni wpis jest "najważniejszy")
+                            last_status = existing_entry.iloc[-1]['Status']
+                            
+                            # Jeśli status jest TAKI SAM -> to duplikat, nie dodajemy
+                            if last_status == status_key:
+                                is_duplicate = True
+                                # Spróbujmy znaleźć autora w Logach
+                                df_logs = load_google_sheet_data(sheet, "LogWpisow")
+                                if not df_logs.empty:
+                                    log_entry = df_logs[
+                                        (df_logs['Participant'] == participant) & 
+                                        (df_logs['Day'] == day) &
+                                        (df_logs['Status_Reported'] == status_key)
+                                    ]
+                                    if not log_entry.empty:
+                                        duplicate_author = log_entry.iloc[-1]['Submitter']
+
+                    if is_duplicate:
+                        # Wyświetlamy komunikat, że dane już są
+                        st.info(_t('form_data_exists', lang, duplicate_author, participant, day))
+                    else:
+                        # 2. Logika Przesyłania Pliku (tylko jeśli nie duplikat)
+                        file_link_text = ""
+                        if uploaded_file is not None:
+                            if GOOGLE_DRIVE_FOLDER_ID == "PASTE_YOUR_FOLDER_ID_HERE" or not GOOGLE_DRIVE_FOLDER_ID:
+                                st.error(_t('form_error_drive_not_configured', lang))
+                                file_link_text = f"Błąd konfiguracji (Plik: {uploaded_file.name})"
+                            else:
+                                drive_service = connect_to_google_drive()
+                                if drive_service:
+                                    file_link = upload_file_to_drive(drive_service, uploaded_file, GOOGLE_DRIVE_FOLDER_ID, lang)
+                                    if file_link:
+                                        file_link_text = file_link
+                                    else:
+                                        file_link_text = f"(Błąd przesyłania pliku: {uploaded_file.name})"
+                                else:
+                                    file_link_text = "(Błąd połączenia z Google Drive)"
+                        
+                        full_notes = f"{notes} | {file_link_text}".strip(" | ")
+                        timestamp = datetime.now().isoformat()
+
+                        # 3. Zapis do arkusza
+                        worksheet_data = sheet.worksheet("BiezacaEdycja")
+                        worksheet_data.append_row([participant, day, status_key, full_notes, timestamp])
+                        
+                        worksheet_log = sheet.worksheet("LogWpisow")
+                        worksheet_log.append_row([submitter, participant, day, status_key, timestamp])
+                        
+                        st.session_state.last_submission = {
+                            'participant': participant,
+                            'day': day,
+                            'status_translated': status,
+                            'full_notes': full_notes
+                        }
+                        
+                        st.cache_data.clear() 
+                        st.rerun() # Odśwież po dodaniu
                 else:
                     st.error(_t('form_error_message', lang, "Nie można połączyć się z arkuszem."))
             except Exception as e:
                 st.error(_t('form_error_message', lang, e))
+
+    # === SEKCJA: Najwięksi Pomocnicy (na dole) ===
+    st.markdown("---")
+    st.subheader(_t('current_stats_top_submitters', lang))
+    st.caption(_t('current_stats_top_submitters_desc', lang))
+    
+    sheet_stats = connect_to_google_sheets()
+    if sheet_stats:
+        df_raw_logs = load_google_sheet_data(sheet_stats, "LogWpisow")
+        
+        expected_log_cols = ['Submitter', 'Participant', 'Day', 'Status_Reported', 'Timestamp']
+        if df_raw_logs.empty:
+            st.info(_t('current_log_empty', lang))
+        elif not all(col in df_raw_logs.columns for col in expected_log_cols):
+            st.warning("Nie można załadować statystyk pomocników (błąd nagłówków).")
+        else:
+            df_helpers = df_raw_logs[df_raw_logs['Submitter'] != 'poprzeczka (Admin)']
             
-        st.rerun()
+            total_entries = len(df_raw_logs)
+            helper_entries = len(df_helpers)
+            admin_entries = total_entries - helper_entries
+            
+            if total_entries > 0:
+                helper_percentage = (helper_entries / total_entries) * 100
+            else:
+                helper_percentage = 0
+            
+            all_submitters = df_helpers['Submitter'].value_counts() 
+            
+            if all_submitters.empty:
+                st.info(_t('current_stats_top_submitters_none', lang))
+            else:
+                # Wyświetlanie w kolumnach dla lepszego wyglądu
+                cols = st.columns(min(3, len(all_submitters)))
+                for idx, (name, count) in enumerate(all_submitters.items()):
+                    with cols[idx % len(cols)]:
+                        mention(
+                            label=f"**{name}** ({count} wpisów)", 
+                            icon="📝", 
+                            url=f"https://hive.blog/@{name}"
+                        )
+            
+            st.caption(_t('current_stats_top_submitters_percentage', lang, helper_percentage, helper_entries, admin_entries))
