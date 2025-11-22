@@ -70,7 +70,8 @@ def calculate_ranking(data, max_day_reported, lang, ranking_type='live'):
             _t('ranking_col_highest_pass', lang): highest_completed,
             "sort_key_failure_tuple": get_failure_tuple(failed_stages, highest_completed),
             _t('ranking_col_status', lang): status_text,
-            _t(failed_col_key, lang): failed_stages_str 
+            _t(failed_col_key, lang): failed_stages_str,
+            "eliminated_on_day": eliminated_on_day # For internal logic
         })
         elimination_map[participant] = eliminated_on_day 
     
@@ -83,6 +84,7 @@ def calculate_ranking(data, max_day_reported, lang, ranking_type='live'):
     ranking_data.sort(key=sort_key)
     
     rank_col_name = _t('ranking_col_rank', lang)
+    last_sort_key = None
     for i, entry in enumerate(ranking_data):
         current_sort_key = (
             entry[_t('ranking_col_highest_pass', lang)], 
@@ -327,7 +329,7 @@ def show_selected_participant_details(participant, rank, df_historical, current_
             st.write("")
             st.link_button(f"Hive\n@{participant}", f"https://hive.blog/@{participant}", use_container_width=True)
 
-def show_daily_rank_progression(current_data, max_day_reported, lang):
+def show_daily_rank_progression(current_data, complete_stages, lang):
     """Generuje wykres liniowy pokazujący zmiany miejsca w rankingu dzień po dniu."""
     labels = {
         'pl': {'loading': "Generowanie wykresu historycznego...", 'title': "Przebieg rywalizacji (Zmiana miejsc)", 'day': "Dzień", 'rank': "Miejsce"},
@@ -335,10 +337,17 @@ def show_daily_rank_progression(current_data, max_day_reported, lang):
     }
     txt = labels.get(lang, labels['pl'])
 
+    # Wybieramy maksymalny dzień do pokazania (ostatni kompletny)
+    max_day_to_show = complete_stages[-1] if complete_stages else 0
+    
+    if max_day_to_show == 0:
+        st.info("Brak kompletnych etapów do wyświetlenia wykresu.")
+        return
+
     with st.spinner(txt['loading']):
         progress_data = {}
-        for day in range(1, max_day_reported + 1):
-            df_daily, _ = calculate_ranking(current_data, day, lang, ranking_type='live')
+        for day in range(1, max_day_to_show + 1):
+            df_daily, _ = calculate_ranking(current_data, day, lang, ranking_type='live') # Używamy live, ale dla historycznych kompletnych dni
             part_col = _t('ranking_col_participant', lang)
             rank_col = _t('ranking_col_rank', lang)
             progress_data[day] = df_daily.set_index(part_col)[rank_col].to_dict()
@@ -360,7 +369,7 @@ def show_daily_rank_progression(current_data, max_day_reported, lang):
             ax.plot(df_progress.index, df_progress[participant], marker='o', markersize=4, label=participant, color=colors[i], linewidth=1.5)
             last_val = df_progress[participant].iloc[-1]
             if pd.notna(last_val):
-                ax.text(max_day_reported + 0.2, last_val, f" {participant}", verticalalignment='center', fontsize=9, color=colors[i], fontweight='bold')
+                ax.text(max_day_to_show + 0.2, last_val, f" {participant}", verticalalignment='center', fontsize=9, color=colors[i], fontweight='bold')
 
         ax.invert_yaxis()
         ax.set_title(txt['title'], color='white')
@@ -377,7 +386,6 @@ def show_daily_rank_progression(current_data, max_day_reported, lang):
 
         st.pyplot(fig)
 
-# <<< ZAKTUALIZOWANA FUNKCJA: Analiza etapów (tylko kompletne etapy dla wykresu) >>>
 def show_stage_analysis(current_data, max_day_reported, elimination_map, complete_stages, lang):
     """Wyświetla statystyki trudności etapów (wykres + tekst)."""
     
@@ -418,7 +426,6 @@ def show_stage_analysis(current_data, max_day_reported, elimination_map, complet
         max_fail_rate = -1
         hardest_stage_num = -1
         
-        # <<< ZMIANA: Liczymy statystyki tylko dla KOMPLETNYCH etapów >>>
         for day in complete_stages:
             fails = 0
             total_active = 0
@@ -426,7 +433,7 @@ def show_stage_analysis(current_data, max_day_reported, elimination_map, complet
             for p in CURRENT_PARTICIPANTS:
                 elim_day = elimination_map.get(p)
                 if elim_day is not None and elim_day < day:
-                    continue # Odpadł wcześniej
+                    continue 
                 
                 total_active += 1
                 p_data = current_data.get(p, {})
@@ -472,7 +479,6 @@ def show_stage_analysis(current_data, max_day_reported, elimination_map, complet
             
         st.divider()
         
-        # --- Narzędzie interaktywne (Dla wszystkich dni, bo to narzędzie) ---
         st.markdown(f"**{txt['tool_header']}**")
         
         col_sel, col_btn = st.columns([3, 1])
@@ -513,7 +519,6 @@ def show_stage_analysis(current_data, max_day_reported, elimination_map, complet
                 else:
                     st.write(f"_{txt['everyone_passed']}_")
 
-# <<< FUNKCJA: Wykres Przetrwania (Bez zmian, już poprawiona) >>>
 def show_survival_comparison(current_data, max_day_reported, df_historical, lang, elimination_map, complete_stages):
     """Porównuje krzywą przetrwania obecnej edycji z 3 ostatnimi."""
     
@@ -592,6 +597,128 @@ def show_survival_comparison(current_data, max_day_reported, df_historical, lang
 
         st.pyplot(fig)
 
+# --- FUNKCJE DO PODSUMOWAŃ TYGODNIOWYCH (NOWE) ---
+
+def get_past_winners_positions(df_historical, current_ranking_df, lang):
+    """Znajduje obecne pozycje zwycięzców poprzednich 3 edycji."""
+    if df_historical.empty:
+        return []
+    
+    # Pobierz unikalne identyfikatory edycji (sortowane chronologicznie malejąco)
+    all_editions = sorted(df_historical['miesiac_rok_str'].unique(), key=lambda x: datetime.strptime(x, '%m.%Y'), reverse=True)
+    last_3_editions = all_editions[:3]
+    
+    # Filtruj historię do ostatnich 3 edycji
+    recent_hist = df_historical[df_historical['miesiac_rok_str'].isin(last_3_editions)]
+    
+    # Znajdź unikalnych zwycięzców (miejsce 1) w tych edycjach
+    past_winners = recent_hist[recent_hist['miejsce'] == 1]['uczestnik'].unique().tolist()
+    
+    current_positions = []
+    participant_col = _t('ranking_col_participant', lang)
+    rank_col = _t('ranking_col_rank', lang)
+    
+    for winner in past_winners:
+        if winner in current_ranking_df[participant_col].values:
+            rank = current_ranking_df[current_ranking_df[participant_col] == winner][rank_col].values[0]
+            current_positions.append(f"@{winner} ({rank})")
+            
+    return current_positions
+
+def generate_weekly_summary_markdown(week_num, current_data, df_historical, df_logs, lang):
+    """Generuje tekst podsumowania dla konkretnego tygodnia (np. 7, 14, 21 dzień)."""
+    
+    day_limit = week_num * 7
+    
+    # 1. Ranking na dany dzień
+    ranking_df, elimination_map = calculate_ranking(current_data, day_limit, lang, ranking_type='live')
+    participant_col = _t('ranking_col_participant', lang)
+    rank_col = _t('ranking_col_rank', lang)
+    
+    # Liderzy (Miejsce 1)
+    leaders = ranking_df[ranking_df[rank_col] == 1][participant_col].tolist()
+    leaders_str = ", ".join([f"@{l}" for l in leaders])
+    
+    # Pościg (Miejsca 2-5) - Tylko jeśli liderów jest mniej niż 5
+    chasing_str = ""
+    chasers_md = ""
+    if len(leaders) < 5:
+        chasers = ranking_df[(ranking_df[rank_col] > 1) & (ranking_df[rank_col] <= 5)][participant_col].tolist()
+        if chasers:
+            chasing_str = ", ".join([f"@{c}" for c in chasers])
+            chasers_md = _t('weekly_chasers', lang, chasing_str)
+    
+    # 2. Byli zwycięzcy (ost 3 edycje)
+    past_winners_info = get_past_winners_positions(df_historical, ranking_df, lang)
+    past_winners_str = ", ".join(past_winners_info) if past_winners_info else "brak danych"
+    
+    # 3. Liczba uczestników
+    started_count = len(CURRENT_PARTICIPANTS)
+    active_count = 0
+    for p in CURRENT_PARTICIPANTS:
+        elim_day = elimination_map.get(p)
+        if elim_day is None or elim_day > day_limit:
+            active_count += 1
+            
+    status_word = "nadal" if active_count == started_count else ("już tylko" if lang == 'pl' else "only")
+    
+    # 4. Porównanie historyczne (proste)
+    comparison_str = "brak danych historycznych"
+    if not df_historical.empty:
+        editions = df_historical['miesiac_rok_str'].unique()
+        hist_active_pcts = []
+        for ed in editions:
+            ed_df = df_historical[df_historical['miesiac_rok_str'] == ed]
+            total_ed = len(ed_df)
+            active_at_limit = ((ed_df['rezultat_numeric'] + 3) > day_limit).sum()
+            if total_ed > 0:
+                hist_active_pcts.append(active_at_limit / total_ed)
+        
+        if hist_active_pcts:
+            avg_hist_pct = sum(hist_active_pcts) / len(hist_active_pcts)
+            current_pct = active_count / started_count if started_count > 0 else 0
+            diff = current_pct - avg_hist_pct
+            
+            if diff > 0.1: comparison_str = "jest zauważalnie lepiej" if lang == 'pl' else "is noticeably better"
+            elif diff > 0.05: comparison_str = "jest lepiej" if lang == 'pl' else "is better"
+            elif diff < -0.1: comparison_str = "jest zauważalnie gorzej" if lang == 'pl' else "is noticeably worse"
+            elif diff < -0.05: comparison_str = "jest gorzej" if lang == 'pl' else "is worse"
+            else: comparison_str = "jest podobnie" if lang == 'pl' else "is similar"
+            
+    # 5. Statystyki pomocników (Globalne, bo to podsumowanie wysyłane teraz)
+    helpers_str = ""
+    helper_pct_str = "0"
+    top_helpers_mentions = []
+    
+    if not df_logs.empty and 'Submitter' in df_logs.columns:
+        helpers = df_logs[df_logs['Submitter'] != 'poprzeczka (Admin)']
+        total_entries = len(df_logs)
+        helper_entries = len(helpers)
+        
+        if total_entries > 0:
+            helper_pct_str = f"{helper_entries / total_entries * 100:.0f}"
+        
+        if not helpers.empty:
+            top_helpers = helpers['Submitter'].value_counts().head(3)
+            top_helpers_mentions = [f"@{h}" for h in top_helpers.index]
+            helpers_str = ", ".join(top_helpers_mentions)
+        else:
+            helpers_str = "Brak"
+
+    # Beneficjanci USUNIĘCI zgodnie z życzeniem
+
+    # SZABLON MD
+    summary_text = f"""
+{_t('weekly_intro', lang, week_num)}
+{_t('weekly_leaders', lang, leaders_str)} {chasers_md}
+{_t('weekly_winners', lang, past_winners_str)}
+
+{_t('weekly_participants', lang, started_count, day_limit, active_count, status_word)}
+{_t('weekly_comparison', lang, comparison_str)}
+
+{_t('weekly_footer', lang, helper_pct_str, helpers_str)}
+"""
+    return summary_text
 
 # === Główna Funkcja Strony ===
 
@@ -619,6 +746,7 @@ def show_current_edition_dashboard(lang):
         return
 
     # --- Klasyfikacja Na Żywo z Interaktywnością ---
+    
     st.subheader(_t('current_ranking_header', lang))
     
     try:
@@ -682,6 +810,19 @@ def show_current_edition_dashboard(lang):
         st.info(_t('current_official_ranking_none', lang))
     
     st.markdown("---")
+    
+    # --- Podsumowania Tygodniowe (PRZENIESIONE TUTAJ) ---
+    # Sprawdzamy, ile pełnych tygodni mamy w COMPLETE stages
+    max_complete_day = complete_stages[-1] if complete_stages else 0
+    weeks_completed = max_complete_day // 7
+    
+    if weeks_completed > 0:
+        for w in range(1, weeks_completed + 1):
+            with st.expander(_t('weekly_summary_title', lang, w, w*7), expanded=False):
+                summary_md = generate_weekly_summary_markdown(w, current_data, df_historical, df_raw_logs, lang)
+                st.code(summary_md, language="markdown")
+        st.markdown("---")
+
     st.subheader(_t('current_completeness_header', lang))
     
     pivot_data = []
@@ -783,24 +924,15 @@ def show_current_edition_dashboard(lang):
             st.pyplot(fig)
         plt.close(fig)
 
-    # <<< KASUJEMY STARE MIEJSCE WYŚWIETLANIA LOGÓW, BO SĄ TERAZ W SIDEBARZE >>>
-
-    # <<< WSZYSTKIE EXPANDERY NA SAMYM DOLE >>>
-    
     st.markdown("---")
     
     expander_title = "📉 Pokaż wykres przebiegu rywalizacji (Historia miejsc)" if lang == 'pl' else "📉 Show Competition Progress (Rank History)"
     with st.expander(expander_title):
-        show_daily_rank_progression(current_data, max_day_reported, lang)
+        show_daily_rank_progression(current_data, complete_stages, lang)
         
-    # <<< PRZEKAZANIE COMPLETE_STAGES DO SURVIVAL >>>
     show_survival_comparison(current_data, max_day_reported, df_historical, lang, elimination_map, complete_stages)
     
-    # <<< PRZEKAZANIE COMPLETE_STAGES DO ANALIZY TRUDNOŚCI >>>
     show_stage_analysis(current_data, max_day_reported, elimination_map, complete_stages, lang)
-
-    with st.expander(_t('current_ranking_rules_expander_label', lang)):
-        st.markdown(_t('current_ranking_rules', lang, max_day_reported))
 
     if not df_historical.empty:
         with st.expander(_t('current_ranking_historical_expander', lang)):
