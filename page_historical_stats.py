@@ -121,6 +121,7 @@ def show_historical_stats(lang):
         st.info(_t('select_single_user', lang))
 
     st.subheader(_t('comparison_chart_title_results', lang) if chart_type == _t('results', lang) else _t('comparison_chart_title_positions', lang))
+    st.caption(_t('comparison_chart_note', lang))
 
     if chart_type == _t('results', lang):
         plot_df = filtered_df.copy()
@@ -167,7 +168,7 @@ def show_historical_stats(lang):
     if not summary_data.empty:
         sorted_columns = filtered_df['miesiac'].sort_values().dt.strftime('%m.%Y').unique()
         
-        st.subheader(_t('monthly_summary_results', lang))
+        # Usunięto podtytuł "Zestawienie miesięczne (Wyniki)", ponieważ jest opisany w głównym opisie
         monthly_results_pivot = summary_data.pivot_table(
             index='uczestnik',
             columns='miesiac_rok_str',
