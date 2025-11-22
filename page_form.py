@@ -6,7 +6,9 @@ from streamlit_extras.mention import mention
 from translations import _t
 from config import CURRENT_PARTICIPANTS, SUBMITTER_LIST, GOOGLE_DRIVE_FOLDER_ID
 from google_connect import connect_to_google_sheets, connect_to_google_drive, upload_file_to_drive
-from data_loader import load_google_sheet_data
+from data_loader import load_google_sheet_data, process_raw_data, load_historical_data_from_json
+# Importujemy funkcje obliczania rankingu z drugiego pliku
+from page_current_ranking import calculate_ranking, find_last_complete_stage
 
 def show_submission_form(lang):
     """Wyświetla formularz do wprowadzania danych bieżącej edycji."""
@@ -50,6 +52,7 @@ def show_submission_form(lang):
                 index=0, 
                 format_func=lambda x: _t('form_participant_placeholder', lang) if x is None else x
             )
+            
         with col2:
             day = st.number_input(
                 _t('form_day_label', lang), 
@@ -199,9 +202,10 @@ def show_submission_form(lang):
     # === SEKCJA: Najwięksi Pomocnicy (na dole) ===
     st.markdown("---")
     st.subheader(_t('current_stats_top_submitters', lang))
-    st.caption(_t('current_stats_top_submitters_desc', lang))
     
     sheet_stats = connect_to_google_sheets()
+    helper_pct_str = "0"
+    
     if sheet_stats:
         df_raw_logs = load_google_sheet_data(sheet_stats, "LogWpisow")
         
@@ -218,9 +222,7 @@ def show_submission_form(lang):
             admin_entries = total_entries - helper_entries
             
             if total_entries > 0:
-                helper_percentage = (helper_entries / total_entries) * 100
-            else:
-                helper_percentage = 0
+                helper_pct_str = f"{helper_entries / total_entries * 100:.0f}"
             
             all_submitters = df_helpers['Submitter'].value_counts() 
             
@@ -237,4 +239,131 @@ def show_submission_form(lang):
                             url=f"https://hive.blog/@{name}"
                         )
             
-            st.caption(_t('current_stats_top_submitters_percentage', lang, helper_percentage, helper_entries, admin_entries))
+            st.caption(_t('current_stats_top_submitters_percentage', lang, float(helper_pct_str), helper_entries, admin_entries))
+
+    # === SEKCJA: Generator Draftu Posta (DODATKOWA CZĘŚĆ NA DOLE) ===
+    st.markdown("---")
+    st.header(_t('draft_header', lang))
+    
+    # Niezależny wybór uczestnika dla generatora
+    users_list_for_draft = sorted(CURRENT_PARTICIPANTS)
+    selected_participant_for_draft = st.selectbox(
+        _t('draft_select_label', lang),
+        options=[None] + users_list_for_draft,
+        format_func=lambda x: _t('form_participant_placeholder', lang) if x is None else x,
+        key="draft_participant_selector"
+    )
+
+    if selected_participant_for_draft:
+        with st.spinner(_t('draft_loading', lang)):
+            try:
+                # Ładowanie danych potrzebnych do draftu (jeśli nie załadowane wcześniej)
+                if not sheet_stats:
+                    sheet_stats = connect_to_google_sheets()
+                
+                if sheet_stats:
+                    df_raw_data = load_google_sheet_data(sheet_stats, "BiezacaEdycja")
+                    expected_data_cols = ['Participant', 'Day', 'Status', 'Timestamp', 'Notes']
+                    current_data, max_day_reported, _ = process_raw_data(df_raw_data, lang, expected_data_cols, "BiezacaEdycja")
+                    
+                    # 1. Obliczamy ranking "live", aby uzyskać mapę eliminacji i znaleźć kompletny etap
+                    _, elimination_map_live = calculate_ranking(current_data, max_day_reported, lang, ranking_type='live')
+                    
+                    # 2. Znajdujemy OFICJALNY (kompletny) etap
+                    complete_stages = find_last_complete_stage(current_data, elimination_map_live, max_day_reported)
+                    official_stage = complete_stages[-1] if complete_stages else 1
+                    
+                    # 3. Obliczamy ranking dla OFICJALNEGO etapu
+                    ranking_df, elimination_map_official = calculate_ranking(current_data, official_stage, lang, ranking_type='official')
+                    df_historical = load_historical_data_from_json()
+                    
+                    # -- LOGIKA PŁCI --
+                    female_users = ['ataraksja', 'asia-pl', 'patif2025']
+                    is_female = selected_participant_for_draft in female_users
+                    
+                    w_participant = _t('word_participant_f', lang) if is_female else _t('word_participant_m', lang)
+                    w_chance = _t('word_chance_f', lang) if is_female else _t('word_chance_m', lang)
+                    w_eliminated = _t('word_eliminated_f', lang) if is_female else _t('word_eliminated_m', lang)
+                    w_achieved = _t('word_achieved_f', lang) if is_female else _t('word_achieved_m', lang)
+                    w_missing = _t('word_missing_f', lang) if is_female else _t('word_missing_m', lang)
+                    w_broke = _t('word_broke_f', lang) if is_female else _t('word_broke_m', lang)
+
+                    # -- POZYCJE I SĄSIEDZI --
+                    part_col = _t('ranking_col_participant', lang)
+                    rank_col = _t('ranking_col_rank', lang)
+                    
+                    user_row = ranking_df[ranking_df[part_col] == selected_participant_for_draft]
+                    
+                    if not user_row.empty:
+                        current_rank = user_row.iloc[0][rank_col]
+                        idx = user_row.index[0]
+                        
+                        prev_user = f"@{ranking_df.iloc[idx-1][part_col]}" if idx > 0 else ("nikt (prowadzi!)" if lang == 'pl' else "no one (leads!)")
+                        next_user = f"@{ranking_df.iloc[idx+1][part_col]}" if idx < len(ranking_df) - 1 else ("nikt (zamyka stawkę)" if lang == 'pl' else "no one (last place)")
+                        
+                        # -- OSTATNI ETAP (ZMIANA: ZAWSZE ABSOLUTNIE OSTATNI Z DANYCH) --
+                        p_days = current_data.get(selected_participant_for_draft, {})
+                        if p_days:
+                            # Pobieramy maksymalny klucz (dzień) z słownika dni użytkownika
+                            # Niezależnie od tego, czy jest to etap oficjalny czy nie
+                            last_reported_day = max(p_days.keys())
+                            s_raw = p_days[last_reported_day]['status']
+                            last_status_text = _t('draft_status_pass', lang) if s_raw == "Zaliczone" else _t('draft_status_fail', lang)
+                        else:
+                            last_reported_day = 0
+                            last_status_text = "Brak danych"
+                        
+                        # -- SZANSA / ELIMINACJA (z mapy oficjalnej) --
+                        elim_day = elimination_map_official.get(selected_participant_for_draft)
+                        
+                        # -- DANE HISTORYCZNE --
+                        avg_res = "brak danych"
+                        pb_res = "brak danych"
+                        diff_to_pb = "X"
+                        pb_message = ""
+                        
+                        if not df_historical.empty:
+                            hist_p = df_historical[df_historical['uczestnik'] == selected_participant_for_draft]
+                            if not hist_p.empty:
+                                avg = hist_p['rezultat_numeric'].mean()
+                                pb = hist_p['rezultat_numeric'].max()
+                                if pd.notna(avg): avg_res = f"{avg:.0f}"
+                                if pd.notna(pb): 
+                                    pb_res = f"{pb:.0f}"
+                                    # Obliczamy ile brakuje do PB w obecnej (oficjalnej) edycji
+                                    current_score = user_row.iloc[0][_t('ranking_col_highest_pass', lang)]
+                                    if current_score < pb:
+                                        diff_to_pb = f"{pb - current_score:.0f}"
+                                    else:
+                                        # PB POBITY!
+                                        pb_message = _t('draft_pb_congrats', lang, w_broke, w_participant, current_score)
+
+                        # -- BUDOWANIE ZDAŃ ANALIZY --
+                        if elim_day:
+                            # Odpadł/a
+                            elim_str = w_eliminated.format(elim_day)
+                            analysis_part = _t('draft_analysis_eliminated', lang, f"@{selected_participant_for_draft}", elim_str, w_achieved, avg_res, pb_message)
+                        else:
+                            # W grze
+                            if pb_message:
+                                # Jeśli pobito PB, zastępujemy "brakuje mu X" gratulacjami
+                                analysis_part = _t('draft_analysis_eliminated', lang, f"@{selected_participant_for_draft}", w_chance, w_achieved, avg_res, pb_message)
+                            else:
+                                analysis_part = _t('draft_analysis_active', lang, f"@{selected_participant_for_draft}", w_chance, w_achieved, avg_res, pb_res, w_missing, diff_to_pb)
+
+                        # -- SKŁADANIE CAŁOŚCI --
+                        draft_text = f"""{_t('draft_intro', lang, f'@{selected_participant_for_draft}')}
+
+{_t('draft_main_text', lang, official_stage, f'@{selected_participant_for_draft}', current_rank, prev_user, next_user, w_participant, last_reported_day, last_status_text)}
+
+{analysis_part}
+
+{_t('draft_footer', lang, helper_pct_str)}"""
+
+                        st.text_area(_t('draft_copy_label', lang), value=draft_text, height=300)
+                    else:
+                        st.warning(_t('draft_no_data', lang))
+                else:
+                    st.error("Brak połączenia z arkuszem.")
+            except Exception as e:
+                st.error(_t('draft_error', lang, str(e)))
