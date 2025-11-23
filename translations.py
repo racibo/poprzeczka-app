@@ -148,7 +148,7 @@ translations = {
         'participant_summary_expander': "Pokaż szczegóły uczestników",
         'summary_current_rank': "Teraz",
         'summary_previous_rank': "Poprz.",
-        'summary_medals': "Medale",
+        'summary_medals': "Medals",
         'summary_wins': "Zwycięstwa",
         'summary_last_5_days': "Ost. 5 dni",
         'summary_no_hist_data': "Brak historii",
@@ -167,18 +167,20 @@ translations = {
         'survival_y_axis': "% Graczy w grze",
         'survival_current_legend': "Obecna Edycja",
         
-        # === WEEKLY SUMMARIES ===
+        # === PODSUMOWANIA TYGODNIOWE (ZAKTUALIZOWANE) ===
         'weekly_summary_title': "📅 Podsumowanie Tygodnia nr {0} (Etap {1})",
         'weekly_intro': "Czas na podsumowanie sytuacji w rywalizacji POPRZECZKA po tygodniu nr {0}.",
-        'weekly_leaders': "Prowadzi/dzą: {0}",
+        'weekly_leader_sg': "Prowadzi: {0}", # Singular
+        'weekly_leader_pl': "Prowadzą: {0}", # Plural
         'weekly_chasers': "za nimi są {0}.",
         'weekly_winners': "Zwycięzcy poprzednich edycji są obecnie na miejscach: {0}.",
         'weekly_participants': "W tej edycji wystartowało {0} uczestników - po {1} dniach mamy ich {3} {2}.",
         'weekly_comparison': "W porównaniu do poprzednich edycji {0}.",
-        'weekly_footer': "Więcej statystyk na stronie [poprzeczka.streamlit.app](https://poprzeczka.streamlit.app) gdzie możesz także pomóc w uzupełnianiu danych. Wasza pomoc to {0}% wprowadzania danych, a największy wkład wnieśli: {1}.",
-        'weekly_beneficiaries': "Pomagający oraz wspomniani liderzy klasyfikacji otrzymają beneficjum tego wpisu: {0}",
+        # Nowa stopka i nagrody
+        'weekly_footer_new': "Więcej statystyk, wykresów, wizualizacji na stronie [poprzeczka.streamlit.app](https://poprzeczka.streamlit.app) gdzie w prostym formularzu możesz także pomóc w uzupełnianiu danych. Wasza pomoc sięga obecnie poziomu {0}%.\n\nChcesz być wśród beneficjentów wpisu - dodawaj dane, wygrywaj. Obecnie {0}% nagrody z posta wędruje do:",
+        'weekly_rewards_list': "{0}% - {1}",
 
-        # === STATYSTYKI HISTORYCZNE (ZAKTUALIZOWANE) ===
+        # === STATYSTYKI HISTORYCZNE (BEZ ZMIAN) ===
         'title': "Statystyki rywalizacji od 2021 roku",
         'sidebar_header': "🎛️ Filtry i opcje",
         'select_period': "Wybierz okres",
@@ -449,18 +451,20 @@ translations = {
         'survival_y_axis': "% Players Active",
         'survival_current_legend': "Current Edition",
         
-        # === WEEKLY SUMMARIES ===
-        'weekly_summary_title': "📅 Week {0} Summary (Stage {1})",
+        # === WEEKLY SUMMARIES (ZAKTUALIZOWANE) ===
+        'weekly_summary_title': "📅 Podsumowanie Tygodnia nr {0} (Etap {1})",
         'weekly_intro': "It's time to summarize the CROSSBAR competition after week #{0}.",
-        'weekly_leaders': "Leading: {0}",
+        'weekly_leader_sg': "Leading: {0}", # Singular
+        'weekly_leader_pl': "Leading: {0}", # Plural (same in EN)
         'weekly_chasers': "followed by {0}.",
         'weekly_winners': "Winners of previous editions are currently at positions: {0}.",
         'weekly_participants': "In this edition {0} participants started - after {1} days we have {3} {2}.", 
         'weekly_comparison': "Compared to previous editions it {0}.",
-        'weekly_footer': "More stats at [poprzeczka.streamlit.app](https://poprzeczka.streamlit.app) where you can also help with data entry. Your help accounts for {0}% of data entry, and the biggest contributors were: {1}.",
-        'weekly_beneficiaries': "Helpers and mentioned leaders will receive the beneficiary of this post: {0}",
+        # Nowa stopka EN
+        'weekly_footer_new': "More stats, charts, and visualizations at [poprzeczka.streamlit.app](https://poprzeczka.streamlit.app) where you can also help with data entry via a simple form. Your help currently reaches {0}%.\n\nWant to be among the post beneficiaries? Add data, win. Currently {0}% of the post reward goes to:",
+        'weekly_rewards_list': "{0}% - {1}",
 
-        # === HISTORICAL STATS (UPDATED) ===
+        # === HISTORICAL STATS ===
         'title': "Interactive Step Challenge Analysis",
         'sidebar_header': "🎛️ Filters & Options",
         'select_period': "Select period",
