@@ -638,6 +638,7 @@ def generate_weekly_summary_markdown(week_num, current_data, df_historical, df_l
     # Liderzy (Miejsce 1)
     leaders = ranking_df[ranking_df[rank_col] == 1][participant_col].tolist()
     leaders_str = ", ".join([f"@{l}" for l in leaders])
+    leader_text = _t('weekly_leader_sg', lang, leaders_str) if len(leaders) == 1 else _t('weekly_leader_pl', lang, leaders_str)
     
     # Pościg (Miejsca 2-5) - Tylko jeśli liderów jest mniej niż 5
     chasing_str = ""
@@ -685,38 +686,83 @@ def generate_weekly_summary_markdown(week_num, current_data, df_historical, df_l
             elif diff < -0.05: comparison_str = "jest gorzej" if lang == 'pl' else "is worse"
             else: comparison_str = "jest podobnie" if lang == 'pl' else "is similar"
             
-    # 5. Statystyki pomocników (Globalne, bo to podsumowanie wysyłane teraz)
-    helpers_str = ""
-    helper_pct_str = "0"
-    top_helpers_mentions = []
+    # 5. Algorytm Nagród (zgodnie z nowymi wytycznymi)
+    # Cel: Pula = % wkładu społeczności. Podział: 80% pomocnicy (proporcjonalnie), 20% liderzy.
+    
+    rewards_str = ""
+    helper_pct_val = 0
     
     if not df_logs.empty and 'Submitter' in df_logs.columns:
-        helpers = df_logs[df_logs['Submitter'] != 'poprzeczka (Admin)']
         total_entries = len(df_logs)
-        helper_entries = len(helpers)
+        # Logi tylko do analizowanego tygodnia
+        # Konwersja kolumny Day na numeryczny, żeby filtrować <= day_limit
+        df_logs['Day_Num'] = pd.to_numeric(df_logs['Day'], errors='coerce')
+        logs_subset = df_logs[df_logs['Day_Num'] <= day_limit]
         
-        if total_entries > 0:
-            helper_pct_str = f"{helper_entries / total_entries * 100:.0f}"
-        
-        if not helpers.empty:
-            top_helpers = helpers['Submitter'].value_counts().head(3)
-            top_helpers_mentions = [f"@{h}" for h in top_helpers.index]
-            helpers_str = ", ".join(top_helpers_mentions)
-        else:
-            helpers_str = "Brak"
-
-    # Beneficjanci USUNIĘCI zgodnie z życzeniem
+        if not logs_subset.empty:
+            helpers_subset = logs_subset[logs_subset['Submitter'] != 'poprzeczka (Admin)']
+            
+            # Pula (P) = % wkładu (bez Admina)
+            total_subset_entries = len(logs_subset)
+            if total_subset_entries > 0:
+                helper_pct_val = int((len(helpers_subset) / total_subset_entries) * 100)
+            
+            # Pula Nagród (Points Pool) = helper_pct_val (np. 40 punktów)
+            P = helper_pct_val
+            
+            if P > 0:
+                # Podział Puli
+                helper_pool = P * 0.80
+                leader_pool = P * 0.20
+                
+                user_rewards = {}
+                
+                # A. Rozdanie dla Pomocników (80%) - Proporcjonalnie do liczby wpisów
+                helper_counts = helpers_subset['Submitter'].value_counts()
+                total_helper_entries = helper_counts.sum()
+                
+                for user, count in helper_counts.items():
+                    share = (count / total_helper_entries) * helper_pool
+                    user_rewards[user] = user_rewards.get(user, 0) + share
+                    
+                # B. Rozdanie dla Liderów (20%) - Równo dla Top 5 (lub mniej)
+                # Pobieramy liderów z rankingu (do 5 miejsca)
+                top_leaders = ranking_df[(ranking_df[rank_col] <= 5)][participant_col].unique()
+                # Jeśli jest więcej niż 5 osób na miejscach 1-5 (remisy), bierzemy wszystkich
+                # Ale jeśli lista jest bardzo długa, ograniczamy do top 5 nazwisk
+                top_leaders = top_leaders[:5] 
+                
+                if len(top_leaders) > 0:
+                    share_per_leader = leader_pool / len(top_leaders)
+                    for leader in top_leaders:
+                        # Liderzy w rankingu to nazwy z małych liter w configu, w logach mogą być inne
+                        # Zakładamy spójność nazw (case sensitive) lub ignorujemy
+                        user_rewards[leader] = user_rewards.get(leader, 0) + share_per_leader
+                
+                # C. Zaokrąglanie i Formatowanie
+                final_rewards = []
+                for user, val in user_rewards.items():
+                    r_val = round(val)
+                    if r_val > 0:
+                        final_rewards.append((user, r_val))
+                
+                # Sortowanie malejąco wg nagrody
+                final_rewards.sort(key=lambda x: x[1], reverse=True)
+                
+                rewards_list = [f"{val}% - @{user}" for user, val in final_rewards]
+                rewards_str = ", ".join(rewards_list)
 
     # SZABLON MD
     summary_text = f"""
 {_t('weekly_intro', lang, week_num)}
-{_t('weekly_leaders', lang, leaders_str)} {chasers_md}
+{leader_text} {chasers_md}
 {_t('weekly_winners', lang, past_winners_str)}
 
 {_t('weekly_participants', lang, started_count, day_limit, active_count, status_word)}
 {_t('weekly_comparison', lang, comparison_str)}
 
-{_t('weekly_footer', lang, helper_pct_str, helpers_str)}
+{_t('weekly_footer_new', lang, helper_pct_val)}
+{rewards_str}
 """
     return summary_text
 
