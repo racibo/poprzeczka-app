@@ -16,81 +16,139 @@ st.set_page_config(
 def main():
     """Główna funkcja renderująca aplikację Streamlit."""
     
+    # Inicjalizacja sesji dla wyboru menu
+    if 'nav_selection' not in st.session_state:
+        # Domyślnie startujemy od rankingu listopada
+        st.session_state.nav_selection = "nav_november_ranking"
+
     # === PASEK BOCZNY (Sidebar) ===
-    
-    # 1. Wybór języka
     st.sidebar.selectbox("Język / Language", ["pl", "en"], index=0, key="lang_select")
     lang = st.session_state.lang_select
     
     st.sidebar.markdown("---")
-    
-    # 2. Tytuł nawigacji
     st.sidebar.title(_t('nav_header', lang)) 
     
-    # 3. Menu Główne (Radio)
-    nav_options = [
-        _t('nav_november_ranking', lang), 
-        _t('nav_december_ranking', lang),
-        _t('nav_submission_form', lang),
-        _t('nav_historical_stats', lang)
-    ]
+    # === DEFINICJA OPCJI MENU ===
+    # Klucze muszą odpowiadać kluczom w translations.py
+    opts_nov = ['nav_november_ranking', 'nav_november_form']
+    opts_dec = ['nav_december_ranking', 'nav_december_form']
+    opts_hist = ['nav_historical_stats', 'nav_rules', 'nav_join', 'about_app']
     
-    app_section = st.sidebar.radio(
-        "Menu",
-        nav_options,
-        label_visibility="collapsed"
+    # Mapowanie: Tłumaczenie -> Klucz (potrzebne, bo radio zwraca tekst)
+    label_to_key = {}
+    for key in opts_nov + opts_dec + opts_hist:
+        label_to_key[_t(key, lang)] = key
+
+    # Funkcja aktualizująca stan (Callback)
+    def update_nav(group_name):
+        # Pobieramy wybraną wartość z konkretnego radio buttona
+        selected_label = st.session_state[f"radio_{group_name}"]
+        if selected_label:
+            st.session_state.nav_selection = label_to_key.get(selected_label)
+
+    # Wyznaczanie indeksów dla radio buttonów na podstawie aktualnego wyboru
+    curr_key = st.session_state.nav_selection
+    
+    idx_nov = opts_nov.index(curr_key) if curr_key in opts_nov else None
+    idx_dec = opts_dec.index(curr_key) if curr_key in opts_dec else None
+    idx_hist = opts_hist.index(curr_key) if curr_key in opts_hist else None
+
+    # === RENDEROWANIE MENU ===
+    
+    # 1. SEKCJA LISTOPAD
+    st.sidebar.markdown("--- 🍂 **LISTOPAD** ---")
+    st.sidebar.write("") # Odstęp
+    st.sidebar.radio(
+        "Listopad",
+        options=[_t(k, lang) for k in opts_nov],
+        index=idx_nov,
+        key="radio_nov",
+        label_visibility="collapsed",
+        on_change=update_nav,
+        args=("nov",)
+    )
+    
+    # 2. SEKCJA GRUDZIEŃ
+    st.sidebar.markdown(" ") # Odstęp
+    st.sidebar.markdown("--- ❄️ **GRUDZIEŃ** ---")
+    st.sidebar.write("") # Odstęp
+    st.sidebar.radio(
+        "Grudzień",
+        options=[_t(k, lang) for k in opts_dec],
+        index=idx_dec,
+        key="radio_dec",
+        label_visibility="collapsed",
+        on_change=update_nav,
+        args=("dec",)
+    )
+    
+    # 3. SEKCJA HISTORIA I ZASADY
+    st.sidebar.markdown(" ") 
+    st.sidebar.markdown(" ") # Większy odstęp
+    st.sidebar.markdown("--- 📈 **HISTORIA, ZASADY** ---")
+    st.sidebar.radio(
+        "Historia",
+        options=[_t(k, lang) for k in opts_hist],
+        index=idx_hist,
+        key="radio_hist",
+        label_visibility="collapsed",
+        on_change=update_nav,
+        args=("hist",)
     )
 
-    # 4. Dodatkowe elementy paska bocznego
+    # --- Linki i Log ---
     st.sidebar.markdown("---")
+    st.sidebar.link_button("🐝 Hive.blog", "https://hive.blog/trending/poprzeczka", use_container_width=True)
     
-    st.sidebar.link_button(
-        _t('sidebar_hive_link', lang), 
-        "https://hive.blog/trending/poprzeczka", 
-        use_container_width=True
-    )
-    
-    with st.sidebar.expander(_t('sidebar_rules_header', lang)):
-        st.markdown(_t('sidebar_rules_text', lang))
-
-    with st.sidebar.expander(_t('about_app', lang)):
-        st.info(_t('about_app_text', lang))
-        
-    # <<< DYSKRETNY LOG ADMINA (NA DOLE PASKU BOCZNEGO) >>>
-    st.sidebar.markdown("---")
     with st.sidebar.expander(_t('sidebar_admin_log', lang)):
         sheet = connect_to_google_sheets()
         if sheet:
             df_logs = load_google_sheet_data(sheet, "LogWpisow")
             if not df_logs.empty:
-                # Pokazujemy tylko ostatnie 50 wpisów, posortowane od najnowszych
-                st.dataframe(
-                    df_logs.sort_values("Timestamp", ascending=False).head(50), 
-                    use_container_width=True,
-                    hide_index=True
-                )
+                st.dataframe(df_logs.sort_values("Timestamp", ascending=False).head(20), hide_index=True)
             else:
-                st.info(_t('sidebar_log_empty', lang))
-        
-    # === CZĘŚĆ GŁÓWNA (Main) ===
+                st.info("Log pusty.")
+
+    # === OBSŁUGA GŁÓWNEGO WIDOKU ===
     
-    if 'submitter_index_plus_one' not in st.session_state:
-        st.session_state.submitter_index_plus_one = 0 
-    if 'last_day_entered' not in st.session_state:
-        st.session_state.last_day_entered = 1
+    # Inicjalizacja sesji dla formularzy
+    if 'submitter_index_plus_one' not in st.session_state: st.session_state.submitter_index_plus_one = 0 
+    if 'last_day_entered' not in st.session_state: st.session_state.last_day_entered = 1
     
-    if app_section == _t('nav_november_ranking', lang):
-        show_current_edition_dashboard(lang)
+    selection = st.session_state.nav_selection
+
+    # Routing
+    if selection == 'nav_november_ranking':
+        show_current_edition_dashboard(lang, edition_key="november")
+    elif selection == 'nav_november_form':
+        show_submission_form(lang, edition_key="november")
         
-    elif app_section == _t('nav_december_ranking', lang):
-        st.header("❄️ Ranking Edycji Grudniowej")
-        st.info("Ta edycja rozpocznie się 1 grudnia! Wróć tutaj później.")
+    elif selection == 'nav_december_ranking':
+        show_current_edition_dashboard(lang, edition_key="december")
+    elif selection == 'nav_december_form':
+        show_submission_form(lang, edition_key="december")
         
-    elif app_section == _t('nav_submission_form', lang):
-        show_submission_form(lang)
-        
-    elif app_section == _t('nav_historical_stats', lang):
+    elif selection == 'nav_historical_stats':
         show_historical_stats(lang)
+        
+    elif selection == 'nav_rules':
+        st.header(_t('sidebar_rules_header', lang))
+        st.markdown(_t('sidebar_rules_text', lang))
+        
+    elif selection == 'nav_join':
+        st.header(_t('nav_join', lang))
+        st.info("Aby dołączyć, zacznij publikować raporty Actifit na Hive.blog i zgłoś swój udział w komentarzu pod postem organizacyjnym @racibo.")
+        st.markdown("""
+        1. Załóż konto na Hive.blog.
+        2. Pobierz aplikację Actifit.
+        3. Publikuj codziennie swoje wyniki.
+        4. Używaj tagu #poprzeczka.
+        """)
+        
+    elif selection == 'about_app':
+        st.header(_t('about_app', lang))
+        st.markdown(_t('about_app_text', lang))
+        st.caption("Created by @racibo & AI Assistant.")
 
 if __name__ == "__main__":
     main()
