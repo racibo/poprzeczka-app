@@ -210,7 +210,7 @@ def show_historical_stats(lang):
             monthly_results_pivot = monthly_results_pivot.reindex(index=avg_result_sort.index)
             
             monthly_results_display = monthly_results_pivot.reset_index().rename(columns={'uczestnik': participant_col_name})
-            st.dataframe(monthly_results_display, hide_index=True)
+            st.dataframe(monthly_results_display, width="stretch", hide_index=True)
         else:
             st.error("Błąd danych: brak kolumny 'rezultat_raw'.")
 
@@ -229,7 +229,7 @@ def show_historical_stats(lang):
         monthly_positions_pivot = monthly_positions_pivot.reindex(index=avg_pos_sort.index)
         
         monthly_positions_display = monthly_positions_pivot.reset_index().rename(columns={'uczestnik': participant_col_name})
-        st.dataframe(monthly_positions_display, hide_index=True)
+        st.dataframe(monthly_positions_display, width="stretch", hide_index=True)
     else:
         st.info(_t('no_data_selected', lang))
 
@@ -423,7 +423,7 @@ def show_historical_stats(lang):
             position_counts = position_counts.join(participation_count)
             sort_cols = [col for col in position_counts.columns if isinstance(col, (int, np.integer))]
             position_counts = position_counts.sort_values(by=sort_cols, ascending=[False]*len(sort_cols))
-            st.dataframe(position_counts.reset_index().rename(columns={'uczestnik': participant_col_name}), hide_index=True)
+            st.dataframe(position_counts.reset_index().rename(columns={'uczestnik': participant_col_name}), width="stretch", hide_index=True)
         else:
             st.info(_t('no_data_selected', lang))
 
@@ -439,7 +439,7 @@ def show_historical_stats(lang):
                 medal_counts.columns = ['1. miejsce', '2. miejsce', '3. miejsce']
                 medal_counts[_t('total_medals_col', lang)] = medal_counts['1. miejsce'] + medal_counts['2. miejsce'] + medal_counts['3. miejsce']
                 medal_counts = medal_counts.sort_values(by=['1. miejsce', '2. miejsce', '3. miejsce'], ascending=[False, False, False])
-                st.dataframe(medal_counts.reset_index().rename(columns={'uczestnik': participant_col_name}), hide_index=True)
+                st.dataframe(medal_counts.reset_index().rename(columns={'uczestnik': participant_col_name}), width="stretch", hide_index=True)
             else:
                 st.info(_t('no_data_selected', lang))
         else:
@@ -468,7 +468,7 @@ def show_historical_stats(lang):
         col_mean_pos = f"{_t('mean_col', lang)} ({_t('positions', lang)})"
         player_stats[col_mean_res] = player_stats[col_mean_res].round(1)
         player_stats[col_mean_pos] = player_stats[col_mean_pos].round(1)
-        st.dataframe(player_stats.sort_values(by=col_mean_pos), hide_index=True)
+        st.dataframe(player_stats.sort_values(by=col_mean_pos), width="stretch", hide_index=True)
     else:
         st.info(_t('no_data_selected', lang))
 
@@ -481,7 +481,7 @@ def show_historical_stats(lang):
         participants_per_edition['miesiac'] = participants_per_edition['miesiac_rok_str'].apply(lambda x: datetime.strptime(x, '%m.%Y'))
         participants_per_edition = participants_per_edition.sort_values('miesiac').drop(columns='miesiac')
         
-        st.dataframe(participants_per_edition.set_index('miesiac_rok_str')) 
+        st.dataframe(participants_per_edition.set_index('miesiac_rok_str'), width="stretch") 
 
         fig_participants, ax_participants = plt.subplots(figsize=(16, 6))
         plt.style.use('dark_background')
@@ -514,7 +514,7 @@ def show_historical_stats(lang):
         avg_edition_stats[_t('avg_result_edition', lang)] = avg_edition_stats[_t('avg_result_edition', lang)].round(1)
         avg_edition_stats['miesiac'] = avg_edition_stats['miesiac_rok_str'].apply(lambda x: datetime.strptime(x, '%m.%Y'))
         avg_edition_stats = avg_edition_stats.sort_values('miesiac').drop(columns='miesiac')
-        st.dataframe(avg_edition_stats.set_index('miesiac_rok_str'))
+        st.dataframe(avg_edition_stats.set_index('miesiac_rok_str'), width="stretch")
 
         fig_avg_stats, ax_avg_stats = plt.subplots(figsize=(16, 6))
         plt.style.use('dark_background')
@@ -548,7 +548,7 @@ def show_historical_stats(lang):
         edition_ranking = pd.DataFrame(edition_ranking_data)
         edition_ranking['miesiac_sort'] = edition_ranking['Miesiąc/Rok'].apply(lambda x: datetime.strptime(x, '%m.%Y'))
         edition_ranking = edition_ranking.sort_values('miesiac_sort').drop(columns='miesiac_sort')
-        st.dataframe(edition_ranking.set_index('Miesiąc/Rok'))
+        st.dataframe(edition_ranking.set_index('Miesiąc/Rok'), width="stretch")
     else:
         st.info(_t('no_data_selected', lang))
 
@@ -565,7 +565,7 @@ def show_historical_stats(lang):
                 record_holders_in_edition = edition_data[edition_data['rezultat_numeric'] == best_result_in_edition]['uczestnik'].unique()
                 overall_records.append({_t('edition', lang): edition_data['miesiac_rok_str'].iloc[0], _t('record_holder', lang): ", ".join(record_holders_in_edition), _t('record_value', lang): f"{best_result_in_edition:.1f}", _t('previous_record', lang): f"{current_best_result:.1f}" if current_best_result != -np.inf else "N/A"})
                 current_best_result = best_result_in_edition
-        if overall_records: st.dataframe(pd.DataFrame(overall_records), hide_index=True)
+        if overall_records: st.dataframe(pd.DataFrame(overall_records), width="stretch", hide_index=True)
         else: st.info(_t('no_data_selected', lang))
     else:
         st.info(_t('no_data_selected', lang))
@@ -585,7 +585,7 @@ def show_historical_stats(lang):
             personal_records_df = pd.DataFrame(personal_records_timeline)
             personal_records_df['miesiac_sort'] = personal_records_df[_t('edition', lang)].apply(lambda x: datetime.strptime(x, '%m.%Y'))
             personal_records_df = personal_records_df.sort_values(by='miesiac_sort').drop(columns='miesiac_sort')
-            st.dataframe(personal_records_df, hide_index=True)
+            st.dataframe(personal_records_df, width="stretch", hide_index=True)
         else: st.info(_t('no_data_selected', lang))
     else: st.info(_t('no_data_selected', lang))
 
