@@ -1,5 +1,6 @@
 import streamlit as st
 from translations import _t
+import pandas as pd
 from page_form import show_submission_form
 from page_current_ranking import show_current_edition_dashboard
 from page_historical_stats import show_historical_stats
@@ -120,7 +121,16 @@ def main():
         if sheet:
             df_logs = load_google_sheet_data(sheet, "LogWpisow")
             if not df_logs.empty:
-                st.dataframe(df_logs.sort_values("Timestamp", ascending=False).head(20), width="stretch", hide_index=True)
+                # Konwersja na format daty i usunięcie sekund
+                df_logs['Timestamp'] = pd.to_datetime(df_logs['Timestamp'])
+                df_logs['Timestamp'] = df_logs['Timestamp'].dt.strftime('%Y-%m-%d %H:%M')
+                
+                # Zmiana nazwy kolumny na Time (UTC) dla jasności międzynarodowej
+                st.dataframe(
+                    df_logs.rename(columns={'Timestamp': 'Time (UTC)'}).sort_values("Time (UTC)", ascending=False).head(20), 
+                    width="stretch", 
+                    hide_index=True
+                )
             else:
                 st.info("Log pusty.")
 
