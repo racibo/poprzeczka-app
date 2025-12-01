@@ -419,7 +419,8 @@ def show_historical_stats(lang):
             for pos in all_possible_positions:
                 if pos not in position_counts.columns: position_counts[pos] = 0
             position_counts = position_counts.reindex(columns=sorted(position_counts.columns), fill_value=0)
-            participation_count = filtered_df['uczestnik'].value_counts().rename(_t('total_participations', lang))
+            # Liczymy tylko te wiersze, gdzie jest faktyczny wynik (nie jest NaN)
+            participation_count = filtered_df.dropna(subset=['rezultat_numeric'])['uczestnik'].value_counts().rename(_t('total_participations', lang))
             position_counts = position_counts.join(participation_count)
             sort_cols = [col for col in position_counts.columns if isinstance(col, (int, np.integer))]
             position_counts = position_counts.sort_values(by=sort_cols, ascending=[False]*len(sort_cols))
