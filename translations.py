@@ -1,25 +1,546 @@
-  You can now view your Streamlit app in your browser.
+# === Słownik Tłumaczeń (PL/EN) ===
+translations = {
+    'pl': {
+        'app_title': "Analiza i Zarządzanie Poprzeczką",
+        
+        # MENU
+        'nav_header': "Edycje i Menu",
+        'nav_november_ranking': "🍂 Ranking Listopad",
+        'nav_november_form': "📝 Formularz Listopad",
+        'nav_december_ranking': "❄️ Ranking Grudzień",
+        'nav_december_form': "📝 Formularz Grudzień",
+        'nav_historical_stats': "📈 Statystyki Historyczne",
+        'nav_rules': "📜 Zasady",
+        'nav_join': "ℹ️ Jak dołączyć",
+        'about_app': "🤔 O projekcie",
+        'nav_submission_form': "📋 Formularz", # Fallback
+        
+        # TEKSTY STATYCZNE
+        'about_app_text': "Nie było by POPRZECZKI bez hive.blog. Tam wokół ludzi publikujących swoje raporty na actifit wykiełkowały nowe rywalizacje. POPRZECZKA powstała dzięki lidze 'poliac' organizowanej przez @browery. POPRZECZKA to inne spojrzenie na liczbę kroków i publikowane codziennie raporty. Można je ułożyć w klasyfikację i tak się właśnie stało. Kolejne miesiące mijają a POPRZECZKA nadal trwa",
+        'sidebar_hive_link': "🐝 Przejdź do Hive.blog",
+        'sidebar_rules_header': "Zasady Klasyfikacji",
+        'sidebar_rules_text': """
+        **Zasady ogólne:**
+        1. **Cel:** Utrzymać się w grze jak najdłużej, zaliczając kolejne etapy (dni).
+        2. **Wymagania:** Każdy etap ma określoną minimalną liczbę kroków (np. Dzień 1 = 1000, Dzień 30 = 30000).
+        3. **Zaliczenie:** Wymagany raport Actifit lub dowód ze Stravy/Garmina (zdjęcie/link).
+        4. **Eliminacja:** 3 niezaliczone etapy z rzędu oznaczają koniec gry (tzw. "pa").
+        5. **Ranking:** Decyduje najwyższy zaliczony etap. W przypadku remisu decyduje historia wpadek.
 
-  Local URL: http://localhost:8501
-  Network URL: http://192.168.0.101:8501
+        ---
+        **💰 Zasady Nagradzania (Beneficjenci):**
+        
+        1. **Tworzymy Pulę:** Pula nagród z posta jest równa **procentowi Waszego wkładu** w uzupełnianie danych (np. 40% wpisów społeczności = 40% nagrody dla Was).
+        2. **Dzielimy Pulę:**
+            * **80%** tej puli trafia do **Pomocników** (proporcjonalnie do liczby dodanych wpisów).
+            * **20%** tej puli trafia do **Liderów** (równo dla Top 5 obecnej klasyfikacji).
+        3. **Sumujemy:** Jeśli jesteś Liderem i Pomocnikiem jednocześnie – Twoje nagrody się sumują!
+        4. **Limity:** Nagrodę (beneficjum) otrzymuje **maksymalnie 7 osób** z najwyższym łącznym wynikiem (minimum 1%).
+        
+        *Uwaga: System nagradzania jest zmienny i zależy od możliwości finansowych oraz czasu admina. Zasady te mogą ulegać zmianom w trakcie trwania edycji.*
+        """,
+        'sidebar_admin_log': "🔒 Log wpisów (Admin)",
+        'sidebar_log_empty': "Log jest pusty.",
 
-2025-12-01 10:04:31.514 Please replace `use_container_width` with `width`.
+        # FORMULARZ
+        'form_header': "Formularz wprowadzania danych: {0}",
+        'form_info': "Wprowadzasz dane dla edycji: **{0}**.",
+        'form_submitter_label': "Kto wprowadza dane?",
+        'form_submitter_placeholder': "Wybierz...",
+        'form_participant_label': "Uczestnik",
+        'form_participant_placeholder': "Wybierz...",
+        'form_day_label': "Etap (numer dnia)",
+        'form_status_label': "Status etapu",
+        'form_status_pass': "Zaliczone",
+        'form_status_fail': "Niezaliczone",
+        'form_status_no_report': "Brak raportu",
+        'form_status_info': "Uwaga: 'Niezaliczone' oraz 'Brak raportu' mają ten sam skutek.",
+        'form_converters_expander': "ℹ️ Przeliczniki (Strava/Rower/Inne)",
+        'form_converters_warning': "Jeśli zgłaszasz kroki z aktywności (np. Strava, Garmin), stosujemy poniższe przeliczniki. Zamiast raportu Actifit, możesz wgrać zrzut ekranu.",
+        'form_notes_label': "Inne (opcjonalnie)",
+        'form_notes_placeholder': "Np. 'Dane ze Strava', 'Link do zrzutu ekranu'...",
+        'form_upload_label': "Zrzut ekranu (opcjonalnie)",
+        'form_upload_link_text': "📂 Folder ze zrzutami",
+        'form_thanks_note': "Dzięki za pomoc!",
+        'form_submit_button': "Zapisz dane",
+        'form_ranking_info': "Sprawdź ranking w menu bocznym.",
+        'form_success_message': "Zapisano: **{0}** - Dzień {1} - Status: **{2}**",
+        'form_error_message': "Błąd zapisu: {0}",
+        'form_error_no_participant': "Wybierz uczestnika i wprowadzającego.",
+        'form_confirmation_header': "Potwierdzenie zapisu",
+        'form_confirmation_participant': "Uczestnik",
+        'form_confirmation_day': "Dzień",
+        'form_confirmation_status': "Status",
+        'form_confirmation_notes': "Notatki",
+        'form_confirmation_notes_empty': "Brak",
+        'form_overwrite_info': "Nowy wpis nadpisuje stary.",
+        'form_data_exists': "ℹ️ Dane już istnieją (autor: {0}).",
+        
+        # GENERATOR
+        'draft_header': "📝 Generator Wpisu (Dla {0})",
+        'draft_select_label': "Wybierz uczestnika:",
+        'draft_copy_label': "Skopiuj tekst:",
+        'draft_loading': "Generowanie...",
+        'draft_no_data': "Brak danych rankingowych.",
+        'draft_error': "Błąd: {0}",
+        'draft_intro': "1. Podsumowanie dla {0}",
+        'draft_main_text': "Wg oficjalnej klasyfikacji po etapie {0}, {1} zajmuje {2} miejsce. Przed: {3}, za: {4}. Ostatnie dane (etap {6}): {7}",
+        'draft_status_pass': "Zaliczony.",
+        'draft_status_fail': "Niezaliczony.",
+        'draft_analysis_active': "{0} {1}. Ostatnio wyniki blisko etapu nr {3}. Do PB ({4}) {5} jeszcze {6}.",
+        'draft_analysis_eliminated': "{0} {1}. Ostatnio wyniki blisko etapu nr {3}. {4}",
+        'draft_pb_congrats': "Uwaga! {0} {1} rekord życiowy ({2})! Gratulacje 👏",
+        'draft_footer': "Więcej na app. Wasza pomoc: {0}%.",
+        'word_participant_m': "uczestnika", 'word_participant_f': "uczestniczki",
+        'word_chance_m': "ma szansę", 'word_chance_f': "ma szansę",
+        'word_eliminated_m': "odpadł w dniu {0}", 'word_eliminated_f': "odpadła w dniu {0}",
+        'word_achieved_m': "osiągał", 'word_achieved_f': "osiągała",
+        'word_missing_m': "brakuje mu", 'word_missing_f': "brakuje jej",
+        'word_broke_m': "Uczestnik pobił", 'word_broke_f': "Uczestniczka pobiła",
 
-`use_container_width` will be removed after 2025-12-31.
+        # RANKING
+        'current_header': "📊 Ranking Edycji",
+        'current_no_data': "Brak danych.",
+        'current_ranking_header': "Aktualna Klasyfikacja (Na Żywo / Nieoficjalna)",
+        'current_ranking_rules_expander_label': "Zasady klasyfikacji (Na Żywo)",
+        'current_ranking_rules': "Ranking do etapu {0}. Sortowanie po najwyższym zaliczonym etapie.",
+        'current_official_ranking_header': "Oficjalna Klasyfikacja (wg kompletnych etapów)",
+        'current_official_stage_selector': "Wybierz etap:",
+        'current_official_ranking_desc': "Poniższa klasyfikacja jest oparta o **Etap {0}**. Jest to ostatni (lub wybrany) dzień, dla którego wszyscy aktywni uczestnicy posiadają kompletne dane (jawne lub wywnioskowane).",
+        'current_official_ranking_none': "Brak kompletnych etapów.",
+        'current_ranking_error': "Błąd: {0}",
+        'ranking_col_rank': "Miejsce", 
+        'ranking_col_participant': "Uczestnik",
+        'ranking_col_highest_pass': "Najw. Zaliczone",
+        'ranking_col_status': "Status",
+        'ranking_col_failed_list_live': "Niezaliczone (nieoficjalnie)", 
+        'ranking_col_failed_list_official': "Niezaliczone", 
+        'ranking_status_active': "W grze",
+        'ranking_status_eliminated': "Odpadł (Dzień {0})",
+        'current_completeness_header': "Kompletność Danych",
+        'current_completeness_no_data': "Brak danych.",
+        'completeness_col_day': "Dzień",
+        'completeness_col_participant': "Uczestnik",
+        
+        # ZMIANA: Nowy opis dla rankingu na żywo
+        'ranking_selection_instruction': "ℹ️ **O tej klasyfikacji:** Bierze ona pod uwagę wszystkie dostępne dane (z różnych okresów). U jednych uczestników mogą być braki, u innych dane są bieżące. Dzięki temu ranking reaguje natychmiast po wprowadzeniu nowych danych do formularza.",
+        
+        'current_stats_header': "🏆 Statystyki",
+        'current_stats_top_submitters': "Najwięksi Pomocnicy",
+        'current_stats_top_submitters_desc': "Kto pomagał.",
+        'current_stats_top_submitters_none': "Brak wpisów.",
+        'current_stats_top_submitters_percentage': "Pomoc: **{0:.0f}%** ({1} wpisów). Admin: {2}.",
+        'current_stats_streaks': "Serie Zaliczeń",
+        'current_stats_streaks_desc': "Najdłuższe serie.",
+        'current_stats_streaks_days': "dni",
+        
+        # --- WYKRES WYŚCIGU ---
+        'current_stats_race_header': "🏁 Wyścig o Najwyższy Etap",
+        'current_stats_race_desc': """
+        Wykres dynamiczny (Race Chart) pokazuje, **kto prowadził w danym momencie rywalizacji**.
+        Długość słupka oznacza numer najwyższego zaliczonego etapu przez uczestnika na koniec wybranego dnia.
+        Możesz odtworzyć przebieg rywalizacji jako animację lub przewijać etapy ręcznie przyciskami, aby zobaczyć zmiany lidera.
+        """,
+        'current_stats_race_mode': "Tryb",
+        'current_stats_race_mode_anim': "Animacja",
+        'current_stats_race_mode_manual': "Ręczny",
+        'current_stats_race_button': "▶️ Odtwórz Animację",
+        'current_stats_race_day': "Etap",
+        'current_stats_race_total': "Najw. Etap",
+        'race_btn_prev': "➖ Poprzedni",
+        'race_btn_next': "➕ Następny",
+        'race_input_label': "Wybierz Etap",
+        
+        'current_ranking_historical_expander': "Kontekst Historyczny",
+        'current_ranking_historical_no_data': "Brak historii.",
+        
+        # ZMIANA: PB na R. Życiowy
+        'hist_context_pb': "R. Życiowy",
+        'hist_context_avg': "Śr. Ogół",
+        'hist_context_avg_last_3': "Śr. Ost.3",
+        'hist_context_best_pos': "Najl. Poz.",
+        'hist_context_medals': "Medale",
+        'hist_context_editions': "Edycje",
+        
+        'participant_summary_expander': "Szczegóły",
+        'summary_current_rank': "Teraz",
+        'summary_previous_rank': "Poprz.",
+        'summary_medals': "Medale",
+        'summary_wins': "Wygrane",
+        'summary_last_5_days': "Ost. 5 dni",
+        'summary_no_hist_data': "-",
+        'summary_profile_link': "Profil",
+        'stats_rabbits_title': "🐰 Najwięksi spryciarze",
+        'stats_rabbits_desc': "Są to uczestnicy, którzy mieli lub mają w tej edycji najwięcej niezaliczonych etapów.",
+        
+        'card_hist_stats_header': "Statystyki:",
+        'card_avg_total': "Śr. wynik",
+        'card_avg_l3': "Śr. ost. 3",
+        'card_avg_pos': "Śr. miejsce",
+        'stage_analysis_title': "📉 Trudność Etapów",
+        'stage_analysis_y_axis': "% Niezaliczonych",
+        'stage_analysis_hardest': "🔥 Najtrudniejszy: **Dzień {0}** (Nie zaliczyło {1:.1f}%)",
+        'survival_chart_header': "📉 Analiza Przetrwania",
+        'survival_chart_title': "% w grze",
+        'survival_y_axis': "%",
+        'survival_current_legend': "Obecna",
+        
+        # TYGODNIOWE
+        'weekly_summary_title': "📅 Podsumowanie Tygodnia nr {0} (Etap {1})",
+        'weekly_intro': "Podsumowanie po tygodniu nr {0}.",
+        'weekly_leader_sg': "Prowadzi: {0}",
+        'weekly_leader_pl': "Prowadzą: {0}",
+        'weekly_chasers': "za nimi są {0}.",
+        'weekly_winners': "Zwycięzcy poprzednich edycji na miejscach: {0}.",
+        'weekly_participants': "Startowało {0} - po {1} dniach mamy ich już tylko {2}.",
+        'weekly_comparison': "W porównaniu do historii {0}.",
+        'weekly_footer_new': "Więcej na [poprzeczka.streamlit.app](https://poprzeczka.streamlit.app). Wasza pomoc: {0}%. Beneficjenci:",
+        'weekly_rewards_list': "{0}% - {1}",
 
-For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
-2025-12-01 10:04:31.528 Please replace `use_container_width` with `width`.
+        # HISTORIA
+        'title': "Statystyki rywalizacji od 2021 roku",
+        'sidebar_header': "Filtry",
+        'select_period': "Okres",
+        'manual_select': "Ręcznie",
+        'last_n_editions': "Ost. {0}",
+        'all_editions': "Wszystkie",
+        'select_users': "Uczestnicy",
+        'select_all_users': "Wszyscy",
+        'min_editions': "Min. edycji",
+        'chart_type': "Wykres",
+        'results': "Wyniki",
+        'positions': "Miejsca",
+        'comparison_chart_title_results': "Porównanie wyników graczy",
+        'comparison_chart_title_positions': "Porównanie pozycji graczy",
+        'comparison_chart_note': "W menu po lewej stronie możesz wybrać dowolnego lub dowolnych uczestników do porównania.",
+        'y_axis_results': "Wynik",
+        'y_axis_positions': "Miejsce",
+        'x_axis_month': "Miesiąc",
+        'x_axis_edition': "Numer edycji",
+        'personal_records': "🏅 Rekordy osobiste",
+        'best_result': "Najlepszy wynik",
+        'worst_result': "Najgorszy wynik",
+        'best_position': "Najlepsze miejsce",
+        'worst_position': "Najgorsze miejsce",
+        'avg_result': "Średni wynik",
+        'avg_position': "Średnie miejsce",
+        'edition': "Edycja",
+        'participant': "Uczestnik",
+        'result': "Wynik",
+        'position': "Miejsce",
+        'no_data_selected': "Brak danych dla wybranych filtrów.",
+        'monthly_summary': "Zestawienie miesięczne",
+        'monthly_summary_results': "Wyniki miesięczne",
+        'monthly_summary_positions': "Miejsca miesięczne",
+        'monthly_summary_desc': "Zestawienie miesięczne. Tabela przedstawia wyniki i niżej zajęte miejsca w poszczególnych edycjach",
+        'distribution_of_results': "Rozkład wyników",
+        'histogram_title_results': "Histogram wyników",
+        'histogram_title_positions': "Histogram miejsc",
+        'player_stats': "Statystyki graczy",
+        'count_col': "Liczba",
+        'mean_col': "Średnia",
+        'min_col': "Min",
+        'max_col': "Max",
+        'median_col': "Mediana",
+        'std_col': "Odch.",
+        'correlation_analysis': "Analiza korelacji (Wynik vs Miejsce)",
+        'correlation_r': "Współczynnik korelacji (r):",
+        'correlation_p': "Wartość p:",
+        'correlation_desc_strong_neg': "Silna ujemna korelacja: Wzrost wyniku wiąże się z lepszą pozycją (niższy numer miejsca).",
+        'correlation_desc_weak_neg': "Słaba ujemna korelacja: Wzrost wyniku może wiązać się z lepszą pozycją (niższy numer miejsca).",
+        'correlation_desc_no': "Brak korelacji: Wynik nie ma związku z miejscem.",
+        'correlation_desc_not_significant': "Korelacja nie jest statystycznie istotna (p > 0.05).",
+        'medal_classification_title': "Klasyfikacja miejsc",
+        'position_col': "Pozycja",
+        'medals_col': "Medale",
+        'total_medals_col': "Suma medali",
+        'total_participations': "Liczba startów",
+        'user_details_header': "Szczegółowe statystyki uczestnika",
+        'select_single_user': "W menu po lewej stronie strony możesz zawęzić historię do wybranych uczestników lub edycji.",
+        'heatmap_title': "Mapa cieplna zajmowanych miejsc",
+        'heatmap_desc': "Wizualizacja miejsc zajmowanych przez uczestników. Jaśniejszy kolor oznacza lepsze (niższe) miejsce.",
+        'medal_race_title': "Historyczny wyścig medalowy",
+        'medal_race_desc': "Wykres pokazuje skumulowaną liczbę medali (miejsca 1-3) dla uczestników po każdej edycji.",
+        'cumulative_medals': "Łączna liczba medali (Top {0})",
+        'participants_per_edition': "Liczba uczestników w poszczególnych edycjach",
+        'participants_chart_title': "Liczba uczestników",
+        'participants_chart_ylabel': "Liczba uczestników",
+        'avg_result_pos_per_edition': "Średnie edycji",
+        'avg_result_edition': "Śr. Wynik",
+        'avg_position_edition': "Śr. Miejsce",
+        'select_medal_range': "Zakres medali",
+        'top_1': "Tylko 1. miejsce",
+        'top_3': "Top 3 (1-3)",
+        'top_5': "Top 5 (1-5)",
+        'top_10': "Top 10 (1-10)",
+        'custom_range': "Zakres niestandardowy",
+        'min_medal_position': "Minimalna pozycja medalowa",
+        'max_medal_position': "Maksymalna pozycja medalowa",
+        'edition_ranking_title': "Ranking edycji rozgrywki",
+        'edition_ranking_desc': "Tabela przedstawia ranking edycji od najlepszej do najgorszej, na podstawie średniego wyniku i średniej pozycji.",
+        'overall_records_title': "Chronologiczna tablica rekordów całej rozgrywki",
+        'overall_records_desc': "Tabela przedstawia najwyższe wyniki osiągnięte w całej rozgrywce po każdej edycji.",
+        'personal_records_timeline_title': "Chronologiczna tablica rekordów osobistych uczestników",
+        'personal_records_timeline_desc': "Tabela przedstawia, kiedy poszczególni uczestnicy pobijali swoje rekordy osobiste.",
+        'record_holder': "Rekordzista",
+        'record_value': "Wartość rekordu",
+        'previous_record': "Poprzedni rekord",
+        'record_broken_by': "Rekord pobity przez",
+        'new_record': "Nowy rekord",
+        'old_record': "Stary rekord",
+        'edition_winner': "Zwycięzca edycji",
+        'medal_classification_classic_title': "Klasyfikacja medalowa (Top 3)",
+        'survival_analysis_title': "Analiza przetrwania uczestników",
+        'survival_analysis_desc': "Wykres pokazuje, ilu uczestników pozostało w grze każdego dnia. Uczestnik odpada 3 dni po ostatnim zaliczonym etapie (np. wynik 10 oznacza odpadnięcie 13. dnia).",
+        'survival_analysis_select_editions': "Wybierz edycje do porównania",
+        'survival_analysis_x_axis': "Dzień rozgrywki",
+        'survival_analysis_y_axis': "Liczba aktywnych uczestników",
+        'survival_analysis_legend': "Edycja",
+        'survival_analysis_no_selection': "Wybierz co najmniej jedną edycję, aby zobaczyć analizę przetrwania.",
+        'scatter_plot_title': "Wyniki uczestników w poszczególnych edycjach (z miejscami)",
+        'scatter_plot_desc': "Wykres punktowy przedstawiający wyniki każdego uczestnika w kolejnych edycjach. Kolor punktu oznacza zajęte miejsce.",
+        'position_legend': "Miejsce",
+    },
+    'en': {
+        'app_title': "Crossbar Challenge Analysis",
+        'nav_header': "Menu",
+        'nav_november_ranking': "🍂 Ranking November",
+        'nav_november_form': "📝 Form November",
+        'nav_december_ranking': "❄️ Ranking December",
+        'nav_december_form': "📝 Form December",
+        'nav_historical_stats': "📈 Historical Stats",
+        'nav_rules': "📜 Rules",
+        'nav_join': "ℹ️ How to join",
+        'about_app': "🤔 About",
+        'about_app_text': "App supporting the 'Crossbar' challenge on Hive Blog.",
+        'sidebar_hive_link': "🐝 Go to Hive.blog",
+        'sidebar_rules_header': "Classification Rules",
+        
+        # ZAKTUALIZOWANE ZASADY (EN)
+        'sidebar_rules_text': """
+        **Classification Rules:**
+        1. **Goal:** Survive as long as possible.
+        2. **Pass:** Report required with proof (photo/link).
+        3. **Elimination:** 3 consecutive failures = game over.
+        4. **Ranking:** Highest passed stage decides.
 
-`use_container_width` will be removed after 2025-12-31.
+        ---
+        **💰 Reward Rules (Beneficiaries):**
+        1. **Pool:** The reward pool equals the **percentage of community contribution** to data entry (e.g., 40% entries = 40% reward).
+        2. **Split:**
+            * **80%** goes to **Helpers** (proportional to entries).
+            * **20%** goes to **Leaders** (equally for Top 5).
+        3. **Sum:** Rewards stack if you are both a Helper and a Leader.
+        4. **Limits:** Max **7 beneficiaries** (min 1%).
+        
+        *Note: The reward system is variable and depends on the admin's time and resources. Rules may evolve during the edition.*
+        """,
+        
+        'sidebar_admin_log': "🔒 Log",
+        'sidebar_log_empty': "Log empty.",
+        
+        'form_header': "Data Entry: {0}",
+        'form_info': "Edition: **{0}**.",
+        'form_submitter_label': "Submitter",
+        'form_participant_label': "Participant",
+        'form_day_label': "Stage",
+        'form_status_label': "Status",
+        'form_status_pass': "Passed",
+        'form_status_fail': "Failed",
+        'form_status_no_report': "No Report",
+        'form_status_info': "Failed = No Report.",
+        'form_converters_expander': "ℹ️ Converters",
+        'form_converters_warning': "If reporting steps from activities (Strava, Garmin), use converters below.",
+        'form_notes_label': "Notes",
+        'form_upload_label': "Screenshot",
+        'form_submit_button': "Save",
+        'form_ranking_info': "Check rankings menu.",
+        'form_success_message': "Saved: **{0}** - Day {1} - {2}",
+        'form_error_message': "Error: {0}",
+        'form_error_no_participant': "Select submitter/participant.",
+        'form_error_drive_not_configured': "Drive error.",
+        'form_error_uploading_file': "Upload error: {1}",
+        'form_confirmation_header': "Confirm",
+        'form_confirmation_participant': "User",
+        'form_confirmation_day': "Day",
+        'form_confirmation_status': "Status",
+        'form_confirmation_notes': "Notes",
+        'form_confirmation_notes_empty': "None",
+        'form_overwrite_info': "New overwrites old.",
+        'form_data_exists': "Exists.",
+        
+        'draft_header': "📝 Post Draft",
+        'draft_select_label': "User:",
+        'draft_copy_label': "Copy:",
+        'draft_loading': "Generating...",
+        'draft_no_data': "No data.",
+        'draft_error': "Error: {0}",
+        'draft_intro': "1. Summary {0}",
+        'draft_main_text': "Rank after stage {0}: {1} is {2}. Before: {3}, After: {4}. Last data (st {6}): {7}",
+        'draft_status_pass': "Passed.",
+        'draft_status_fail': "Failed.",
+        'draft_analysis_active': "{0} {1}. Scores near stage {3}. Needs {6} for PB ({4}).",
+        'draft_analysis_eliminated': "{0} {1}. Scores near stage {3}. {4}",
+        'draft_pb_congrats': "PB Broken ({2})! Congrats {0}!",
+        'draft_footer': "More at app.",
+        'word_participant_m': "participant", 'word_participant_f': "participant",
+        'word_chance_m': "has chance", 'word_chance_f': "has chance",
+        'word_eliminated_m': "eliminated day {0}", 'word_eliminated_f': "eliminated day {0}",
+        'word_achieved_m': "achieved", 'word_achieved_f': "achieved",
+        'word_missing_m': "needs", 'word_missing_f': "needs",
+        'word_broke_m': "Broke", 'word_broke_f': "Broke",
+        
+        'current_header': "📊 Ranking",
+        'current_no_data': "No data.",
+        'current_ranking_header': "Live Ranking",
+        'current_ranking_rules_expander_label': "Show Rules (Live)",
+        'current_ranking_rules': "Up to stage {0}.",
+        'current_official_ranking_header': "Official Ranking",
+        'current_official_stage_selector': "Select Stage:",
+        'current_official_ranking_desc': "The following standings are based on **Stage {0}**. This is the last (or selected) day for which all active participants have complete data (explicit or inferred).",
+        'current_official_ranking_none': "No complete stages yet.",
+        'current_ranking_error': "Error: {0}",
+        'current_header_check_error': "Header error.",
+        'current_header_check_details': "Details: {0}",
+        'current_header_check_expected': "Exp",
+        'current_header_check_found': "Fnd",
+        'ranking_col_rank': "Rank", 
+        'ranking_col_participant': "User",
+        'ranking_col_highest_pass': "High Pass",
+        'ranking_col_status': "Status",
+        'ranking_col_failed_list_live': "Fail (live)",
+        'ranking_col_failed_list_official': "Fail",
+        'ranking_status_active': "Active",
+        'ranking_status_eliminated': "Out ({0})",
+        'current_completeness_header': "Completeness",
+        'current_completeness_no_data': "No data.",
+        'completeness_col_day': "Day",
+        'completeness_col_participant': "User",
+        'current_log_expander': "Log",
+        'current_log_empty': "Empty.",
+        'current_stats_header': "Stats",
+        'current_stats_top_submitters': "Helpers",
+        'current_stats_top_submitters_desc': "Top contributors.",
+        'current_stats_top_submitters_none': "None.",
+        'current_stats_top_submitters_percentage': "Help: **{0:.0f}%**. Admin: {2}.",
+        'current_stats_streaks': "Streaks",
+        'current_stats_streaks_desc': "Longest streaks.",
+        'current_stats_streaks_days': "days",
+        
+        # RACE CHART (EN)
+        'current_stats_race_header': "🏁 Highest Stage Race",
+        'current_stats_race_desc': """
+        Dynamic Race Chart shows **who was leading at any given moment**.
+        Bar length indicates the highest stage completed by the participant by the end of the selected day.
+        You can play an animation or manually browse stages to see leader changes.
+        """,
+        'current_stats_race_mode': "Mode",
+        'current_stats_race_mode_anim': "Animation",
+        'current_stats_race_mode_manual': "Manual",
+        'current_stats_race_button': "▶️ Play Animation",
+        'current_stats_race_day': "Stage",
+        'current_stats_race_total': "Highest Stage",
+        'race_btn_prev': "➖ Prev",
+        'race_btn_next': "➕ Next",
+        'race_input_label': "Select Stage",
 
-For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
-2025-12-01 10:04:31.986 Please replace `use_container_width` with `width`.
+        'current_ranking_historical_expander': "History Context",
+        'current_ranking_historical_no_data': "None.",
+        
+        # ZMIANA: Nowy opis dla rankingu na żywo (EN)
+        'ranking_selection_instruction': "ℹ️ **About this ranking:** It takes into account all available data (mixed timeframes). Some participants may have gaps, while others are up to date. This allows the ranking to update immediately after new entries in form.",
+        
+        # ZMIANA: Dodanie brakujących kolumn History Context (EN)
+        'hist_context_pb': "PB",
+        'hist_context_avg': "Avg Total",
+        'hist_context_avg_last_3': "Avg Last 3",
+        'hist_context_best_pos': "Best Pos",
+        'hist_context_medals': "Medals",
+        'hist_context_editions': "Editions",
 
-`use_container_width` will be removed after 2025-12-31.
+        'summary_current_rank': "Now",
+        'summary_previous_rank': "Prev",
+        'summary_medals': "Medals",
+        'summary_wins': "Wins",
+        'summary_last_5_days': "Last 5",
+        'summary_no_hist_data': "-",
+        'summary_profile_link': "Profile",
+        'stats_rabbits_title': "🐰 Rabbits",
+        'stats_rabbits_desc': "Most failures.",
+        'card_hist_stats_header': "Stats:",
+        'card_avg_total': "Avg Res",
+        'card_avg_l3': "Avg 3",
+        'card_avg_pos': "Avg Pos",
+        'stage_analysis_title': "📉 Difficulty",
+        'stage_analysis_y_axis': "% Fail",
+        'stage_analysis_hardest': "🔥 Hardest: **Day {0}** (Fail {1:.1f}%)",
+        'survival_chart_header': "📉 Survival",
+        'survival_chart_title': "% Active",
+        'survival_y_axis': "%",
+        'survival_current_legend': "Current",
+        
+        'weekly_summary_title': "📅 Week {0} Summary",
+        'weekly_intro': "Summary week #{0}.",
+        'weekly_leader_sg': "Leading: {0}",
+        'weekly_leader_pl': "Leading: {0}",
+        'weekly_chasers': "followed by {0}.",
+        'weekly_winners': "Past winners: {0}.",
+        'weekly_participants': "Started {0} - after {1} days we have only {2}.",
+        'weekly_comparison': "Vs history {0}.",
+        'weekly_footer_new': "More at app. Help: {0}%.",
+        'weekly_rewards_list': "{0}% - {1}",
+        
+        'title': "Stats since 2021",
+        'sidebar_header': "Filters",
+        'select_period': "Period",
+        'manual_select': "Manual",
+        'last_n_editions': "Last {0}",
+        'all_editions': "All",
+        'select_users': "Users",
+        'select_all_users': "All",
+        'min_editions': "Min eds",
+        'chart_type': "Chart",
+        'results': "Results",
+        'positions': "Positions",
+        'y_axis_results': "Result",
+        'y_axis_positions': "Position",
+        'x_axis_month': "Mo",
+        'x_axis_edition': "Ed",
+        'user_details_header': "Details",
+        'best_result': "PB",
+        'worst_result': "Worst",
+        'best_position': "Best Pos",
+        'worst_position': "Worst Pos",
+        'comparison_chart_title_results': "Results Comp.",
+        'comparison_chart_title_positions': "Pos Comp.",
+        'comparison_chart_note': "Select users.",
+        'monthly_summary': "Monthly",
+        'monthly_summary_desc': "Table.",
+        'monthly_summary_results': "Res",
+        'monthly_summary_positions': "Pos",
+        'participant': "Participant",
+        'medal_race_title': "Medal Race",
+        'medal_race_desc': "Cumulative medals.",
+        'select_medal_range': "Range",
+        'top_1': "1", 'top_3': "3", 'top_5': "5", 'top_10': "10", 'custom_range': "Custom",
+        'min_medal_position': "Min", 'max_medal_position': "Max",
+        'cumulative_medals': "Medals (Top {0})",
+        'heatmap_title': "Heatmap", 'heatmap_desc': "Positions.", 'position': "Pos", 'edition': "Ed",
+        'scatter_plot_title': "Scatter", 'scatter_plot_desc': "Points.", 'position_legend': "Pos",
+        'medal_classification_title': "Class.", 'total_participations': "Starts",
+        'medal_classification_classic_title': "Medal Table", 'total_medals_col': "Total",
+        'player_stats': "Stats", 'count_col': "Cnt", 'mean_col': "Avg", 'min_col': "Min", 'max_col': "Max", 'median_col': "Med",
+        'participants_per_edition': "Participants", 'participants_chart_title': "Count", 'participants_chart_ylabel': "N",
+        'avg_result_pos_per_edition': "Avg Ed", 'avg_result_edition': "Avg Res",
+        'avg_position_edition': "Avg Pos",
+        'edition_ranking_title': "Rank Ed", 'edition_ranking_desc': "Best to worst", 'edition_winner': "Winner",
+        'overall_records_title': "Records", 'overall_records_desc': "High scores.", 'record_holder': "Holder", 'record_value': "Val", 'previous_record': "Prev",
+        'personal_records_timeline_title': "PB Timeline", 'personal_records_timeline_desc': "Timeline.", 'new_record': "New", 'old_record': "Old",
+        'survival_analysis_title': "Survival", 'survival_analysis_desc': "Dropout.", 'survival_analysis_select_editions': "Select", 'survival_analysis_no_selection': "Select one.",
+        'survival_analysis_x_axis': "Day", 'survival_analysis_y_axis': "Active", 'survival_analysis_legend': "Ed",
+    }
+}
 
-For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
-2025-12-01 10:04:35.012 Please replace `use_container_width` with `width`.
-
-`use_container_width` will be removed after 2025-12-31.
-
-For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+def _t(key, lang, *args):
+    text = translations[lang].get(key, f"MISSING_KEY: {key}")
+    return text.format(*args) if args else text
