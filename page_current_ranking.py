@@ -228,13 +228,20 @@ def show_historical_context(df_historical, lang, participants_list):
         st.info(_t('current_ranking_historical_no_data', lang))
         return
 
+# Modyfikacja: Najpierw standardowe statystyki bez liczby edycji
     stats = hist_data.groupby('uczestnik').agg(
         pb_result=pd.NamedAgg(column='rezultat_numeric', aggfunc='max'),
         avg_result=pd.NamedAgg(column='rezultat_numeric', aggfunc='mean'),
-        editions_count=pd.NamedAgg(column='edycja_nr', aggfunc='nunique'),
+        # Tu usunęliśmy błędne zliczanie edycji
         best_position=pd.NamedAgg(column='miejsce', aggfunc='min'),
         medals_top3=pd.NamedAgg(column='miejsce', aggfunc=lambda x: (x <= 3).sum())
     )
+
+    # Obliczamy liczbę edycji ODDZIELNIE, biorąc pod uwagę tylko te z wynikiem (nie NaN)
+    real_editions_count = hist_data.dropna(subset=['rezultat_numeric']).groupby('uczestnik')['edycja_nr'].nunique()
+    
+    # Dodajemy poprawną kolumnę do tabeli statystyk
+    stats['editions_count'] = real_editions_count
     
     last_3_editions_nr = sorted(df_historical['edycja_nr'].unique())[-3:]
     hist_last_3 = hist_data[hist_data['edycja_nr'].isin(last_3_editions_nr)]
@@ -270,7 +277,7 @@ def show_historical_context(df_historical, lang, participants_list):
 
     st.dataframe(
         stats_display.sort_values(by=_t('hist_context_avg', lang), ascending=False), 
-        use_container_width=True,
+        width="stretch",
         hide_index=True
     )
 
@@ -800,7 +807,7 @@ def show_current_edition_dashboard(lang, edition_key="november"):
         
         selection = st.dataframe(
             ranking_df_display, 
-            use_container_width=True, 
+            width="stretch", 
             hide_index=True,
             on_select="rerun",
             selection_mode="single-row"
@@ -844,7 +851,7 @@ def show_current_edition_dashboard(lang, edition_key="november"):
         st.info(_t('current_official_ranking_desc', lang, selected_stage))
         try:
             official_ranking_df, _ = calculate_ranking(current_data, selected_stage, lang, participants_list, ranking_type='official')
-            st.dataframe(official_ranking_df, use_container_width=True, hide_index=True)
+            st.dataframe(official_ranking_df, width="stretch", hide_index=True)
         except Exception as e:
             st.error(_t('current_ranking_error', lang, e))
     else:
@@ -898,7 +905,7 @@ def show_current_edition_dashboard(lang, edition_key="november"):
         completeness_pivot_display.columns = completeness_pivot_display.columns.astype(str)
         
         # UŻYWAMY use_container_width ZAMIAST width=None
-        st.dataframe(completeness_pivot_display, use_container_width=True, hide_index=True)
+        st.dataframe(completeness_pivot_display, width="stretch", hide_index=True)
     else:
         st.info(_t('current_completeness_no_data', lang))
 
