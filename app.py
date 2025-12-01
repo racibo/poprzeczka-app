@@ -41,10 +41,25 @@ def main():
 
     # Funkcja aktualizująca stan (Callback)
     def update_nav(group_name):
-        # Pobieramy wybraną wartość z konkretnego radio buttona
-        selected_label = st.session_state[f"radio_{group_name}"]
+        # 1. Pobieramy wybraną wartość z widgetu, który wywołał zmianę
+        changed_widget_key = f"radio_{group_name}"
+        selected_label = st.session_state.get(changed_widget_key)
+        
+        # 2. Aktualizujemy główny wybór nawigacji
         if selected_label:
             st.session_state.nav_selection = label_to_key.get(selected_label)
+
+        # 3. Czyścimy stan POZOSTAŁYCH widgetów (ustawiamy na None)
+        # To sprawia, że wizualnie się odznaczają i pozwalają na ponowne kliknięcie w przyszłości
+        if group_name == "nov":
+            st.session_state.radio_dec = None
+            st.session_state.radio_hist = None
+        elif group_name == "dec":
+            st.session_state.radio_nov = None
+            st.session_state.radio_hist = None
+        elif group_name == "hist":
+            st.session_state.radio_nov = None
+            st.session_state.radio_dec = None
 
     # Wyznaczanie indeksów dla radio buttonów na podstawie aktualnego wyboru
     curr_key = st.session_state.nav_selection
