@@ -105,7 +105,7 @@ def main():
         if sheet:
             df_logs = load_google_sheet_data(sheet, "LogWpisow")
             if not df_logs.empty:
-                st.dataframe(df_logs.sort_values("Timestamp", ascending=False).head(20), hide_index=True)
+                st.dataframe(df_logs.sort_values("Timestamp", ascending=False).head(20), width="stretch", hide_index=True)
             else:
                 st.info("Log pusty.")
 
