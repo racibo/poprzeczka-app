@@ -128,7 +128,7 @@ def main():
                 # Zmiana nazwy kolumny na Time (UTC) dla jasności międzynarodowej
                 st.dataframe(
                     df_logs.rename(columns={'Timestamp': 'Time (UTC)'}).sort_values("Time (UTC)", ascending=False).head(20), 
-                    width="stretch", 
+                    width="stretch",  # <--- ZMIANA
                     hide_index=True
                 )
             else:
