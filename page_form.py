@@ -1,5 +1,5 @@
 import streamlit as st
-from datetime import datetime
+from datetime import datetime, timedelta
 import pandas as pd
 from streamlit_extras.mention import mention
 from translations import _t
@@ -70,6 +70,39 @@ def show_submission_form(lang, edition_key="november"):
             step=1,
             key=f"day_{edition_key}"
         )
+
+        # --- NOWY KOD: KALKULATOR DATY ---
+        # Definiujemy daty startowe dla poszczególnych edycji
+        # (Możesz to przenieść do config.py w przyszłości, ale tu zadziała od razu)
+        edition_start_dates = {
+            'november': datetime(2024, 11, 1),
+            'december': datetime(2024, 12, 1),
+            # 'january': datetime(2025, 1, 1), # Na przyszłość
+        }
+
+        start_date = edition_start_dates.get(edition_key)
+        
+        if start_date:
+            # Obliczamy datę: Data Startu + (Numer Etapu - 1 dni)
+            # Np. Listopad (Start 1.11) + (Etap 31 - 1 = 30 dni) = 1 Grudnia
+            calculated_date = start_date + timedelta(days=day_input - 1)
+            
+            # Formatowanie nazwy miesiąca po polsku (bo system może mieć angielskie locale)
+            pl_months = {
+                1: "stycznia", 2: "lutego", 3: "marca", 4: "kwietnia", 5: "maja", 6: "czerwca",
+                7: "lipca", 8: "sierpnia", 9: "września", 10: "października", 11: "listopada", 12: "grudnia"
+            }
+            
+            if lang == 'pl':
+                date_str = f"{calculated_date.day} {pl_months[calculated_date.month]}"
+                label_text = f"📅 To jest raport za dzień: **{date_str}**"
+            else:
+                date_str = calculated_date.strftime("%d %B")
+                label_text = f"📅 Report for date: **{date_str}**"
+            
+            # Wyświetlamy podpowiedź (caption jest mniejszy i szary, idealny do tego celu)
+            st.caption(label_text) # st.markdown(label_text) jeśli chcesz większy tekst
+        # --- KONIEC NOWEGO KODU ---
         
     st.markdown(f"**{_t('form_status_label', lang)}**")
     status_val = st.radio(
