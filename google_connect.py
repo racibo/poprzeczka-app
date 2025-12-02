@@ -1,15 +1,30 @@
 import streamlit as st
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaIoBaseUpload
+from google.oauth2.service_account import Credentials
+import requests
 
-# Funkcja cache'owana do łączenia z arkuszem
+# Definicja zakresów tylko dla Arkuszy (Dysk nie jest już potrzebny)
+SCOPES = [
+    "https://www.googleapis.com/auth/spreadsheets",
+]
+
+@st.cache_resource
+def get_credentials():
+    try:
+        creds = Credentials.from_service_account_info(
+            st.secrets["gcp_service_account"],
+            scopes=SCOPES
+        )
+        return creds
+    except Exception as e:
+        st.error(f"Błąd tworzenia poświadczeń: {e}")
+        return None
+
 @st.cache_resource
 def connect_to_google_sheets():
     try:
-        scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-        creds = ServiceAccountCredentials.from_json_keyfile_dict(st.secrets["gcp_service_account"], scope)
+        creds = get_credentials()
+        if not creds: return None
         client = gspread.authorize(creds)
         sheet = client.open_by_key(st.secrets["public_gsheets_url"]) 
         return sheet
@@ -17,27 +32,30 @@ def connect_to_google_sheets():
         st.error(f"Błąd połączenia z Google Sheets: {e}")
         return None
 
-@st.cache_resource
-def connect_to_google_drive():
+def upload_file_to_hosting(uploaded_file):
+    """
+    Wysyła plik do darmowego hostingu (Catbox.moe) i zwraca link.
+    Nie wymaga kluczy API ani konta Google Drive.
+    """
     try:
-        creds = ServiceAccountCredentials.from_json_keyfile_dict(
-            st.secrets["gcp_service_account"], 
-            ["https://www.googleapis.com/auth/drive"]
-        )
-        service = build('drive', 'v3', credentials=creds)
-        return service
+        # Przygotowanie pliku do wysyłki
+        files = {
+            'reqtype': (None, 'fileupload'),
+            'fileToUpload': (uploaded_file.name, uploaded_file.getvalue(), uploaded_file.type)
+        }
+        
+        # Wysyłanie zapytania do API
+        response = requests.post("https://catbox.moe/user/api.php", files=files)
+        
+        if response.status_code == 200:
+            # Sukces - API zwraca bezpośredni link jako tekst
+            return response.text.strip()
+        else:
+            st.error(f"Hosting zwrócił błąd: {response.status_code}")
+            return None
+            
     except Exception as e:
-        st.error(f"Błąd połączenia z Google Drive: {e}")
-        return None
-
-def upload_file_to_drive(service, uploaded_file, folder_id, lang):
-    try:
-        file_metadata = {'name': uploaded_file.name, 'parents': [folder_id]}
-        media = MediaIoBaseUpload(uploaded_file, mimetype=uploaded_file.type)
-        file = service.files().create(body=file_metadata, media_body=media, fields='id, webViewLink').execute()
-        return file.get('webViewLink')
-    except Exception as e:
-        st.error(f"Błąd przesyłania: {e}")
+        st.error(f"Błąd przesyłania pliku: {e}")
         return None
 
 def append_to_sheet_dual(sheet, data_old, data_new):
@@ -57,8 +75,6 @@ def append_to_sheet_dual(sheet, data_old, data_new):
         try:
             ws_new = sheet.worksheet(data_new['sheet_name'])
             ws_new.append_row(data_new['row'])
-            # Opcjonalnie: Logujemy też wpis grudniowy
-            # sheet.worksheet("LogWpisow").append_row(data_new['log_row']) 
         except Exception as e:
             st.error(f"Błąd zapisu (Nowa Edycja): {e}. Czy arkusz '{data_new['sheet_name']}' istnieje?")
             success = False
