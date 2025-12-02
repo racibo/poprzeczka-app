@@ -112,14 +112,30 @@ def show_submission_form(lang, edition_key="november"):
             
             file_link_text = ""
             if uploaded_file:
+                # --- DIAGNOSTYKA START ---
+                st.info(f"Próba uploadu. ID folderu: {GOOGLE_DRIVE_FOLDER_ID}")
+                
                 if GOOGLE_DRIVE_FOLDER_ID and GOOGLE_DRIVE_FOLDER_ID != "PASTE_YOUR_FOLDER_ID_HERE":
-                    drive = connect_to_google_drive()
-                    if drive:
-                        link = upload_file_to_drive(drive, uploaded_file, GOOGLE_DRIVE_FOLDER_ID, lang)
-                        file_link_text = link if link else "(Błąd uploadu)"
-                else:
+                    try:
+                        drive = connect_to_google_drive()
+                        if drive:
+                            st.write("Połączono z API Drive...") # Debug
+                            link = upload_file_to_drive(drive, uploaded_file, GOOGLE_DRIVE_FOLDER_ID, lang)
+                            
+                            if link:
+                                file_link_text = link
+                                st.success(f"Plik wysłany: {link}") # Debug
+                            else:
+                                file_link_text = "(Błąd uploadu - funkcja zwróciła None)"
+                                st.error("Upload nieudany: Funkcja uploadu zwróciła pusty wynik.")
+                        else:
+                            st.error("Błąd: Nie udało się połączyć z obiektem Drive (connect_to_google_drive zwróciło None).")
+                    except Exception as e_upload:
+                        st.error(f"KRYTYCZNY BŁĄD PODCZAS UPLOADU: {e_upload}")
+                        file_link_text = f"(Wyjątek: {e_upload})"
+                    st.warning("ID folderu w configu wygląda na domyślne/puste.")
                     file_link_text = "(Drive nieskonfigurowany)"
-            
+                # --- DIAGNOSTYKA KONIEC ---            
             full_notes = f"{notes} | {file_link_text}".strip(" | ")
             timestamp = datetime.now().isoformat()
             
