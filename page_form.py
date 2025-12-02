@@ -199,39 +199,127 @@ def show_submission_form(lang, edition_key="november"):
         except Exception as e:
             st.warning(f"Podgląd niedostępny: {e}")
 
-    # === NAJWIĘKSI POMOCNICY ===
+    # === NAJWIĘKSI POMOCNICY (ZAAWANSOWANA TABELA) ===
     st.markdown("---")
     st.subheader(_t('current_stats_top_submitters', lang))
     
-    helper_pct_str = "0"
+    # Tekst wprowadzający
+    st.info("O zasadach wyliczeń na podstawie których wynagradzamy za aktywność przeczytasz w 'Zasady' w Menu po lewej stronie. Co tydzień następuje zmiana. Tu tabelka pokazująca stan obecny:")
+
     if sheet:
         try:
-            df_raw_logs = load_google_sheet_data(sheet, "LogWpisow")
-            if not df_raw_logs.empty:
-                # Naprawa nagłówków też tutaj, żeby nie było błędu przy obliczaniu pomocników
-                proper_headers_simple = ['Submitter', 'Participant', 'Day', 'Status', 'Timestamp', 'Edition', 'Notes']
-                df_raw_logs.columns = proper_headers_simple[:len(df_raw_logs.columns)]
+            # 1. Ładowanie danych logów (Dla Pomocników)
+            df_logs = load_google_sheet_data(sheet, "LogWpisow")
+            
+            # 2. Ładowanie danych wyników (Dla Liderów) - potrzebne do wyznaczenia Top 5
+            # Musimy to pobrać tutaj, niezależnie od sekcji Draftu
+            df_results = load_google_sheet_data(sheet, sheet_name)
+            
+            if not df_logs.empty and not df_results.empty:
+                # --- PRZYGOTOWANIE DANYCH ---
                 
-                if 'Submitter' in df_raw_logs.columns:
-                    df_helpers = df_raw_logs[df_raw_logs['Submitter'] != 'poprzeczka (Admin)']
-                    total_entries = len(df_raw_logs)
-                    helper_entries = len(df_helpers)
-                    admin_entries = total_entries - helper_entries
-                    
-                    if total_entries > 0:
-                        helper_pct_str = f"{helper_entries / total_entries * 100:.0f}"
-                    
-                    all_submitters = df_helpers['Submitter'].value_counts()
-                    if not all_submitters.empty:
-                        cols = st.columns(min(3, len(all_submitters)))
-                        for idx, (name, count) in enumerate(all_submitters.items()):
-                            with cols[idx % len(cols)]:
-                                mention(label=f"**{name}** ({count})", icon="📝", url=f"https://hive.blog/@{name}")
-                    
-                    st.caption(_t('current_stats_top_submitters_percentage', lang, float(helper_pct_str), helper_entries, admin_entries))
-        except Exception:
-            pass
+                # A. Obliczenia Pomocników
+                proper_headers = ['Submitter', 'Participant', 'Day', 'Status', 'Timestamp', 'Edition', 'Notes']
+                df_logs.columns = proper_headers[:len(df_logs.columns)]
+                
+                total_entries = len(df_logs)
+                helpers_subset = df_logs[df_logs['Submitter'] != 'poprzeczka (Admin)']
+                community_entries = len(helpers_subset)
+                
+                # Procent puli (P)
+                P = 0
+                if total_entries > 0:
+                    P = int((community_entries / total_entries) * 100)
+                
+                helper_pool = P * 0.80
+                leader_pool = P * 0.20
+                
+                # Zliczanie wpisów per użytkownik
+                helper_counts = helpers_subset['Submitter'].value_counts()
+                
+                # B. Obliczenia Liderów (Top 5)
+                # Przetwarzamy dane, aby uzyskać ranking
+                expected_data_cols = ['Participant', 'Day', 'Status', 'Timestamp', 'Notes']
+                current_data_proc, max_day_proc, _ = process_raw_data(df_results, lang, expected_data_cols, sheet_name)
+                ranking_df, _ = calculate_ranking(current_data_proc, max_day_proc, lang, participants_list, ranking_type='live')
+                
+                # Pobieramy Top 5 liderów
+                rank_col = _t('ranking_col_rank', lang)
+                part_col = _t('ranking_col_participant', lang)
+                
+                # Zakładamy, że ranking_df jest już posortowany przez funkcję calculate_ranking
+                top_5_leaders = []
+                if not ranking_df.empty:
+                    # Bierzemy unikalnych liderów z miejsc 1-5 (może być ich więcej przy remisie, ale tutaj bierzemy pierwsze 5 rekordów z góry)
+                    # Lub ściśle wg zasad: Top 5 participants list
+                    top_5_leaders = ranking_df.head(5)[part_col].tolist()
+                
+                bonus_per_leader = 0
+                if len(top_5_leaders) > 0:
+                    bonus_per_leader = leader_pool / len(top_5_leaders)
 
+                # C. Agregacja Wyników
+                rewards_data = []
+                
+                # Zbieramy wszystkich unikalnych beneficjentów (zarówno pomocnicy jak i liderzy)
+                all_beneficiaries = set(helper_counts.index.tolist()) | set(top_5_leaders)
+                
+                for user in all_beneficiaries:
+                    # Wyliczenie części za pomoc
+                    user_entries = helper_counts.get(user, 0)
+                    h_share = 0
+                    if community_entries > 0:
+                        h_share = (user_entries / community_entries) * helper_pool
+                    
+                    # Wyliczenie części za lidera
+                    l_share = bonus_per_leader if user in top_5_leaders else 0
+                    
+                    # Suma i zaokrąglenie
+                    total_raw = h_share + l_share
+                    total_rounded = round(total_raw)
+                    
+                    # Formatowanie opisu
+                    # "pomoc 0%, lider 1,6%, razem zaokrąglone 2%"
+                    details_str = (
+                        f"pomoc {h_share:.1f}%, "
+                        f"lider {l_share:.1f}%, "
+                        f"razem zaokrąglone {total_rounded}%"
+                    )
+                    
+                    if total_rounded > 0:
+                        rewards_data.append({
+                            "Uczestnik": f"@{user}",
+                            "Nagroda": f"{total_rounded}%",
+                            "Szczegóły wyliczenia": details_str,
+                            "_sort_val": total_rounded
+                        })
+                
+                # Sortowanie i limit Top 7
+                rewards_data.sort(key=lambda x: x['_sort_val'], reverse=True)
+                top_rewards = rewards_data[:7]
+                
+                # D. Wyświetlenie Tabeli
+                if top_rewards:
+                    df_display = pd.DataFrame(top_rewards).drop(columns=['_sort_val'])
+                    
+                    st.dataframe(
+                        df_display,
+                        width="stretch",  # <--- ZMIANA: Zastępujemy use_container_width=True
+                        hide_index=True,
+                        column_config={
+                            "Uczestnik": st.column_config.TextColumn("Uczestnik", width="small"),
+                            "Nagroda": st.column_config.TextColumn("Nagroda", width="small"),
+                            "Szczegóły wyliczenia": st.column_config.TextColumn("Szczegóły wyliczenia", width="large"),
+                        }
+                    )
+                    
+                    # Stopka z info o puli
+                    st.caption(f"Aktualna Pula Społeczności: {P}% (Wpisy: {community_entries} vs Admin: {total_entries - community_entries})")
+                else:
+                    st.info("Brak danych do wyliczenia nagród.")
+
+        except Exception as e:
+            st.warning(f"Nie udało się pobrać danych do tabeli pomocników: {e}")
     # === GENERATOR DRAFTU (Skrócony w widoku, ale działa tak samo) ===
     st.markdown("---")
     st.header(_t('draft_header', lang, edition_label))
