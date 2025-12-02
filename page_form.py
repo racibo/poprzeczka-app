@@ -133,6 +133,7 @@ def show_submission_form(lang, edition_key="november"):
                     except Exception as e_upload:
                         st.error(f"KRYTYCZNY BŁĄD PODCZAS UPLOADU: {e_upload}")
                         file_link_text = f"(Wyjątek: {e_upload})"
+                else:
                     st.warning("ID folderu w configu wygląda na domyślne/puste.")
                     file_link_text = "(Drive nieskonfigurowany)"
                 # --- DIAGNOSTYKA KONIEC ---            
