@@ -805,6 +805,10 @@ def show_current_edition_dashboard(lang, edition_key="november"):
 
         ranking_df_display = ranking_df.copy()
         
+        # --- FIX: Konwersja nazw kolumn na napisy ---
+        ranking_df_display.columns = ranking_df_display.columns.astype(str)
+        # --------------------------------------------
+
         selection = st.dataframe(
             ranking_df_display, 
             width="stretch", 
@@ -851,6 +855,11 @@ def show_current_edition_dashboard(lang, edition_key="november"):
         st.info(_t('current_official_ranking_desc', lang, selected_stage))
         try:
             official_ranking_df, _ = calculate_ranking(current_data, selected_stage, lang, participants_list, ranking_type='official')
+            
+            # --- FIX: Konwersja nazw kolumn na napisy ---
+            official_ranking_df.columns = official_ranking_df.columns.astype(str)
+            # --------------------------------------------
+            
             st.dataframe(official_ranking_df, width="stretch", hide_index=True)
         except Exception as e:
             st.error(_t('current_ranking_error', lang, e))
@@ -902,9 +911,11 @@ def show_current_edition_dashboard(lang, edition_key="november"):
         ).reindex(columns=days_to_show, fill_value="").reindex(index=sorted(participants_list))
         
         completeness_pivot_display = completeness_pivot.reset_index()
+        # --- FIX: Konwersja nazw kolumn na napisy ---
         completeness_pivot_display.columns = completeness_pivot_display.columns.astype(str)
+        # --------------------------------------------
         
-        # UŻYWAMY use_container_width ZAMIAST width=None
+        # UŻYWAMY width="stretch" ZAMIAST use_container_width
         st.dataframe(completeness_pivot_display, width="stretch", hide_index=True)
     else:
         st.info(_t('current_completeness_no_data', lang))
