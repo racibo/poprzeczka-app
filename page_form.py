@@ -3,8 +3,8 @@ from datetime import datetime
 import pandas as pd
 from streamlit_extras.mention import mention
 from translations import _t
-from config import ALL_POSSIBLE_PARTICIPANTS, SUBMITTER_LIST, GOOGLE_DRIVE_FOLDER_ID, EDITIONS
-from google_connect import connect_to_google_sheets, connect_to_google_drive, upload_file_to_drive, append_to_sheet_dual
+from config import ALL_POSSIBLE_PARTICIPANTS, SUBMITTER_LIST, EDITIONS
+from google_connect import connect_to_google_sheets, upload_file_to_hosting, append_to_sheet_dual
 from page_current_ranking import calculate_ranking, find_last_complete_stage
 from data_loader import load_google_sheet_data, process_raw_data, load_historical_data_from_json
 
@@ -27,19 +27,22 @@ def show_submission_form(lang, edition_key="november"):
     users_list = sorted(participants_list)
     submitters_list = sorted(SUBMITTER_LIST)
 
-    # === STANY FORMULARZA (Komunikat o sukcesie) ===
+    # === 1. KOMUNIKAT SUKCESU (Trwały) ===
     if 'last_submission' in st.session_state and st.session_state.last_submission:
         details = st.session_state.last_submission
-        st.success(_t('form_success_message', lang, details['participant'], details['day'], details['status_translated']))
+        msg = _t('form_success_message', lang, details['participant'], details['day'], details['status_translated'])
+        if details.get('file_link'):
+            msg += f" | 🖼️ [Zobacz zdjęcie]({details['file_link']})"
+        st.success(msg)
         st.session_state.last_submission = None 
 
-    # Funkcja formatująca dla selectbox (zastępuje None tekstem)
+    # Funkcja formatująca dla selectbox
     def format_option(option):
         if option is None:
             return _t('form_submitter_placeholder', lang) if "Wybierz" in _t('form_submitter_placeholder', lang) else "Wybierz..."
         return option
 
-    # BEZ st.form - formularz jest interaktywny
+    # FORMULARZ
     col1, col2 = st.columns(2)
     with col1:
         submitter = st.selectbox(
@@ -76,7 +79,7 @@ def show_submission_form(lang, edition_key="november"):
         label_visibility="collapsed"
     )
 
-    # === PRZYCISK ZAPISU ===
+    # PRZYCISK ZAPISU
     st.write("")
     try:
         submitted = st.button(_t('form_submit_button', lang), type="primary", use_container_width=True, key=f"btn_{edition_key}")
@@ -85,7 +88,7 @@ def show_submission_form(lang, edition_key="november"):
     
     st.markdown("---")
     
-    # === DODATKI ===
+    # DODATKI (Konwerter)
     with st.expander(_t('form_converters_expander', lang), expanded=False):
         st.info(_t('form_converters_warning', lang))
         st.markdown("""
@@ -99,10 +102,6 @@ def show_submission_form(lang, edition_key="november"):
     notes = st.text_area(_t('form_notes_label', lang), placeholder=_t('form_notes_placeholder', lang), key=f"note_{edition_key}")
     uploaded_file = st.file_uploader(_t('form_upload_label', lang), type=["png", "jpg", "jpeg"], key=f"upl_{edition_key}")
 
-    # Link do folderu publicznego (zawsze widoczny)
-    public_folder_url = f"https://drive.google.com/drive/folders/{GOOGLE_DRIVE_FOLDER_ID}" if GOOGLE_DRIVE_FOLDER_ID != "PASTE_YOUR_FOLDER_ID_HERE" else "https://drive.google.com/drive/folders/1b-mUxDmKEUoOyLtTePeb7RaJWGfO_Xre"
-    st.link_button(_t('form_upload_link_text', lang), public_folder_url, use_container_width=True)
-
     # === LOGIKA ZAPISU ===
     if submitted:
         if not submitter or not participant:
@@ -112,31 +111,14 @@ def show_submission_form(lang, edition_key="november"):
             
             file_link_text = ""
             if uploaded_file:
-                # --- DIAGNOSTYKA START ---
-                st.info(f"Próba uploadu. ID folderu: {GOOGLE_DRIVE_FOLDER_ID}")
-                
-                if GOOGLE_DRIVE_FOLDER_ID and GOOGLE_DRIVE_FOLDER_ID != "PASTE_YOUR_FOLDER_ID_HERE":
-                    try:
-                        drive = connect_to_google_drive()
-                        if drive:
-                            st.write("Połączono z API Drive...") # Debug
-                            link = upload_file_to_drive(drive, uploaded_file, GOOGLE_DRIVE_FOLDER_ID, lang)
-                            
-                            if link:
-                                file_link_text = link
-                                st.success(f"Plik wysłany: {link}") # Debug
-                            else:
-                                file_link_text = "(Błąd uploadu - funkcja zwróciła None)"
-                                st.error("Upload nieudany: Funkcja uploadu zwróciła pusty wynik.")
-                        else:
-                            st.error("Błąd: Nie udało się połączyć z obiektem Drive (connect_to_google_drive zwróciło None).")
-                    except Exception as e_upload:
-                        st.error(f"KRYTYCZNY BŁĄD PODCZAS UPLOADU: {e_upload}")
-                        file_link_text = f"(Wyjątek: {e_upload})"
-                else:
-                    st.warning("ID folderu w configu wygląda na domyślne/puste.")
-                    file_link_text = "(Drive nieskonfigurowany)"
-                # --- DIAGNOSTYKA KONIEC ---            
+                with st.spinner("Wysyłanie pliku..."):
+                    link = upload_file_to_hosting(uploaded_file)
+                    if link:
+                        file_link_text = link
+                    else:
+                        file_link_text = "(Błąd uploadu)"
+                        st.error("Nie udało się wysłać pliku.")
+           
             full_notes = f"{notes} | {file_link_text}".strip(" | ")
             timestamp = datetime.now().isoformat()
             
@@ -152,13 +134,15 @@ def show_submission_form(lang, edition_key="november"):
                 ws.append_row([participant, day_input, status_key, full_notes, timestamp])
                 
                 ws_log = sheet.worksheet("LogWpisow")
-                ws_log.append_row([submitter, participant, day_input, status_key, timestamp, edition_key])
+                # Tutaj dodajemy 7. kolumnę (full_notes)
+                ws_log.append_row([submitter, participant, day_input, status_key, timestamp, edition_key, full_notes])
                 
                 st.session_state.last_submission = {
                     'participant': participant,
                     'day': day_input,
                     'status_translated': status_val,
-                    'full_notes': full_notes
+                    'full_notes': full_notes,
+                    'file_link': file_link_text if "http" in file_link_text else None
                 }
                 st.session_state.last_day_entered = day_input + 1
                 st.cache_data.clear()
@@ -166,6 +150,54 @@ def show_submission_form(lang, edition_key="november"):
                 
             except Exception as e:
                 st.error(f"Błąd zapisu: {e}")
+
+    # === 2. OSTATNIE ZGŁOSZENIA (Poprawione i naprawione) ===
+    st.markdown("---")
+    st.subheader("📋 Ostatnie zgłoszenia (Weryfikacja)" if lang == 'pl' else "📋 Recent Submissions (Verification)")
+    st.caption("Tutaj możesz sprawdzić, czy Twój wpis dotarł do systemu." if lang == 'pl' else "Check here if your submission was received.")
+    
+    if sheet:
+        try:
+            df_log = load_google_sheet_data(sheet, "LogWpisow")
+            
+            if not df_log.empty:
+                # --- AUTO-NAPRAWA NAGŁÓWKÓW ---
+                # Nazywamy tyle kolumn, ile fizycznie przyszło z arkusza
+                proper_headers = ['Submitter', 'Participant', 'Day', 'Status', 'Timestamp', 'Edition', 'Notes']
+                current_col_count = len(df_log.columns)
+                df_log.columns = proper_headers[:current_col_count]
+                
+                # --- WYMUSZENIE KOLUMNY NOTES ---
+                # Jeśli arkusz ma stare dane (np. tylko 6 kolumn), Notes nie istnieje.
+                # Dodajemy pustą kolumnę Notes, żeby tabela się nie wywaliła.
+                if 'Notes' not in df_log.columns:
+                    df_log['Notes'] = "" 
+
+                if 'Timestamp' in df_log.columns:
+                    df_log['Timestamp'] = pd.to_datetime(df_log['Timestamp'], errors='coerce')
+                    df_log = df_log.sort_values('Timestamp', ascending=False).head(10)
+                    df_log['Timestamp'] = df_log['Timestamp'].dt.strftime('%H:%M %d-%m')
+
+                    # Wybieramy kolumny (teraz 'Notes' na pewno istnieje dzięki if powyżej)
+                    display_cols = ['Submitter', 'Participant', 'Day', 'Status', 'Notes', 'Timestamp']
+                    # Filtrujemy, żeby brać tylko te, które są w df (zabezpieczenie)
+                    final_cols = [c for c in display_cols if c in df_log.columns]
+                    
+                    st.dataframe(
+                        df_log[final_cols], 
+                        hide_index=True, 
+                        width="stretch",  # <--- POPRAWKA OSTRZEŻENIA (zamiast use_container_width)
+                        column_config={
+                            "Notes": st.column_config.TextColumn("Notatki / Link", width="medium"),
+                            "Timestamp": st.column_config.TextColumn("Czas", width="small")
+                        }
+                    )
+                else:
+                    st.warning("Błąd danych: Nie udało się zidentyfikować kolumny z datą.")
+            else:
+                st.info("Brak wpisów." if lang == 'pl' else "No entries yet.")
+        except Exception as e:
+            st.warning(f"Podgląd niedostępny: {e}")
 
     # === NAJWIĘKSI POMOCNICY ===
     st.markdown("---")
@@ -176,30 +208,38 @@ def show_submission_form(lang, edition_key="november"):
         try:
             df_raw_logs = load_google_sheet_data(sheet, "LogWpisow")
             if not df_raw_logs.empty:
-                df_helpers = df_raw_logs[df_raw_logs['Submitter'] != 'poprzeczka (Admin)']
-                total_entries = len(df_raw_logs)
-                helper_entries = len(df_helpers)
-                admin_entries = total_entries - helper_entries
+                # Naprawa nagłówków też tutaj, żeby nie było błędu przy obliczaniu pomocników
+                proper_headers_simple = ['Submitter', 'Participant', 'Day', 'Status', 'Timestamp', 'Edition', 'Notes']
+                df_raw_logs.columns = proper_headers_simple[:len(df_raw_logs.columns)]
                 
-                if total_entries > 0:
-                    helper_pct_str = f"{helper_entries / total_entries * 100:.0f}"
-                
-                all_submitters = df_helpers['Submitter'].value_counts()
-                if not all_submitters.empty:
-                    cols = st.columns(min(3, len(all_submitters)))
-                    for idx, (name, count) in enumerate(all_submitters.items()):
-                        with cols[idx % len(cols)]:
-                            mention(label=f"**{name}** ({count})", icon="📝", url=f"https://hive.blog/@{name}")
-                
-                st.caption(_t('current_stats_top_submitters_percentage', lang, float(helper_pct_str), helper_entries, admin_entries))
+                if 'Submitter' in df_raw_logs.columns:
+                    df_helpers = df_raw_logs[df_raw_logs['Submitter'] != 'poprzeczka (Admin)']
+                    total_entries = len(df_raw_logs)
+                    helper_entries = len(df_helpers)
+                    admin_entries = total_entries - helper_entries
+                    
+                    if total_entries > 0:
+                        helper_pct_str = f"{helper_entries / total_entries * 100:.0f}"
+                    
+                    all_submitters = df_helpers['Submitter'].value_counts()
+                    if not all_submitters.empty:
+                        cols = st.columns(min(3, len(all_submitters)))
+                        for idx, (name, count) in enumerate(all_submitters.items()):
+                            with cols[idx % len(cols)]:
+                                mention(label=f"**{name}** ({count})", icon="📝", url=f"https://hive.blog/@{name}")
+                    
+                    st.caption(_t('current_stats_top_submitters_percentage', lang, float(helper_pct_str), helper_entries, admin_entries))
         except Exception:
-            st.info(_t('current_log_empty', lang))
+            pass
 
-    # === GENERATOR DRAFTU ===
+    # === GENERATOR DRAFTU (Skrócony w widoku, ale działa tak samo) ===
     st.markdown("---")
     st.header(_t('draft_header', lang, edition_label))
     
-    all_participants_draft = sorted(list(set(EDITIONS['november']['participants'] + EDITIONS['december']['participants'])))
+    p_nov = EDITIONS.get('november', {}).get('participants', [])
+    p_dec = EDITIONS.get('december', {}).get('participants', [])
+    all_participants_draft = sorted(list(set(p_nov + p_dec)))
+    
     selected_participant_for_draft = st.selectbox(
         _t('draft_select_label', lang), 
         options=[None] + all_participants_draft, 
@@ -221,6 +261,7 @@ def show_submission_form(lang, edition_key="november"):
                     ranking_df, elimination_map_official = calculate_ranking(current_data, official_stage, lang, participants_list, ranking_type='official')
                     df_historical = load_historical_data_from_json()
                     
+                    # Logika draftu (bez zmian merytorycznych)
                     female_users = ['ataraksja', 'asia-pl', 'patif2025']
                     is_female = selected_participant_for_draft in female_users
                     w_participant = _t('word_participant_f', lang) if is_female else _t('word_participant_m', lang)
