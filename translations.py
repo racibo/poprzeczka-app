@@ -14,6 +14,9 @@ translations = {
         'nav_join': "ℹ️ Jak dołączyć",
         'about_app': "🤔 O projekcie",
         'nav_submission_form': "📋 Formularz", # Fallback
+        'menu_section_nov': "--- 🍂 **LISTOPAD** ---",
+        'menu_section_dec': "--- ❄️ **GRUDZIEŃ** ---",
+        'menu_section_hist': "--- 📈 **HISTORIA, ZASADY** ---",
         
         # TEKSTY STATYCZNE
         'about_app_text': "Nie było by POPRZECZKI bez hive.blog. Tam wokół ludzi publikujących swoje raporty na actifit wykiełkowały nowe rywalizacje. POPRZECZKA powstała dzięki lidze 'poliac' organizowanej przez @browery. POPRZECZKA to inne spojrzenie na liczbę kroków i publikowane codziennie raporty. Można je ułożyć w klasyfikację i tak się właśnie stało. Kolejne miesiące mijają a POPRZECZKA nadal trwa",
@@ -76,6 +79,15 @@ translations = {
         'form_overwrite_info': "Nowy wpis nadpisuje stary.",
         'form_data_exists': "ℹ️ Dane już istnieją (autor: {0}).",
         
+        # TABELA POMOCNIKÓW (Nagrody) - NOWE
+        'helpers_info_text': "O zasadach wyliczeń na podstawie których wynagradzamy za aktywność przeczytasz w zakładce 'Zasady' w menu po lewej stronie. Co tydzień następuje zmiana. Poniższa tabela pokazuje stan obecny:",
+        'helpers_col_participant': "Uczestnik",
+        'helpers_col_reward': "Nagroda",
+        'helpers_col_details': "Szczegóły wyliczenia",
+        'helpers_details_format': "pomoc {0:.1f}%, lider {1:.1f}%, razem zaokrąglone {2}%",
+        'helpers_footer_pool': "Aktualna Pula Społeczności: {0}% (Wpisy: {1} vs Admin: {2})",
+        'helpers_no_data': "Brak danych do wyliczenia nagród.",
+        
         # GENERATOR
         'draft_header': "📝 Generator Wpisu (Dla {0})",
         'draft_select_label': "Wybierz uczestnika:",
@@ -121,8 +133,6 @@ translations = {
         'current_completeness_no_data': "Brak danych.",
         'completeness_col_day': "Dzień",
         'completeness_col_participant': "Uczestnik",
-        
-        # ZMIANA: Nowy opis dla rankingu na żywo
         'ranking_selection_instruction': "ℹ️ **O tej klasyfikacji:** Bierze ona pod uwagę wszystkie dostępne dane (z różnych okresów). U jednych uczestników mogą być braki, u innych dane są bieżące. Dzięki temu ranking reaguje natychmiast po wprowadzeniu nowych danych do formularza.",
         
         'current_stats_header': "🏆 Statystyki",
@@ -153,8 +163,6 @@ translations = {
         
         'current_ranking_historical_expander': "Kontekst Historyczny",
         'current_ranking_historical_no_data': "Brak historii.",
-        
-        # ZMIANA: PB na R. Życiowy
         'hist_context_pb': "R. Życiowy",
         'hist_context_avg': "Śr. Ogół",
         'hist_context_avg_last_3': "Śr. Ost.3",
@@ -196,6 +204,13 @@ translations = {
         'weekly_comparison': "W porównaniu do historii {0}.",
         'weekly_footer_new': "Więcej na [poprzeczka.streamlit.app](https://poprzeczka.streamlit.app). Wasza pomoc: {0}%. Beneficjenci:",
         'weekly_rewards_list': "{0}% - {1}",
+
+         # JAK DOŁĄCZYĆ
+        'join_intro': "Aby dołączyć, zacznij publikować raporty Actifit na Hive.blog i zgłoś swój udział w komentarzu pod którymś z postów @poprzeczka.",
+        'join_step_1': "Załóż konto na Hive.blog.",
+        'join_step_2': "Pobierz aplikację Actifit.",
+        'join_step_3': "Publikuj codziennie swoje wyniki.",
+        'join_step_4': "Używaj tagu #poprzeczka.",
 
         # HISTORIA
         'title': "Statystyki rywalizacji od 2021 roku",
@@ -315,6 +330,9 @@ translations = {
         'about_app_text': "App supporting the 'Crossbar' challenge on Hive Blog.",
         'sidebar_hive_link': "🐝 Go to Hive.blog",
         'sidebar_rules_header': "Classification Rules",
+        'menu_section_nov': "--- 🍂 **NOVEMBER** ---",
+        'menu_section_dec': "--- ❄️ **DECEMBER** ---",
+        'menu_section_hist': "--- 📈 **HISTORY, RULES** ---",
         
         # ZAKTUALIZOWANE ZASADY (EN)
         'sidebar_rules_text': """
@@ -342,7 +360,9 @@ translations = {
         'form_header': "Data Entry: {0}",
         'form_info': "Edition: **{0}**.",
         'form_submitter_label': "Submitter",
+        'form_submitter_placeholder': "Select...",       # <--- DODANO
         'form_participant_label': "Participant",
+        'form_participant_placeholder': "Select...",     # <--- DODANO
         'form_day_label': "Stage",
         'form_status_label': "Status",
         'form_status_pass': "Passed",
@@ -352,6 +372,7 @@ translations = {
         'form_converters_expander': "ℹ️ Converters",
         'form_converters_warning': "If reporting steps from activities (Strava, Garmin), use converters below.",
         'form_notes_label': "Notes",
+        'form_notes_placeholder': "E.g. 'Data from Strava', 'Screenshot link'...", # <--- DODANO
         'form_upload_label': "Screenshot",
         'form_submit_button': "Save",
         'form_ranking_info': "Check rankings menu.",
@@ -368,6 +389,15 @@ translations = {
         'form_confirmation_notes_empty': "None",
         'form_overwrite_info': "New overwrites old.",
         'form_data_exists': "Exists.",
+        
+        # TABELA POMOCNIKÓW (Nagrody) - NEW (EN)
+        'helpers_info_text': "You can read about the reward calculation rules in the 'Rules' tab in the left menu. Updates occur weekly. The table below shows the current status:",
+        'helpers_col_participant': "Participant",
+        'helpers_col_reward': "Reward",
+        'helpers_col_details': "Calculation Details",
+        'helpers_details_format': "help {0:.1f}%, leader {1:.1f}%, total rounded {2}%",
+        'helpers_footer_pool': "Current Community Pool: {0}% (Entries: {1} vs Admin: {2})",
+        'helpers_no_data': "No data to calculate rewards.",
         
         'draft_header': "📝 Post Draft",
         'draft_select_label': "User:",
@@ -426,7 +456,14 @@ translations = {
         'current_stats_streaks': "Streaks",
         'current_stats_streaks_desc': "Longest streaks.",
         'current_stats_streaks_days': "days",
-        
+
+        # JAK DOŁĄCZYĆ
+        'join_intro': "To join, start publishing Actifit reports on Hive.blog and declare your participation in a comment under the organizational post by @poprzeczka.",
+        'join_step_1': "Create an account on Hive.blog.",
+        'join_step_2': "Download the Actifit app.",
+        'join_step_3': "Publish your results daily.",
+        'join_step_4': "Use the tag #poprzeczka.",
+
         # RACE CHART (EN)
         'current_stats_race_header': "🏁 Highest Stage Race",
         'current_stats_race_desc': """
@@ -446,18 +483,14 @@ translations = {
 
         'current_ranking_historical_expander': "History Context",
         'current_ranking_historical_no_data': "None.",
-        
-        # ZMIANA: Nowy opis dla rankingu na żywo (EN)
         'ranking_selection_instruction': "ℹ️ **About this ranking:** It takes into account all available data (mixed timeframes). Some participants may have gaps, while others are up to date. This allows the ranking to update immediately after new entries in form.",
-        
-        # ZMIANA: Dodanie brakujących kolumn History Context (EN)
         'hist_context_pb': "PB",
         'hist_context_avg': "Avg Total",
         'hist_context_avg_last_3': "Avg Last 3",
         'hist_context_best_pos': "Best Pos",
         'hist_context_medals': "Medals",
         'hist_context_editions': "Editions",
-
+        'select_single_user': "In the menu on the left, you can narrow down the history to selected participants or editions.",
         'summary_current_rank': "Now",
         'summary_previous_rank': "Prev",
         'summary_medals': "Medals",
