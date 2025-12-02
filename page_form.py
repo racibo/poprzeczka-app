@@ -237,7 +237,8 @@ def show_submission_form(lang, edition_key="november"):
     st.subheader(_t('current_stats_top_submitters', lang))
     
     # Tekst wprowadzający
-    st.info("O zasadach wyliczeń na podstawie których wynagradzamy za aktywność przeczytasz w 'Zasady' w Menu po lewej stronie. Co tydzień następuje zmiana. Tu tabelka pokazująca stan obecny:")
+    # Zamiast st.info("Tekst...") wpisz:
+    st.info(_t('helpers_info_text', lang))
 
     if sheet:
         try:
