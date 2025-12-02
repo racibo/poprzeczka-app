@@ -23,7 +23,7 @@ def main():
         st.session_state.nav_selection = "nav_november_ranking"
 
     # === PASEK BOCZNY (Sidebar) ===
-    st.sidebar.selectbox("Język / Language", ["pl", "en"], index=0, key="lang_select")
+    st.sidebar.selectbox("Język / Language", ["en", "pl"], index=0, key="lang_select")
     lang = st.session_state.lang_select
     
     st.sidebar.markdown("---")
@@ -72,7 +72,7 @@ def main():
     # === RENDEROWANIE MENU ===
     
     # 1. SEKCJA LISTOPAD
-    st.sidebar.markdown("--- 🍂 **LISTOPAD** ---")
+    st.sidebar.markdown(_t('menu_section_nov', lang))
     st.sidebar.write("") # Odstęp
     st.sidebar.radio(
         "Listopad",
@@ -86,7 +86,7 @@ def main():
     
     # 2. SEKCJA GRUDZIEŃ
     st.sidebar.markdown(" ") # Odstęp
-    st.sidebar.markdown("--- ❄️ **GRUDZIEŃ** ---")
+    st.sidebar.markdown(_t('menu_section_dec', lang))
     st.sidebar.write("") # Odstęp
     st.sidebar.radio(
         "Grudzień",
@@ -101,7 +101,7 @@ def main():
     # 3. SEKCJA HISTORIA I ZASADY
     st.sidebar.markdown(" ") 
     st.sidebar.markdown(" ") # Większy odstęp
-    st.sidebar.markdown("--- 📈 **HISTORIA, ZASADY** ---")
+    st.sidebar.markdown(_t('menu_section_hist', lang))
     st.sidebar.radio(
         "Historia",
         options=[_t(k, lang) for k in opts_hist],
@@ -162,12 +162,12 @@ def main():
         
     elif selection == 'nav_join':
         st.header(_t('nav_join', lang))
-        st.info("Aby dołączyć, zacznij publikować raporty Actifit na Hive.blog i zgłoś swój udział w komentarzu pod postem organizacyjnym @racibo.")
-        st.markdown("""
-        1. Załóż konto na Hive.blog.
-        2. Pobierz aplikację Actifit.
-        3. Publikuj codziennie swoje wyniki.
-        4. Używaj tagu #poprzeczka.
+        st.info(_t('join_intro', lang))
+        st.markdown(f"""
+        1. {_t('join_step_1', lang)}
+        2. {_t('join_step_2', lang)}
+        3. {_t('join_step_3', lang)}
+        4. {_t('join_step_4', lang)}
         """)
         
     elif selection == 'about_app':
