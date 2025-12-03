@@ -85,8 +85,9 @@ translations = {
         'helpers_col_reward': "Nagroda",
         'helpers_col_details': "Szczegóły wyliczenia",
         'helpers_details_format': "pomoc {0:.1f}%, lider {1:.1f}%, razem zaokrąglone {2}%",
-        'helpers_footer_pool': "Aktualna Pula Społeczności: {0}% (Wpisy: {1} vs Admin: {2})",
+        'helpers_footer_pool_full': "Aktualna Pula Społeczności: {0}% (Wpisy: {1} vs Admin: {2}) - liczone na podstawie ostatnich {3} wpisów.",        
         'helpers_no_data': "Brak danych do wyliczenia nagród.",
+        'helpers_details_template': "pomoc {0}%, lider {1}%, razem zaokrąglone {2}%",
         
         # GENERATOR
         'draft_header': "📝 Generator Wpisu (Dla {0})",
@@ -333,7 +334,16 @@ translations = {
         'menu_section_nov': "--- 🍂 **NOVEMBER** ---",
         'menu_section_dec': "--- ❄️ **DECEMBER** ---",
         'menu_section_hist': "--- 📈 **HISTORY, RULES** ---",
-        
+
+        # TABELA POMOCNIKÓW (Nagrody) - NEW (EN)
+        'helpers_info_text': "You can read about the reward calculation rules in the 'Rules' tab in the left menu. Updates occur weekly. The table below shows the current status:",
+        'helpers_col_participant': "Participant",
+        'helpers_col_reward': "Reward",
+        'helpers_col_details': "Calculation Details",
+        'helpers_footer_pool': "Current Community Pool: {0}% (Entries: {1} vs Admin: {2})",
+        'helpers_no_data': "No data to calculate rewards.",
+        'helpers_details_template': "help {0}%, leader {1}%, total rounded {2}%",
+        'helpers_footer_pool_full': "Current Community Pool: {0}% (Entries: {1} vs Admin: {2}) - calculated based on the last {3} entries.",
         # ZAKTUALIZOWANE ZASADY (EN)
         'sidebar_rules_text': """
         **Classification Rules:**
