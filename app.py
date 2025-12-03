@@ -17,16 +17,49 @@ st.set_page_config(
 def main():
     """Główna funkcja renderująca aplikację Streamlit."""
     
+    # === STARTUP LOGIC: URL PARAMS & SESSION INIT ===
+    query_params = st.query_params
+    
+    # 1. Odczyt i walidacja parametrów startowych z URL
+    url_page = query_params.get('page', ['ranking'])[0].lower() # np. 'ranking', 'formularz'
+    url_edition = query_params.get('edition', ['listopad'])[0].lower() # np. 'listopad', 'grudzien'
+    url_lang = query_params.get('lang', ['pl'])[0].lower() # np. 'pl', 'en'
+    
+    # 2. Mapowanie na klucze nawigacji Streamlit ('nav_november_ranking')
+    start_selection_key = "nav_november_ranking" # Domyślna wartość
+    
+    if url_page == 'ranking' and url_edition == 'listopad':
+        start_selection_key = 'nav_november_ranking'
+    elif url_page == 'formularz' and url_edition == 'listopad':
+        start_selection_key = 'nav_november_form'
+    elif url_page == 'ranking' and url_edition == 'grudzien':
+        start_selection_key = 'nav_december_ranking'
+    elif url_page == 'formularz' and url_edition == 'grudzien':
+        start_selection_key = 'nav_december_form'
+        
+    # Ustalenie języka startowego (dla sidebar index)
+    start_lang_value = 'en' if url_lang == 'en' else 'pl'
+    
     # Inicjalizacja sesji dla wyboru menu
+    # TYLKO nav_selection, aby widget selectbox mógł ustawić 'lang_select'
     if 'nav_selection' not in st.session_state:
-        # Domyślnie startujemy od rankingu listopada
-        st.session_state.nav_selection = "nav_november_ranking"
+        st.session_state.nav_selection = start_selection_key
 
     # === PASEK BOCZNY (Sidebar) ===
-    st.sidebar.selectbox("Język / Language", ["en", "pl"], index=0, key="lang_select")
+    # Używamy start_lang_value do obliczenia INDEXU, co rozwiązuje błąd konfliktu
+    # "en" to index 0, "pl" to index 1
+    initial_lang_index = 0 if start_lang_value == "en" else 1
+
+    st.sidebar.selectbox(
+        "Język / Language", 
+        ["en", "pl"], 
+        index=initial_lang_index, 
+        key="lang_select"
+    )
     lang = st.session_state.lang_select
     
-    st.sidebar.markdown("---")
+    st.sidebar.markdown("---") # Ta linia (Lw. 40) jest już w kodzie
+    # ... reszta kodu powinna pozostać bez zmian
     st.sidebar.title(_t('nav_header', lang)) 
     
     # === DEFINICJA OPCJI MENU ===
