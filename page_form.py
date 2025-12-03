@@ -188,7 +188,7 @@ def show_submission_form(lang, edition_key="november"):
     st.markdown("---")
     st.subheader("📋 Ostatnie zgłoszenia (Weryfikacja)" if lang == 'pl' else "📋 Recent Submissions (Verification)")
     st.caption("Tutaj możesz sprawdzić, czy Twój wpis dotarł do systemu." if lang == 'pl' else "Check here if your submission was received.")
-    
+        
     if sheet:
         try:
             df_log = load_google_sheet_data(sheet, "LogWpisow")
@@ -235,9 +235,8 @@ def show_submission_form(lang, edition_key="november"):
     # === NAJWIĘKSI POMOCNICY (ZAAWANSOWANA TABELA) ===
     st.markdown("---")
     st.subheader(_t('current_stats_top_submitters', lang))
-    
+
     # Tekst wprowadzający
-    # Zamiast st.info("Tekst...") wpisz:
     st.info(_t('helpers_info_text', lang))
 
     if sheet:
@@ -245,19 +244,61 @@ def show_submission_form(lang, edition_key="november"):
             # 1. Ładowanie danych logów (Dla Pomocników)
             df_logs = load_google_sheet_data(sheet, "LogWpisow")
             
-            # 2. Ładowanie danych wyników (Dla Liderów) - potrzebne do wyznaczenia Top 5
-            # Musimy to pobrać tutaj, niezależnie od sekcji Draftu
-            df_results = load_google_sheet_data(sheet, sheet_name)
+            # --- ZMIANA 1: Ograniczenie do ostatnich 200 wpisów (Rolling Window) ---
+            if not df_logs.empty:
+                # Bierzemy tylko ostatnie 200 wpisów do obliczeń puli P
+                df_logs_subset = df_logs.tail(200).copy() 
+            else:
+                df_logs_subset = pd.DataFrame() # Pusty DataFrame, jeśli brak logów
             
-            if not df_logs.empty and not df_results.empty:
-                # --- PRZYGOTOWANIE DANYCH ---
+            # --- ZMIANA 2: AGREGACJA TOP 5 Z OFICJALNYCH WYNIKÓW WSZYSTKICH EDYCJI ---
+            all_top_leaders = set()
+            
+            # Iterujemy przez WSZYSTKIE edycje, dla których chcemy liczyć bonus lidera
+            leader_bonus_editions = ['november', 'december'] 
+            
+            # Nazwy kolumn do późniejszego użycia wewnątrz pętli
+            part_col = _t('ranking_col_participant', lang)
+            
+            for ed_key in leader_bonus_editions:
+                ed_cfg = EDITIONS.get(ed_key)
+                if ed_cfg:
+                    ed_sheet_name = ed_cfg['sheet_name']
+                    ed_participants_list = ed_cfg['participants']
+                    
+                    # Ładowanie danych wyników dla danej edycji
+                    df_ed_results = load_google_sheet_data(sheet, ed_sheet_name)
+                    
+                    if not df_ed_results.empty:
+                        # Przetwarzamy dane
+                        expected_data_cols = ['Participant', 'Day', 'Status', 'Timestamp', 'Notes']
+                        current_data_proc, max_day_proc, elimination_map_live = process_raw_data(df_ed_results, lang, expected_data_cols, ed_sheet_name)
+                        
+                        # 1. Obliczamy OSTATNI OFICJALNY etap (na podstawie rankingu 'live')
+                        ranking_live, elimination_map_live = calculate_ranking(current_data_proc, max_day_proc, lang, ed_participants_list, ranking_type='live')
+                        complete_stages = find_last_complete_stage(current_data_proc, elimination_map_live, max_day_proc, ed_participants_list)
+                        
+                        # Używamy ostatniego oficjalnie ukończonego etapu (lub 1 jako fallback)
+                        official_stage = complete_stages[-1] if complete_stages else 1
+                        
+                        # 2. Obliczamy ranking na podstawie OFICJALNYCH wyników (tylko ukończone etapy)
+                        ranking_df, _ = calculate_ranking(current_data_proc, official_stage, lang, ed_participants_list, ranking_type='official')
+                        
+                        if not ranking_df.empty:
+                            # Dodajemy Top 5 liderów z TEJ EDYCJI do globalnego zbioru
+                            top_5_ed_leaders = ranking_df.head(5)[part_col].tolist()
+                            all_top_leaders.update(top_5_ed_leaders)
+            # --- KONIEC NOWEJ LOGIKI DLA LIDERÓW ---
+
+            if not df_logs_subset.empty:
+                # --- PRZYGOTOWANIE DANYCH (POMOCNIKÓW) ---
                 
-                # A. Obliczenia Pomocników
+                # A. Obliczenia Pomocników (na podstawie podzbioru ostatnich 200 wpisów)
                 proper_headers = ['Submitter', 'Participant', 'Day', 'Status', 'Timestamp', 'Edition', 'Notes']
-                df_logs.columns = proper_headers[:len(df_logs.columns)]
+                df_logs_subset.columns = proper_headers[:len(df_logs_subset.columns)]
                 
-                total_entries = len(df_logs)
-                helpers_subset = df_logs[df_logs['Submitter'] != 'poprzeczka (Admin)']
+                total_entries = len(df_logs_subset)
+                helpers_subset = df_logs_subset[df_logs_subset['Submitter'] != 'poprzeczka (Admin)']
                 community_entries = len(helpers_subset)
                 
                 # Procent puli (P)
@@ -265,38 +306,27 @@ def show_submission_form(lang, edition_key="november"):
                 if total_entries > 0:
                     P = int((community_entries / total_entries) * 100)
                 
+                # Pula dla pomocników (80% puli społeczności)
                 helper_pool = P * 0.80
+                
+                # Pula dla liderów (20% puli społeczności)
                 leader_pool = P * 0.20
                 
                 # Zliczanie wpisów per użytkownik
                 helper_counts = helpers_subset['Submitter'].value_counts()
                 
-                # B. Obliczenia Liderów (Top 5)
-                # Przetwarzamy dane, aby uzyskać ranking
-                expected_data_cols = ['Participant', 'Day', 'Status', 'Timestamp', 'Notes']
-                current_data_proc, max_day_proc, _ = process_raw_data(df_results, lang, expected_data_cols, sheet_name)
-                ranking_df, _ = calculate_ranking(current_data_proc, max_day_proc, lang, participants_list, ranking_type='live')
-                
-                # Pobieramy Top 5 liderów
-                rank_col = _t('ranking_col_rank', lang)
-                part_col = _t('ranking_col_participant', lang)
-                
-                # Zakładamy, że ranking_df jest już posortowany przez funkcję calculate_ranking
-                top_5_leaders = []
-                if not ranking_df.empty:
-                    # Bierzemy unikalnych liderów z miejsc 1-5 (może być ich więcej przy remisie, ale tutaj bierzemy pierwsze 5 rekordów z góry)
-                    # Lub ściśle wg zasad: Top 5 participants list
-                    top_5_leaders = ranking_df.head(5)[part_col].tolist()
+                # B. Obliczenia Liderów 
+                num_leaders = len(all_top_leaders) 
                 
                 bonus_per_leader = 0
-                if len(top_5_leaders) > 0:
-                    bonus_per_leader = leader_pool / len(top_5_leaders)
-
+                if num_leaders > 0:
+                    bonus_per_leader = leader_pool / num_leaders 
+                
                 # C. Agregacja Wyników
                 rewards_data = []
                 
-                # Zbieramy wszystkich unikalnych beneficjentów (zarówno pomocnicy jak i liderzy)
-                all_beneficiaries = set(helper_counts.index.tolist()) | set(top_5_leaders)
+                # Zbieramy wszystkich unikalnych beneficjentów (zarówno pomocnicy jak i globalni liderzy)
+                all_beneficiaries = set(helper_counts.index.tolist()) | all_top_leaders 
                 
                 for user in all_beneficiaries:
                     # Wyliczenie części za pomoc
@@ -306,14 +336,13 @@ def show_submission_form(lang, edition_key="november"):
                         h_share = (user_entries / community_entries) * helper_pool
                     
                     # Wyliczenie części za lidera
-                    l_share = bonus_per_leader if user in top_5_leaders else 0
+                    l_share = bonus_per_leader if user in all_top_leaders else 0
                     
                     # Suma i zaokrąglenie
                     total_raw = h_share + l_share
                     total_rounded = round(total_raw)
                     
                     # Formatowanie opisu
-                    # "pomoc 0%, lider 1,6%, razem zaokrąglone 2%"
                     details_str = (
                         f"pomoc {h_share:.1f}%, "
                         f"lider {l_share:.1f}%, "
@@ -328,17 +357,19 @@ def show_submission_form(lang, edition_key="november"):
                             "_sort_val": total_rounded
                         })
                 
-                # Sortowanie i limit Top 7
+                # D. Sortowanie i Wyświetlenie Tabeli
                 rewards_data.sort(key=lambda x: x['_sort_val'], reverse=True)
                 top_rewards = rewards_data[:7]
                 
-                # D. Wyświetlenie Tabeli
+                # Używamy P do stopki draftu w Generatorze Draftu
+                st.session_state['helper_pool_P'] = P 
+
                 if top_rewards:
                     df_display = pd.DataFrame(top_rewards).drop(columns=['_sort_val'])
                     
                     st.dataframe(
                         df_display,
-                        width="stretch",  # <--- ZMIANA: Zastępujemy use_container_width=True
+                        width="stretch",
                         hide_index=True,
                         column_config={
                             "Uczestnik": st.column_config.TextColumn("Uczestnik", width="small"),
@@ -348,12 +379,17 @@ def show_submission_form(lang, edition_key="november"):
                     )
                     
                     # Stopka z info o puli
-                    st.caption(f"Aktualna Pula Społeczności: {P}% (Wpisy: {community_entries} vs Admin: {total_entries - community_entries})")
+                    st.caption(f"Aktualna Pula Społeczności: {P}% (Wpisy: {community_entries} vs Admin: {total_entries - community_entries}) - liczone na podstawie ostatnich {total_entries} wpisów.")
                 else:
                     st.info("Brak danych do wyliczenia nagród.")
 
+            else: # Gdy df_logs jest puste
+                st.info("Brak wpisów w logu.")
+
+
         except Exception as e:
             st.warning(f"Nie udało się pobrać danych do tabeli pomocników: {e}")
+
     # === GENERATOR DRAFTU (Skrócony w widoku, ale działa tak samo) ===
     st.markdown("---")
     st.header(_t('draft_header', lang, edition_label))
@@ -428,14 +464,23 @@ def show_submission_form(lang, edition_key="november"):
                                     if current_score < pb: diff_to_pb = f"{pb - current_score:.0f}"
                                     else: pb_message = _t('draft_pb_congrats', lang, w_broke, w_participant, current_score)
 
+                        # Pobieramy obliczoną pulę P lub 0 jako fallback
+                        helper_pool_pct = st.session_state.get('helper_pool_P', 0)
+                        
                         if elim_day:
                             elim_str = w_eliminated.format(elim_day)
                             analysis_part = _t('draft_analysis_eliminated', lang, f"@{selected_participant_for_draft}", elim_str, w_achieved, avg_res, pb_message)
                         else:
-                            if pb_message: analysis_part = _t('draft_analysis_eliminated', lang, f"@{selected_participant_for_draft}", w_chance, w_achieved, avg_res, pb_message)
-                            else: analysis_part = _t('draft_analysis_active', lang, f"@{selected_participant_for_draft}", w_chance, w_achieved, avg_res, pb_res, w_missing, diff_to_pb)
-
-                        draft_text = f"""{_t('draft_intro', lang, f'@{selected_participant_for_draft}')}\n\n{_t('draft_main_text', lang, official_stage, f'@{selected_participant_for_draft}', current_rank, prev_user, next_user, w_participant, last_reported_day, last_status_text)}\n\n{analysis_part}\n\n{_t('draft_footer', lang, helper_pct_str)}"""
-                        st.text_area(_t('draft_copy_label', lang), value=draft_text, height=300)
+                            if pb_message: 
+                                # Gratulacje PB (osiągnął więcej niż w historii)
+                                analysis_part = _t('draft_analysis_active', lang, f"@{selected_participant_for_draft}", w_chance, w_achieved, avg_res, pb_res, w_missing, diff_to_pb)
+                                analysis_part += f"\n\n{pb_message}" # Dodajemy komunikat PB
+                            else: 
+                                # Standardowa analiza
+                                analysis_part = _t('draft_analysis_active', lang, f"@{selected_participant_for_draft}", w_chance, w_achieved, avg_res, pb_res, w_missing, diff_to_pb)
+                            
+                            # Używamy zmiennej helper_pool_pct w stopce
+                            draft_text = f"""{_t('draft_intro', lang, f'@{selected_participant_for_draft}')}\n\n{_t('draft_main_text', lang, official_stage, f'@{selected_participant_for_draft}', current_rank, prev_user, next_user, w_participant, last_reported_day, last_status_text)}\n\n{analysis_part}\n\n{_t('draft_footer', lang, str(helper_pool_pct))}"""
+                            st.text_area(_t('draft_copy_label', lang), value=draft_text, height=300)
                     else: st.warning(_t('draft_no_data', lang))
             except Exception as e: st.error(_t('draft_error', lang, str(e)))
