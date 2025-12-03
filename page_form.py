@@ -343,11 +343,7 @@ def show_submission_form(lang, edition_key="november"):
                     total_rounded = round(total_raw)
                     
                     # Formatowanie opisu
-                    details_str = (
-                        f"pomoc {h_share:.1f}%, "
-                        f"lider {l_share:.1f}%, "
-                        f"razem zaokrąglone {total_rounded}%"
-                    )
+                    details_str = _t('helpers_details_format', lang, h_share, l_share, total_rounded)
                     
                     if total_rounded > 0:
                         rewards_data.append({
@@ -372,14 +368,16 @@ def show_submission_form(lang, edition_key="november"):
                         width="stretch",
                         hide_index=True,
                         column_config={
-                            "Uczestnik": st.column_config.TextColumn("Uczestnik", width="small"),
-                            "Nagroda": st.column_config.TextColumn("Nagroda", width="small"),
-                            "Szczegóły wyliczenia": st.column_config.TextColumn("Szczegóły wyliczenia", width="large"),
+                            # Używamy kluczy z translations.py
+                            "Uczestnik": st.column_config.TextColumn(_t('helpers_col_participant', lang), width="small"),
+                            "Nagroda": st.column_config.TextColumn(_t('helpers_col_reward', lang), width="small"),
+                            "Szczegóły wyliczenia": st.column_config.TextColumn(_t('helpers_col_details', lang), width="large"),
                         }
                     )
                     
                     # Stopka z info o puli
-                    st.caption(f"Aktualna Pula Społeczności: {P}% (Wpisy: {community_entries} vs Admin: {total_entries - community_entries}) - liczone na podstawie ostatnich {total_entries} wpisów.")
+                    caption_text = _t('helpers_footer_pool_full', lang, P, community_entries, total_entries - community_entries, total_entries)
+                    st.caption(caption_text)
                 else:
                     st.info("Brak danych do wyliczenia nagród.")
 
