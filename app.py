@@ -17,50 +17,74 @@ st.set_page_config(
 def main():
     """Główna funkcja renderująca aplikację Streamlit."""
     
-    # === 1. LOGIKA STARTOWA: PARAMETRY URL ===
+    # === 1. LOGIKA STARTOWA: PRZECHWYTYWANIE LINKÓW (Deep Linking) ===
+    # Sprawdzamy, czy w adresie URL są jakieś parametry
     query_params = st.query_params
     
-    # Odczyt parametrów z linku (jeśli istnieją)
-    url_page = query_params.get('page', ['ranking'])[0].lower()
-    url_edition = query_params.get('edition', ['listopad'])[0].lower()
-    url_lang = query_params.get('lang', ['pl'])[0].lower()
-    
-    # Mapowanie parametrów URL na klucze nawigacji
-    start_selection_key = "nav_november_ranking" # Domyślny start
-    
-    if url_page == 'ranking' and url_edition == 'listopad':
-        start_selection_key = 'nav_november_ranking'
-    elif url_page == 'formularz' and url_edition == 'listopad':
-        start_selection_key = 'nav_november_form'
-    elif url_page == 'ranking' and url_edition == 'grudzien':
-        start_selection_key = 'nav_december_ranking'
-    elif url_page == 'formularz' and url_edition == 'grudzien':
-        start_selection_key = 'nav_december_form'
+    if "page" in query_params or "edition" in query_params or "lang" in query_params:
+        # Odczyt parametrów
+        url_page = query_params.get('page', 'ranking').lower()
+        url_edition = query_params.get('edition', 'listopad').lower()
+        url_lang = query_params.get('lang', 'pl').lower()
         
-    # Ustalenie języka startowego
-    start_lang_value = 'en' if url_lang == 'en' else 'pl'
-    
-    # Inicjalizacja sesji (tylko jeśli pusta, aby nie nadpisywać wyborów w trakcie używania)
+        # 1. Ustawiamy JĘZYK w sesji
+        target_lang = 'en' if url_lang == 'en' else 'pl'
+        st.session_state.lang_select = target_lang
+        
+        # 2. Ustawiamy STRONĘ (Nawigację) w sesji
+        target_key = "nav_november_ranking" # Domyślnie
+        
+        if url_page == 'ranking' and url_edition == 'listopad':
+            target_key = 'nav_november_ranking'
+        elif url_page == 'formularz' and url_edition == 'listopad':
+            target_key = 'nav_november_form'
+        elif url_page == 'ranking' and url_edition == 'grudzien':
+            target_key = 'nav_december_ranking'
+        elif url_page == 'formularz' and url_edition == 'grudzien':
+            target_key = 'nav_december_form'
+        
+        st.session_state.nav_selection = target_key
+        
+        # 3. WAŻNE: Czyścimy parametry URL i przeładowujemy stronę
+        # Dzięki temu aplikacja ustawi się w dobrym stanie, a "link" nie będzie
+        # blokował dalszej nawigacji.
+        st.query_params.clear()
+        st.rerun()
+
+    # === 2. INICJALIZACJA DOMYŚLNA (Jeśli brak linku) ===
     if 'nav_selection' not in st.session_state:
-        st.session_state.nav_selection = start_selection_key
+        st.session_state.nav_selection = "nav_november_ranking"
+    
+    if 'lang_select' not in st.session_state:
+        st.session_state.lang_select = "pl"
 
-    # === 2. PASEK BOCZNY: JĘZYK ===
-    # Obliczamy index dla języka na podstawie URL lub wyboru użytkownika
-    initial_lang_index = 0 if start_lang_value == "en" else 1
+    # Pobieramy aktualny język z sesji (ustawiony wyżej przez link lub domyślnie)
+    lang = st.session_state.lang_select
 
+    # === 3. PASEK BOCZNY: JĘZYK ===
+    # Obliczamy index dla widgetu selectbox, aby wizualnie zgadzał się z sesją
+    initial_lang_index = 0 if lang == "en" else 1
+
+    # Widget języka - klucz 'lang_select' automatycznie zaktualizuje session_state
     st.sidebar.selectbox(
         "Język / Language", 
         ["en", "pl"], 
         index=initial_lang_index, 
-        key="lang_select"
+        key="lang_select_widget", # Używamy innego klucza widgetu, by ręcznie sterować stanem
+        on_change=lambda: st.session_state.update(lang_select=st.session_state.lang_select_widget)
     )
+    # Synchronizacja odwrotna (jeśli zmienimy język widgetem)
+    if 'lang_select_widget' in st.session_state:
+        st.session_state.lang_select = st.session_state.lang_select_widget
+    
+    # Odświeżenie zmiennej lokalnej po ewentualnej zmianie
     lang = st.session_state.lang_select
     
     st.sidebar.markdown("---")
 
-    # === 3. PASEK BOCZNY: MENU GŁÓWNE ===
+    # === 4. PASEK BOCZNY: MENU GŁÓWNE ===
     
-    # Definicja wszystkich opcji w jednym miejscu
+    # Definicja wszystkich opcji (Zależą od aktualnego 'lang')
     options_map = [
         ('nav_november_ranking', _t('nav_november_ranking', lang)),
         ('nav_november_form', _t('nav_november_form', lang)),
@@ -72,12 +96,14 @@ def main():
         ('about_app', _t('about_app', lang)),
     ]
 
-    # Przygotowanie kluczy i mapowania zwrotnego (Nazwa -> Klucz)
+    # Mapowania pomocnicze
     menu_keys = [k for k, v in options_map] 
     reverse_map = {v: k for k, v in options_map}
 
-    # Ustalenie, która pozycja menu ma być aktywna (na podstawie sesji/URL)
+    # Ustalenie, która pozycja menu ma być aktywna (na podstawie sesji)
     current_key = st.session_state.nav_selection
+    
+    # Zabezpieczenie: jeśli klucza z sesji nie ma w opcjach (np. zmiana języka), resetujemy na 0
     if current_key in menu_keys:
         initial_index = menu_keys.index(current_key)
     else:
@@ -88,10 +114,10 @@ def main():
         _t('nav_header', lang),
         options=[v for k, v in options_map],
         index=initial_index, 
-        key='nav_selection_select'
+        key='nav_selection_widget' # Osobny klucz widgetu
     )
 
-    # Aktualizacja wyboru w sesji (zamiana nazwy na klucz techniczny)
+    # Aktualizacja wyboru w sesji (zamiana nazwy wizualnej na klucz techniczny)
     selection = reverse_map.get(selected_name, st.session_state.nav_selection)
     st.session_state.nav_selection = selection
 
@@ -110,7 +136,7 @@ def main():
                     df_logs['Timestamp'] = df_logs['Timestamp'].dt.strftime('%Y-%m-%d %H:%M')
                     st.dataframe(
                         df_logs.rename(columns={'Timestamp': 'Time (UTC)'}).sort_values("Time (UTC)", ascending=False).head(20), 
-                        width=None, # Auto width
+                        width=None,
                         hide_index=True
                     )
                 else:
@@ -118,13 +144,13 @@ def main():
             except Exception as e:
                 st.error(f"Log error: {e}")
 
-    # === 4. OBSŁUGA GŁÓWNEGO WIDOKU (ROUTING) ===
+    # === 5. OBSŁUGA GŁÓWNEGO WIDOKU (ROUTING) ===
     
     # Inicjalizacja zmiennych pomocniczych formularza
     if 'submitter_index_plus_one' not in st.session_state: st.session_state.submitter_index_plus_one = 0 
     if 'last_day_entered' not in st.session_state: st.session_state.last_day_entered = 1
     
-    # Wyświetlenie odpowiedniej strony w zależności od wyboru
+    # Router
     if selection == 'nav_november_ranking':
         show_current_edition_dashboard(lang, edition_key="november")
     elif selection == 'nav_november_form':
