@@ -45,7 +45,7 @@ def main():
     if 'nav_selection' not in st.session_state:
         st.session_state.nav_selection = start_selection_key
 
-    # === PASEK BOCZNY (Sidebar) ===
+    # === PASEK BOCZNY (Sidebar): JĘZYK ===
     # Używamy start_lang_value do obliczenia INDEXU, co rozwiązuje błąd konfliktu
     # "en" to index 0, "pl" to index 1
     initial_lang_index = 0 if start_lang_value == "en" else 1
@@ -58,124 +58,83 @@ def main():
     )
     lang = st.session_state.lang_select
     
-    st.sidebar.markdown("---") # Ta linia (Lw. 40) jest już w kodzie
-    # ... reszta kodu powinna pozostać bez zmian
-    st.sidebar.title(_t('nav_header', lang)) 
-    
-    # === DEFINICJA OPCJI MENU ===
-    # Klucze muszą odpowiadać kluczom w translations.py
-    opts_nov = ['nav_november_ranking', 'nav_november_form']
-    opts_dec = ['nav_december_ranking', 'nav_december_form']
-    opts_hist = ['nav_historical_stats', 'nav_rules', 'nav_join', 'about_app']
-    
-    # Mapowanie: Tłumaczenie -> Klucz (potrzebne, bo radio zwraca tekst)
-    label_to_key = {}
-    for key in opts_nov + opts_dec + opts_hist:
-        label_to_key[_t(key, lang)] = key
-
-    # Funkcja aktualizująca stan (Callback)
-    def update_nav(group_name):
-        # 1. Pobieramy wybraną wartość z widgetu, który wywołał zmianę
-        changed_widget_key = f"radio_{group_name}"
-        selected_label = st.session_state.get(changed_widget_key)
-        
-        # 2. Aktualizujemy główny wybór nawigacji
-        if selected_label:
-            st.session_state.nav_selection = label_to_key.get(selected_label)
-
-        # 3. Czyścimy stan POZOSTAŁYCH widgetów (ustawiamy na None)
-        # To sprawia, że wizualnie się odznaczają i pozwalają na ponowne kliknięcie w przyszłości
-        if group_name == "nov":
-            st.session_state.radio_dec = None
-            st.session_state.radio_hist = None
-        elif group_name == "dec":
-            st.session_state.radio_nov = None
-            st.session_state.radio_hist = None
-        elif group_name == "hist":
-            st.session_state.radio_nov = None
-            st.session_state.radio_dec = None
-
-    # Wyznaczanie indeksów dla radio buttonów na podstawie aktualnego wyboru
-    curr_key = st.session_state.nav_selection
-    
-    idx_nov = opts_nov.index(curr_key) if curr_key in opts_nov else None
-    idx_dec = opts_dec.index(curr_key) if curr_key in opts_dec else None
-    idx_hist = opts_hist.index(curr_key) if curr_key in opts_hist else None
-
-    # === RENDEROWANIE MENU ===
-    
-    # 1. SEKCJA LISTOPAD
-    st.sidebar.markdown(_t('menu_section_nov', lang))
-    st.sidebar.write("") # Odstęp
-    st.sidebar.radio(
-        "Listopad",
-        options=[_t(k, lang) for k in opts_nov],
-        index=idx_nov,
-        key="radio_nov",
-        label_visibility="collapsed",
-        on_change=update_nav,
-        args=("nov",)
-    )
-    
-    # 2. SEKCJA GRUDZIEŃ
-    st.sidebar.markdown(" ") # Odstęp
-    st.sidebar.markdown(_t('menu_section_dec', lang))
-    st.sidebar.write("") # Odstęp
-    st.sidebar.radio(
-        "Grudzień",
-        options=[_t(k, lang) for k in opts_dec],
-        index=idx_dec,
-        key="radio_dec",
-        label_visibility="collapsed",
-        on_change=update_nav,
-        args=("dec",)
-    )
-    
-    # 3. SEKCJA HISTORIA I ZASADY
-    st.sidebar.markdown(" ") 
-    st.sidebar.markdown(" ") # Większy odstęp
-    st.sidebar.markdown(_t('menu_section_hist', lang))
-    st.sidebar.radio(
-        "Historia",
-        options=[_t(k, lang) for k in opts_hist],
-        index=idx_hist,
-        key="radio_hist",
-        label_visibility="collapsed",
-        on_change=update_nav,
-        args=("hist",)
-    )
-
-    # --- Linki i Log ---
     st.sidebar.markdown("---")
-    st.sidebar.link_button("🐝 Hive.blog", "https://hive.blog/trending/poprzeczka", use_container_width=True)
+
+    # === DEFINICJA OPCJI MENU (Jedno źródło prawdy) ===
+    # Klucze z translations.py
+    
+    options_map = [
+        ('nav_november_ranking', _t('nav_november_ranking', lang)),
+        ('nav_november_form', _t('nav_november_form', lang)),
+        ('nav_december_ranking', _t('nav_december_ranking', lang)),
+        ('nav_december_form', _t('nav_december_form', lang)),
+        ('nav_historical_stats', _t('nav_historical_stats', lang)),
+        ('nav_rules', _t('nav_rules', lang)),
+        ('nav_join', _t('nav_join', lang)),
+        ('about_app', _t('about_app', lang)),
+    ]
+
+    # 1. Zdefiniowanie kluczy menu i mapowania zwrotnego
+    menu_keys = [k for k, v in options_map] 
+    reverse_map = {v: k for k, v in options_map}
+
+    # 2. Obliczenie indexu startowego na podstawie klucza z sesji (ustawionego przez URL)
+    # Zabezpieczenie: jeśli klucza nie ma w liście, ustawiamy 0
+    if st.session_state.nav_selection in menu_keys:
+        initial_index = menu_keys.index(st.session_state.nav_selection)
+    else:
+        initial_index = 0
+
+    # === PASEK BOCZNY (Sidebar): NAWIGACJA ===
+
+    # Pokaż selectbox i pobierz WYBRANĄ PRZETŁUMACZONĄ NAZWĘ
+    # Używamy obliczonego initial_index, aby odzwierciedlić wybór z URL
+    selected_name = st.sidebar.selectbox(
+        _t('nav_header', lang),
+        options=[v for k, v in options_map],
+        index=initial_index, 
+        key='nav_selection_select'
+    )
+
+    # KLUCZOWA ZMIANA: Przekształć wybraną nazwę z powrotem na STAŁY KLUCZ
+    # To jest klucz, który jest używany w routingu (np. 'nav_november_form')
+    selection = reverse_map.get(selected_name, st.session_state.nav_selection)
+    
+    # Zapisz klucz do sesji (zamiast przetłumaczonej nazwy), aby utrzymać stan
+    st.session_state.nav_selection = selection
+
+    # --- Linki Zewnętrzne i Log Administratora ---
+    st.sidebar.markdown("---")
+    st.sidebar.link_button(_t('sidebar_hive_link', lang), "https://hive.blog/trending/poprzeczka", use_container_width=True)
     
     with st.sidebar.expander(_t('sidebar_admin_log', lang)):
         sheet = connect_to_google_sheets()
         if sheet:
-            df_logs = load_google_sheet_data(sheet, "LogWpisow")
-            if not df_logs.empty:
-                # Konwersja na format daty i usunięcie sekund
-                df_logs['Timestamp'] = pd.to_datetime(df_logs['Timestamp'])
-                df_logs['Timestamp'] = df_logs['Timestamp'].dt.strftime('%Y-%m-%d %H:%M')
-                
-                # Zmiana nazwy kolumny na Time (UTC) dla jasności międzynarodowej
-                st.dataframe(
-                    df_logs.rename(columns={'Timestamp': 'Time (UTC)'}).sort_values("Time (UTC)", ascending=False).head(20), 
-                    width="stretch",  # <--- ZMIANA
-                    hide_index=True
-                )
-            else:
-                st.info("Log pusty.")
+            try:
+                df_logs = load_google_sheet_data(sheet, "LogWpisow")
+                if not df_logs.empty:
+                    # Konwersja na format daty i usunięcie sekund
+                    df_logs['Timestamp'] = pd.to_datetime(df_logs['Timestamp'], errors='coerce')
+                    df_logs['Timestamp'] = df_logs['Timestamp'].dt.strftime('%Y-%m-%d %H:%M')
+                    
+                    # Zmiana nazwy kolumny na Time (UTC) dla jasności międzynarodowej
+                    st.dataframe(
+                        df_logs.rename(columns={'Timestamp': 'Time (UTC)'}).sort_values("Time (UTC)", ascending=False).head(20), 
+                        width="stretch",
+                        hide_index=True
+                    )
+                else:
+                    st.info(_t('sidebar_log_empty', lang))
+            except Exception as e:
+                st.error(f"Error loading log: {e}")
 
-    # === OBSŁUGA GŁÓWNEGO WIDOKU ===
+    # === OBSŁUGA GŁÓWNEGO WIDOKU (ROUTING) ===
     
-    # Inicjalizacja sesji dla formularzy
+    # Inicjalizacja sesji dla formularzy (jeśli nie istnieją)
     if 'submitter_index_plus_one' not in st.session_state: st.session_state.submitter_index_plus_one = 0 
     if 'last_day_entered' not in st.session_state: st.session_state.last_day_entered = 1
     
-    selection = st.session_state.nav_selection
-
-    # Routing
+    # Używamy zmiennej 'selection', która na pewno jest kluczem (np. 'nav_november_ranking')
     if selection == 'nav_november_ranking':
         show_current_edition_dashboard(lang, edition_key="november")
     elif selection == 'nav_november_form':
