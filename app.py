@@ -206,6 +206,43 @@ def main():
     elif selection == 'about_app':
         st.header(_t('about_app', lang))
         st.markdown(_t('about_app_text', lang))
+        
+        # === NOWY BLOK: SZYBKIE LINKI STARTOWE ===
+        st.subheader(_t('quick_links_header', lang))
+
+        # UWAGA: Używamy stałego adresu URL aplikacji
+        BASE_URL = "https://poprzeczka.streamlit.app/" 
+        
+        # Definicja linków
+        # (Tekst, page, edition, lang, Sekcja)
+        links_data = [
+            # Rankingi PL
+            (_t('quick_links_ranking', lang), 'ranking', 'listopad', 'pl', _t('quick_links_edition_nov', lang)),
+            (_t('quick_links_ranking', lang), 'ranking', 'grudzien', 'pl', _t('quick_links_edition_dec', lang)),
+            # Formularze PL
+            (_t('quick_links_form', lang), 'formularz', 'listopad', 'pl', _t('quick_links_edition_nov', lang)),
+            (_t('quick_links_form', lang), 'formularz', 'grudzien', 'pl', _t('quick_links_edition_dec', lang)),
+            # ---
+            # Rankingi EN
+            (_t('quick_links_ranking', lang), 'ranking', 'listopad', 'en', _t('quick_links_edition_nov', lang)),
+            (_t('quick_links_ranking', lang), 'ranking', 'grudzien', 'en', _t('quick_links_edition_dec', lang)),
+            # Formularze EN
+            (_t('quick_links_form', lang), 'formularz', 'listopad', 'en', _t('quick_links_edition_nov', lang)),
+            (_t('quick_links_form', lang), 'formularz', 'grudzien', 'en', _t('quick_links_edition_dec', lang)),
+        ]
+
+        # Generowanie i wyświetlanie linków
+        for title, page, edition, link_lang, edition_label in links_data:
+            # Tworzenie pełnego URL
+            url = f"{BASE_URL}?page={page}&edition={edition}&lang={link_lang}"
+            
+            # Tworzenie etykiety dla linku
+            lang_label = _t('quick_links_language_pl', lang) if link_lang == 'pl' else _t('quick_links_language_en', lang)
+            link_label = f"🔗 {title} ({edition_label}) {lang_label}"
+            
+            st.markdown(f"* [{link_label}]({url})")
+            
+        # === KONIEC NOWEGO BLOKU ===
         st.caption("Created by @racibo & AI Assistant.")
 
 if __name__ == "__main__":
