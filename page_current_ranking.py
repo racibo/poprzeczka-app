@@ -7,7 +7,7 @@ import numpy as np
 from datetime import datetime 
 from streamlit_extras.mention import mention
 from translations import _t
-from config import EDITIONS
+from config import EDITIONS_CONFIG, MONTH_NAMES
 from google_connect import connect_to_google_sheets
 from data_loader import load_google_sheet_data, load_historical_data_from_json, process_raw_data
 
@@ -15,7 +15,11 @@ from data_loader import load_google_sheet_data, load_historical_data_from_json, 
 
 def clean_title_for_chart(text):
     """Usuwa emotikony z tekstu, aby uniknąć ostrzeżeń matplotlib (Missing Glyph)."""
-    return text.replace("📉", "").replace("🔥", "").replace("🏁", "").strip()
+    import re
+    # Usuwa wszystkie emotikony (nie tylko wybrane)
+    text = re.sub(r'[\U0001F300-\U0001F9FF]', '', text)  # Emotikony Unicode
+    text = re.sub(r'[\u2600-\u27FF]', '', text)  # Symbole
+    return text.strip()
 
 def calculate_ranking(data, max_day_reported, lang, participants_list, ranking_type='live'):
     """Oblicza ranking na podstawie zasad gry."""
@@ -763,13 +767,52 @@ def generate_weekly_summary_markdown(week_num, current_data, df_historical, df_l
     return summary_text
 
 # === Główna Funkcja Strony ===
+# page_current_ranking.py - (Fragmenty do dodania/zmiany)
 
+# ... (zachowaj importy i istniejące funkcje calculate_ranking, show_current_edition_dashboard itp.) ...
+
+# DODAJ TĘ FUNKCJĘ NA KOŃCU PLIKU (lub przed show_current_edition_dashboard):
+
+def check_if_edition_is_finished(sheet, sheet_name, participants_list, lang='pl'):
+    """
+    Automatycznie sprawdza, czy edycja jest zakończona (wszyscy odpadli).
+    Zwraca True, jeśli tak.
+    """
+    try:
+        # Pobieramy dane (zakładamy, że data_loader ma cache, więc to nie będzie za wolne)
+        df_raw = load_google_sheet_data(sheet, sheet_name)
+        if df_raw.empty:
+            return False
+            
+        expected_cols = ['Participant', 'Day', 'Status']
+        # Używamy process_raw_data aby uzyskać czyste dane
+        current_data, max_day, _ = process_raw_data(df_raw, lang, expected_cols, sheet_name)
+        
+        if max_day == 0:
+            return False
+
+        # Obliczamy ranking na ostatni dzień
+        # Jeśli wszyscy mają przypisany 'eliminated_on_day', to edycja zakończona
+        _, elimination_map = calculate_ranking(current_data, max_day, lang, participants_list, ranking_type='live')
+        
+        # Sprawdzamy czy każdy uczestnik jest w mapie eliminacji
+        all_eliminated = True
+        for p in participants_list:
+            if p not in elimination_map or elimination_map[p] is None:
+                all_eliminated = False
+                break
+        
+        return all_eliminated
+
+    except Exception:
+        # W razie błędu (np. brak arkusza) zakładamy, że nie jest zakończona (bezpieczniej)
+        return False
 def show_current_edition_dashboard(lang, edition_key="november"):
     """Wyświetla dashboard dla wybranej edycji."""
     
-    cfg = EDITIONS.get(edition_key, EDITIONS['november'])
+    cfg = EDITIONS_CONFIG.get(edition_key, EDITIONS_CONFIG['november'])
     sheet_name = cfg['sheet_name']
-    label = cfg['label_' + lang]
+    label = MONTH_NAMES[edition_key][lang]
     participants_list = cfg['participants']  # <--- POBIERAMY LISTĘ Z CONFIGA
     
     st.header(f"{_t('current_header', lang)}: {label}")
@@ -841,17 +884,26 @@ def show_current_edition_dashboard(lang, edition_key="november"):
         
     st.markdown("---")
 
-    # --- Ranking Oficjalny ---
+# --- Ranking Oficjalny ---
     st.subheader(_t('current_official_ranking_header', lang))
     complete_stages = find_last_complete_stage(current_data, elimination_map, max_day_reported, participants_list)
     
     if complete_stages:
         default_stage = complete_stages[-1]
-        selected_stage = st.select_slider(
-            _t('current_official_stage_selector', lang),
-            options=complete_stages, 
-            value=default_stage 
-        )
+        
+        # Jeśli jest tylko jeden etap, używamy selectbox zamiast select_slider
+        if len(complete_stages) == 1:
+            selected_stage = st.selectbox(
+                _t('current_official_stage_selector', lang),
+                options=complete_stages,
+                index=0
+            )
+        else:
+            selected_stage = st.select_slider(
+                _t('current_official_stage_selector', lang),
+                options=complete_stages, 
+                value=default_stage 
+            )
         st.info(_t('current_official_ranking_desc', lang, selected_stage))
         try:
             official_ranking_df, _ = calculate_ranking(current_data, selected_stage, lang, participants_list, ranking_type='official')
@@ -867,7 +919,22 @@ def show_current_edition_dashboard(lang, edition_key="november"):
         st.info(_t('current_official_ranking_none', lang))
     
     st.markdown("---")
+    # === ZACHĘTA DO WPROWADZANIA DANYCH (CTA) ===
+    st.info(_t('cta_header', lang))
+    st.markdown(_t('cta_description', lang))
     
+    col_cta1, col_cta2 = st.columns(2)
+    with col_cta1:
+        lang_param = MONTH_NAMES[edition_key]['url_param_pl']
+        form_url_pl = f"https://poprzeczka.streamlit.app/?page=formularz&edition={lang_param}&lang=pl"
+        st.link_button(_t('cta_button_pl', lang), form_url_pl, use_container_width=True)
+    with col_cta2:
+        lang_param = MONTH_NAMES[edition_key]['url_param_en']
+        form_url_en = f"https://poprzeczka.streamlit.app/?page=formularz&edition={lang_param}&lang=en"
+        st.link_button(_t('cta_button_en', lang), form_url_en, use_container_width=True)
+    
+    st.markdown("---")
+
     # --- Podsumowania Tygodniowe (PRZENIESIONE TUTAJ) ---
     max_complete_day = complete_stages[-1] if complete_stages else 0
     weeks_completed = max_complete_day // 7
@@ -945,7 +1012,6 @@ def show_current_edition_dashboard(lang, edition_key="november"):
             st.info("Brak wybitnych zająców.")
 
     st.markdown("---")
-
     # === NOWY WYKRES WYŚCIGU (RACE CHART) ===
     st.subheader(_t('current_stats_race_header', lang))
     st.info(_t('current_stats_race_desc', lang))
