@@ -276,20 +276,52 @@ def main():
         if st.sidebar.button(label, key=f"btn_{key}", use_container_width=True):
             st.session_state.nav_selection = key
             st.rerun()
-    # === LOG ADMIN (EXPANDER) ===
-    with st.sidebar.expander("📋 Log (Admin)", expanded=False):
+# === LOG ADMIN (EXPANDER) + WSKAŹNIK POMOCY ===
+    
+    # Pobierz ostatnie wpisy i wskaźnik pomocy
+    helper_percentage_all = 0
+    helper_percentage_recent = 0
+    if sheet:
+        try:
+            df_log = load_google_sheet_data(sheet, "LogWpisow")
+            
+            if not df_log.empty:
+                # Procent wpisów od pomocników ze WSZYSTKICH wpisów
+                total_entries_all = len(df_log)
+                admin_entries_all = len(df_log[df_log['Submitter'] == 'poprzeczka (Admin)']) if 'Submitter' in df_log.columns else 0
+                helper_entries_all = total_entries_all - admin_entries_all
+                helper_percentage_all = int((helper_entries_all / total_entries_all * 100)) if total_entries_all > 0 else 0
+                
+                # Procent wpisów od pomocników z OSTATNICH 200 wpisów
+                df_log_recent_200 = df_log.iloc[-200:].copy()
+                total_entries_recent = len(df_log_recent_200)
+                admin_entries_recent = len(df_log_recent_200[df_log_recent_200['Submitter'] == 'poprzeczka (Admin)']) if 'Submitter' in df_log_recent_200.columns else 0
+                helper_entries_recent = total_entries_recent - admin_entries_recent
+                helper_percentage_recent = int((helper_entries_recent / total_entries_recent * 100)) if total_entries_recent > 0 else 0
+        except:
+            pass
+    
+    # Tytuł z wskaźnikami
+    log_title = f"📋 Log (Admin) - Pomoc: {helper_percentage_all}% ({helper_percentage_recent}% z ostatnich 200)"
+    
+    with st.sidebar.expander(log_title, expanded=False):
         if sheet:
             try:
                 df_log = load_google_sheet_data(sheet, "LogWpisow")
                 
                 if not df_log.empty:
-                    df_log_recent = df_log.tail(5).copy()
+                    # ODWRÓCENIE: najnowsze na górze
+                    df_log_recent = df_log.iloc[::-1].head(5).copy()
                     
                     for idx, row in df_log_recent.iterrows():
                         participant = row.get('Participant', 'N/A')
                         timestamp = row.get('Timestamp', 'N/A')
                         day = row.get('Day', 'N/A')
                         status = row.get('Status', 'N/A')
+                        submitter = row.get('Submitter', 'N/A')
+                        
+                        # Ikona wskazująca czy to admin czy helper
+                        submitter_icon = "🤖" if submitter == 'poprzeczka (Admin)' else "🙋"
                         
                         try:
                             ts_obj = pd.to_datetime(timestamp)
@@ -297,16 +329,16 @@ def main():
                         except:
                             time_str = str(timestamp)[-5:]
                         
-                        st.markdown(f"**@{participant}** - Dzień {day} ({status}) - {time_str}")
+                        st.markdown(f"{submitter_icon} **@{participant}** - Dzień {day} ({status}) - {time_str}")
                 else:
                     st.info("Brak wpisów")
             except Exception as e:
                 st.warning(f"Błąd: {e}")
         else:
             st.error("Brak połączenia")
-    st.sidebar.markdown("---\n")
     
-    # === 6. ROUTING I WIDOK GŁÓWNY ===
+    st.sidebar.markdown("---\n")
+# === 6. ROUTING I WIDOK GŁÓWNY ===
     
     match_edition = re.match(r"nav_(\w+?)_(ranking|form)$", st.session_state.nav_selection)
     
