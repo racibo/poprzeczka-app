@@ -200,10 +200,9 @@ def find_last_complete_stage(data, elimination_map, max_day, participants_list):
             continue 
 
         for p in active_participants_on_this_day:
-            has_explicit_entry = day in data.get(p, {})
-            has_future_entry = participant_max_days.get(p, 0) > day
-
-            if not has_explicit_entry and not has_future_entry:
+            max_day_for_participant = participant_max_days.get(p, 0)
+            
+            if max_day_for_participant < day:
                 is_complete_for_all = False
                 break 
         
