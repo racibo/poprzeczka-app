@@ -3,20 +3,32 @@ from datetime import datetime, timedelta
 import pandas as pd
 from streamlit_extras.mention import mention
 from translations import _t
-from config import ALL_POSSIBLE_PARTICIPANTS, SUBMITTER_LIST, EDITIONS
+from config import ALL_POSSIBLE_PARTICIPANTS, SUBMITTER_LIST, EDITIONS_CONFIG
 from google_connect import connect_to_google_sheets, upload_file_to_hosting, append_to_sheet_dual
 from page_current_ranking import calculate_ranking, find_last_complete_stage
 from data_loader import load_google_sheet_data, process_raw_data, load_historical_data_from_json
 
-def show_submission_form(lang, edition_key="november"):
-    # Pobieramy config edycji
-    cfg = EDITIONS.get(edition_key, EDITIONS['november'])
-    sheet_name = cfg['sheet_name']
-    edition_label = cfg['label_' + lang]
-    participants_list = cfg['participants']
+# Zmień definicję funkcji:
+def show_submission_form(lang, edition_key="november", is_active=True):
     
-    st.header(_t('form_header', lang, edition_label))
-    st.info(_t('form_info', lang, edition_label))
+    # Pobieramy config
+    cfg = EDITIONS_CONFIG.get(edition_key) # Używamy teraz EDITIONS_CONFIG z config.py
+    if not cfg:
+        st.error("Błąd konfiguracji edycji.")
+        return
+
+    # Pobieramy nazwę z MONTH_NAMES
+    from config import MONTH_NAMES
+    edition_label = MONTH_NAMES[edition_key][lang]
+    sheet_name = cfg['sheet_name']
+    participants_list = cfg['participants']
+
+# === BLOKADA FORMULARZA ===
+    if not is_active:
+        st.header(_t('form_header', lang, edition_label))
+        st.error(_t('form_error_edition_closed', lang, edition_label))
+        return
+    # ===========================
     
     # Nawiązujemy połączenie RAZ na początku funkcji
     sheet = connect_to_google_sheets()
@@ -70,18 +82,10 @@ def show_submission_form(lang, edition_key="november"):
             step=1,
             key=f"day_{edition_key}"
         )
-
-        # --- NOWY KOD: KALKULATOR DATY ---
-        # Definiujemy daty startowe dla poszczególnych edycji
-        # (Możesz to przenieść do config.py w przyszłości, ale tu zadziała od razu)
-        edition_start_dates = {
-            'november': datetime(2024, 11, 1),
-            'december': datetime(2024, 12, 1),
-            # 'january': datetime(2025, 1, 1), # Na przyszłość
-        }
-
-        start_date = edition_start_dates.get(edition_key)
-        
+# --- KALKULATOR DATY ---
+        start_date = cfg['start_date']
+        if not isinstance(start_date, type(datetime.now())):
+            start_date = datetime.combine(start_date, datetime.min.time())        
         if start_date:
             # Obliczamy datę: Data Startu + (Numer Etapu - 1 dni)
             # Np. Listopad (Start 1.11) + (Etap 31 - 1 = 30 dni) = 1 Grudnia
@@ -261,7 +265,7 @@ def show_submission_form(lang, edition_key="november"):
             part_col = _t('ranking_col_participant', lang)
             
             for ed_key in leader_bonus_editions:
-                ed_cfg = EDITIONS.get(ed_key)
+                ed_cfg = EDITIONS_CONFIG.get(ed_key)
                 if ed_cfg:
                     ed_sheet_name = ed_cfg['sheet_name']
                     ed_participants_list = ed_cfg['participants']
@@ -392,8 +396,8 @@ def show_submission_form(lang, edition_key="november"):
     st.markdown("---")
     st.header(_t('draft_header', lang, edition_label))
     
-    p_nov = EDITIONS.get('november', {}).get('participants', [])
-    p_dec = EDITIONS.get('december', {}).get('participants', [])
+    p_nov = EDITIONS_CONFIG.get('november', {}).get('participants', [])
+    p_dec = EDITIONS_CONFIG.get('december', {}).get('participants', [])
     all_participants_draft = sorted(list(set(p_nov + p_dec)))
     
     selected_participant_for_draft = st.selectbox(
