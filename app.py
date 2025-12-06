@@ -144,14 +144,14 @@ def show_admin_panel_expanded(lang='pl', sheet=None, edition_key='november'):
     st.markdown("---")
     
     # === OSTATNIE WPISY (ŚCIŚLE) ===
-    st.subheader("📝 Ostatnie 10 wpisów")
+    st.subheader("📝 Ostatnie 30 wpisów")
     
     df_log_recent = df_logs.copy()
     if 'Timestamp' in df_log_recent.columns:
         df_log_recent['Timestamp_parsed'] = df_log_recent['Timestamp'].apply(parse_timestamp_safely)
         df_log_recent = df_log_recent.sort_values('Timestamp_parsed', ascending=False, na_position='last')
     
-    df_display = df_log_recent.head(10).copy()
+    df_display = df_log_recent.head(30).copy()
     
     if 'Timestamp' in df_display.columns:
         df_display['Timestamp'] = df_display['Timestamp'].apply(
@@ -166,7 +166,7 @@ def show_admin_panel_expanded(lang='pl', sheet=None, edition_key='november'):
         df_display[available_cols],
         width="stretch",
         hide_index=True,
-        height=220
+        height=800
     )
     
     st.markdown("---")
