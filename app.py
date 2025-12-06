@@ -1,9 +1,12 @@
 import streamlit as st
 from translations import _t
 import pandas as pd
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
+import pytz
 import re
 import traceback
+import matplotlib.pyplot as plt
+import numpy as np
 
 # Importy lokalne
 from config import EDITIONS_CONFIG, MONTH_NAMES
@@ -19,7 +22,399 @@ st.set_page_config(
     page_title="Analiza i Zarządzanie Poprzeczką", 
     page_icon="https://raw.githubusercontent.com/racibo/poprzeczka-app/main/logo.png" 
 )
+# ===== FUNKCJE ADMIN =====
 
+def parse_timestamp_safely(ts_str):
+    """Parsuje timestamp ISO format (2025-11-16T00:00:49.929422)"""
+    if pd.isna(ts_str) or not ts_str or ts_str == "":
+        return None
+    
+    try:
+        # Obsługuj format ISO (z T i bez strefy czasowej)
+        ts_str = str(ts_str).strip()
+        # Jeśli ma T, to ISO format
+        if 'T' in ts_str:
+            return datetime.fromisoformat(ts_str.replace('Z', '+00:00'))
+        # Spróbuj inne formaty
+        formats = [
+            '%Y-%m-%d %H:%M:%S',
+            '%d.%m.%Y %H:%M:%S',
+            '%d.%m.%Y %H:%M',
+            '%Y-%m-%d %H:%M',
+            '%m/%d/%Y %H:%M:%S',
+        ]
+        for fmt in formats:
+            try:
+                return datetime.strptime(ts_str, fmt)
+            except ValueError:
+                continue
+    except Exception:
+        pass
+    
+    return None
+
+def format_timestamp_with_timezone(dt_obj, timezone='Europe/Warsaw'):
+    """Formatuje datetime do formatu: 16.11 09:48"""
+    if dt_obj is None:
+        return "—"
+    try:
+        if dt_obj.tzinfo is None:
+            dt_obj = pytz.UTC.localize(dt_obj)
+        tz = pytz.timezone(timezone)
+        local_dt = dt_obj.astimezone(tz)
+        return local_dt.strftime('%d.%m %H:%M')
+    except Exception as e:
+        return "—"
+
+def format_timestamp_with_timezone(dt_obj, timezone='UTC'):
+    if dt_obj is None:
+        return "—"
+    try:
+        if dt_obj.tzinfo is None:
+            dt_obj = pytz.UTC.localize(dt_obj)
+        tz = pytz.timezone(timezone)
+        local_dt = dt_obj.astimezone(tz)
+        return f"{local_dt.strftime('%d.%m.%Y %H:%M:%S')} ({timezone})"
+    except Exception:
+        return str(dt_obj)
+
+def get_available_timezones():
+    return ['UTC', 'Europe/Warsaw', 'Europe/Berlin', 'Europe/London', 'Europe/Paris', 
+            'Europe/Amsterdam', 'America/New_York', 'America/Los_Angeles', 'Asia/Tokyo', 'Asia/Bangkok']
+
+def generate_admin_social_post(lang, edition_label, max_day_reported, selected_participants, 
+                               df_historical, df_logs, participants_list, include_date=True, 
+                               include_stats=True, include_participants=True, include_helpers=False, 
+                               include_cta=True):
+    md = ""
+    title = f"Raport etapu {max_day_reported} - {edition_label}" if lang == 'pl' else f"Stage {max_day_reported} Report - {edition_label}"
+    md += f"# {title}\n\n"
+    
+    if include_date:
+        now = datetime.now()
+        md += f"📅 **Opublikowano:** {now.strftime('%d.%m.%Y o %H:%M')}\n\n" if lang == 'pl' else f"📅 **Published:** {now.strftime('%m/%d/%Y at %H:%M')}\n\n"
+    
+    if include_participants and selected_participants:
+        mentions = " ".join([f"@{p}" for p in selected_participants])
+        md += f"🎯 **Uczestnicy w raporcie:** {mentions}\n\n" if lang == 'pl' else f"🎯 **Featured Participants:** {mentions}\n\n"
+    
+    if include_stats:
+        active_count = len(selected_participants) if selected_participants else 0
+        total_count = len(participants_list)
+        md += f"## 📊 Podsumowanie Etapu {max_day_reported}\n\n- **Uczestników w raporcie:** {active_count}/{total_count}\n" if lang == 'pl' else f"## 📊 Stage {max_day_reported} Summary\n\n- **Participants Reported:** {active_count}/{total_count}\n"
+        
+        if not df_logs.empty:
+            recent_logs = df_logs[df_logs['Day'].astype(str) == str(max_day_reported)]
+            passed_count = len(recent_logs[recent_logs['Status'].str.strip() == 'Zaliczone']) if not recent_logs.empty else 0
+            md += f"- **Zaliczyli etap:** {passed_count}\n" if lang == 'pl' else f"- **Passed:** {passed_count}\n"
+        md += "\n"
+    
+    if include_helpers and not df_logs.empty:
+        helpers = df_logs[df_logs['Submitter'] != 'poprzeczka (Admin)']['Submitter'].unique()
+        if len(helpers) > 0:
+            helpers_str = ", ".join(helpers)
+            md += f"## 🙋 Dziękujemy\n\nDziękujemy za pomoc w zbieraniu danych: {helpers_str}\n\n" if lang == 'pl' else f"## 🙋 Thanks\n\nThanks for helping with data collection: {helpers_str}\n\n"
+    
+    if include_cta:
+        md += "---\n\n## 📝 Chcesz Wziąć Udział?\n\nWypełnij formularz i dołącz do POPRZECZKI!\n\n" if lang == 'pl' else "---\n\n## 📝 Want to Participate?\n\nFill out the form and join POPRZECZKA!\n\n"
+    
+    md += "\n#poprzeczka #hive #raport #etap #wyzwanie" if lang == 'pl' else "\n#poprzeczka #hive #report #stage #challenge"
+    return md
+def show_admin_panel_expanded(lang='pl', sheet=None, edition_key='november'):
+    """Wyświetla panel administratora w rozwijalnym menu Log."""
+    
+    if not sheet:
+        st.error("Nie można połączyć się z Google Sheets")
+        return
+    
+    try:
+        df_logs = load_google_sheet_data(sheet, "LogWpisow")
+    except Exception as e:
+        st.error(f"Błąd ładowania logów: {e}")
+        return
+    
+    if df_logs.empty:
+        st.info("Brak wpisów w logach")
+        return
+    
+    # === NAZWA EDYCJI ===
+    edition_name = MONTH_NAMES.get(edition_key, {}).get(lang, 'Edycja')
+    st.subheader(f"📋 Panel Administracyjny - {edition_name.upper()}")
+    
+    st.markdown("---")
+    
+    # === OSTATNIE WPISY (ŚCIŚLE) ===
+    st.subheader("📝 Ostatnie 10 wpisów")
+    
+    df_log_recent = df_logs.copy()
+    if 'Timestamp' in df_log_recent.columns:
+        df_log_recent['Timestamp_parsed'] = df_log_recent['Timestamp'].apply(parse_timestamp_safely)
+        df_log_recent = df_log_recent.sort_values('Timestamp_parsed', ascending=False, na_position='last')
+    
+    df_display = df_log_recent.head(10).copy()
+    
+    if 'Timestamp' in df_display.columns:
+        df_display['Timestamp'] = df_display['Timestamp'].apply(
+            lambda x: format_timestamp_with_timezone(parse_timestamp_safely(x), 'Europe/Warsaw')
+        )
+    
+    # Wyświetl tylko ważne kolumny
+    display_cols = ['Participant', 'Day', 'Status', 'Timestamp', 'Submitter']
+    available_cols = [col for col in display_cols if col in df_display.columns]
+    
+    st.dataframe(
+        df_display[available_cols],
+        width="stretch",
+        hide_index=True,
+        height=220
+    )
+    
+    st.markdown("---")
+    
+    # === GENERATOR POSTÓW ===
+    st.subheader("📱 Generator Postów na Media")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        # Wybór dnia
+        editions_list = sorted(df_logs['Day'].unique())
+        if editions_list:
+            selected_day = st.selectbox(
+                f"📅 Etap (dzień) do raportu - {edition_name}:",
+                options=editions_list,
+                index=len(editions_list) - 1,
+                key="post_edition_admin"
+            )
+        else:
+            st.warning("Brak danych w logach")
+            return
+        
+        # Język
+        post_lang = st.radio(
+            "Język:",
+            options=["Polski", "English"],
+            horizontal=True,
+            key="post_lang_admin_expanded"
+        )
+        post_lang_key = 'pl' if post_lang == "Polski" else 'en'
+    
+    with col2:
+        st.markdown("**Zawartość posta:**")
+        include_date = st.checkbox("📅 Data", value=True, key="inc_date")
+        include_ranking = st.checkbox("🏆 Klasyfikacja", value=True, key="inc_ranking")
+        include_stats = st.checkbox("📊 Statystyki", value=True, key="inc_stats")
+        include_helpers = st.checkbox("🙋 Dziękowanie pomocnikom", value=False, key="inc_help")
+    
+    st.divider()
+    
+    # === PRZYCISK GENEROWANIA ===
+    if st.button("✨ Generuj Post dla Etapu " + str(selected_day), type="primary", use_container_width=True):
+        df_selected_stage = df_logs[df_logs['Day'].astype(str) == str(selected_day)]
+        participants_in_stage = sorted(df_selected_stage['Participant'].unique()) if 'Participant' in df_selected_stage.columns else []
+        
+        # === OBLICZ RANKING (OFICJALNY) ===
+        # Ładujemy dane z arkusza edycji
+        try:
+            cfg = EDITIONS_CONFIG.get(edition_key, EDITIONS_CONFIG['november'])
+            sheet_name = cfg['sheet_name']
+            participants_list = cfg['participants']
+            
+            df_raw_data = load_google_sheet_data(sheet, sheet_name)
+            if not df_raw_data.empty:
+                expected_cols = ['Participant', 'Day', 'Status']
+                current_data, max_day, _ = process_raw_data(df_raw_data, post_lang_key, expected_cols, sheet_name)
+                
+                # Oblicz ranking oficjalny
+                from page_current_ranking import calculate_ranking
+                ranking_df, elimination_map = calculate_ranking(current_data, int(selected_day), post_lang_key, participants_list, ranking_type='official')
+            else:
+                ranking_df = pd.DataFrame()
+        except:
+            ranking_df = pd.DataFrame()
+        
+        # === GENERUJ POST ===
+        md = f"# Raport Etapu {selected_day} - {edition_name}\n\n"
+        
+        if include_date:
+            now = datetime.now()
+            md += f"📅 **{now.strftime('%d.%m.%Y o %H:%M')}**\n\n"
+        
+        if include_ranking and not ranking_df.empty:
+            md += "## 🏆 Klasyfikacja\n\n"
+            participant_col = _t('ranking_col_participant', post_lang_key)
+            rank_col = _t('ranking_col_rank', post_lang_key)
+            highest_col = _t('ranking_col_highest_pass', post_lang_key)
+            
+            top_5 = ranking_df.head(5)
+            for idx, row in top_5.iterrows():
+                rank = row[rank_col]
+                participant = row[participant_col]
+                highest = row[highest_col]
+                md += f"{rank}. [@{participant}](https://hive.blog/@{participant}) - Etap: {highest}\n"
+            md += "\n"
+        
+        if include_stats:
+            # Liczba uczestników z KONFIGU (wszyscy którzy startują)
+            cfg = EDITIONS_CONFIG.get(edition_key, {})
+            total_participants = len(cfg.get('participants', [])) if cfg else 0
+            
+            # Z logów: ilu zaliczył
+            passed = len(df_selected_stage[df_selected_stage['Status'].str.strip() == 'Zaliczone'])
+            
+            md += "## 📊 Statystyki Etapu\n\n"
+            md += f"- **Uczestników w edycji:** {total_participants}\n"
+            md += f"- **Zaliczyli etap:** {passed}\n"
+            if total_participants > 0:
+                md += f"- **Procent sukcesu:** {int((passed/total_participants)*100)}%\n"
+            md += "\n"
+        
+        if include_helpers:
+            helpers = df_selected_stage[~df_selected_stage['Submitter'].str.contains('Admin', case=False, na=False)]['Submitter'].unique()
+            if len(helpers) > 0:
+                md += "## 🙋 Dziękujemy\n\n"
+                helpers_str = ", ".join(helpers)
+                md += f"Dziękujemy za pomoc w zbieraniu danych: {helpers_str}\n\n"
+        
+        md += "---\n\n#poprzeczka #hive #raport #etap"
+        
+        st.session_state.admin_generated_post = md
+        st.session_state.admin_post_edited = md
+        st.rerun()
+    
+    # === EDYCJA I WYŚWIETLANIE POSTA ===
+    if 'admin_generated_post' not in st.session_state:
+        st.session_state.admin_generated_post = ""
+    if 'admin_post_edited' not in st.session_state:
+        st.session_state.admin_post_edited = ""
+    
+    if st.session_state.admin_generated_post:
+        st.markdown("---")
+        st.subheader("✏️ Edycja i podgląd")
+        
+        edited_content = st.text_area(
+            "Post:",
+            value=st.session_state.admin_post_edited,
+            height=250,
+            key="admin_post_textarea_expanded"
+        )
+        if edited_content != st.session_state.admin_post_edited:
+            st.session_state.admin_post_edited = edited_content
+        
+        col_preview, col_copy = st.columns(2)
+        
+        with col_preview:
+            with st.expander("👁️ Podgląd HTML"):
+                st.markdown(st.session_state.admin_post_edited)
+        
+        with col_copy:
+            st.info("📋 Skopiuj (Ctrl+C)")
+            st.code(st.session_state.admin_post_edited, language="markdown")
+    
+    st.markdown("---")
+    
+    # === DYNAMIKA WPROWADZANIA DANYCH - WYKRES ===
+    st.subheader("📊 Dynamika Wprowadzania Danych")
+    
+    # Przygotuj dane dla wykresu
+    df_logs_sorted = df_logs.copy()
+    if 'Timestamp' in df_logs_sorted.columns:
+        df_logs_sorted['Timestamp_parsed'] = df_logs_sorted['Timestamp'].apply(parse_timestamp_safely)
+        df_logs_sorted = df_logs_sorted.sort_values('Timestamp_parsed')
+    
+    total_entries = len(df_logs)
+    
+    # Liczba wpisów od różnych czasów
+    last_1_day = len(df_logs_sorted.tail(1))  # Ostatni wpis
+    last_2_days = len(df_logs_sorted.tail(int(total_entries * 0.05)) if total_entries > 0 else df_logs_sorted)
+    last_3_days = len(df_logs_sorted.tail(int(total_entries * 0.1)) if total_entries > 0 else df_logs_sorted)
+    last_4_days = len(df_logs_sorted.tail(int(total_entries * 0.15)) if total_entries > 0 else df_logs_sorted)
+    last_week = len(df_logs_sorted.tail(int(total_entries * 0.35)) if total_entries > 0 else df_logs_sorted)
+    last_2_weeks = len(df_logs_sorted.tail(int(total_entries * 0.65)) if total_entries > 0 else df_logs_sorted)
+    
+    # Procent od pomocników dla każdego okresu
+    def get_helper_pct(df_subset):
+        if len(df_subset) == 0:
+            return 0
+        admin_count = len(df_subset[df_subset['Submitter'].str.contains('Admin', case=False, na=False)]) if 'Submitter' in df_subset.columns else 0
+        helper_count = len(df_subset) - admin_count
+        return int((helper_count / len(df_subset) * 100)) if len(df_subset) > 0 else 0
+    
+    periods = [
+        ("Ostatni dzień", df_logs_sorted.tail(max(1, int(total_entries * 0.02))), "1️⃣"),
+        ("Ostatnie 2 dni", df_logs_sorted.tail(max(1, int(total_entries * 0.05))), "2️⃣"),
+        ("Ostatnie 3 dni", df_logs_sorted.tail(max(1, int(total_entries * 0.1))), "3️⃣"),
+        ("Ostatnie 4 dni", df_logs_sorted.tail(max(1, int(total_entries * 0.15))), "4️⃣"),
+        ("Ostatni tydzień", df_logs_sorted.tail(max(1, int(total_entries * 0.35))), "📅"),
+        ("Ostatnie 2 tygodnie", df_logs_sorted.tail(max(1, int(total_entries * 0.65))), "📆"),
+        ("Od początku", df_logs_sorted, "🌍"),
+    ]
+    
+    # Wykres
+    fig, ax = plt.subplots(figsize=(12, 5))
+    plt.style.use('dark_background')
+    ax.set_facecolor('#0e1117')
+    fig.patch.set_facecolor('#0e1117')
+    
+    period_labels = [p[0] for p in periods]
+    helper_percentages = [get_helper_pct(p[1]) for p in periods]
+    
+    bars = ax.barh(period_labels, helper_percentages, color='#00d9ff', edgecolor='#00a8cc', linewidth=2)
+    
+    # Dodaj wartości na słupkach
+    for i, (bar, pct) in enumerate(zip(bars, helper_percentages)):
+        ax.text(pct + 1, bar.get_y() + bar.get_height()/2, f"{pct}%", 
+                va='center', color='white', fontweight='bold', fontsize=10)
+    
+    ax.set_xlim(0, 105)
+    ax.set_xlabel("% Wpisów od Pomocników" if lang == 'pl' else "% Entries from Helpers", color='white')
+    ax.set_title("Dynamika Wprowadzania Danych" if lang == 'pl' else "Data Entry Dynamics", color='white', fontsize=14, fontweight='bold')
+    ax.tick_params(axis='x', colors='white')
+    ax.tick_params(axis='y', colors='white')
+    for spine in ax.spines.values():
+        spine.set_color('#444444')
+    
+    st.pyplot(fig)
+    
+    st.markdown("---")
+    
+    # === STATYSTYKI GŁÓWNE ===
+    st.subheader("📈 Statystyki Ogólne")
+    
+    admin_count = len(df_logs[df_logs['Submitter'].str.contains('Admin', case=False, na=False)]) if 'Submitter' in df_logs.columns else 0
+    helper_count = total_entries - admin_count
+    helper_pct_all = int((helper_count / total_entries * 100)) if total_entries > 0 else 0
+    unique_helpers = df_logs[~df_logs['Submitter'].str.contains('Admin', case=False, na=False)]['Submitter'].nunique() if 'Submitter' in df_logs.columns else 0
+    
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        st.metric(
+            "Razem wpisów" if lang == 'pl' else "Total Entries",
+            total_entries,
+            delta=None
+        )
+    
+    with col2:
+        st.metric(
+            "% od Pomocników" if lang == 'pl' else "% from Helpers",
+            f"{helper_pct_all}%",
+            delta=f"Ostatnie 30 min: {get_helper_pct(df_logs_sorted.tail(max(1, int(total_entries * 0.02))))}%" if lang == 'pl' else f"Last 30 min: {get_helper_pct(df_logs_sorted.tail(max(1, int(total_entries * 0.02))))}%"
+        )
+    
+    with col3:
+        st.metric(
+            "Wpisy Admina" if lang == 'pl' else "Admin Entries",
+            admin_count,
+            delta=f"{helper_count} od pomocników" if lang == 'pl' else f"{helper_count} from helpers"
+        )
+    
+    with col4:
+        st.metric(
+            "Aktywni Pomocnicy" if lang == 'pl' else "Active Helpers",
+            unique_helpers,
+            delta=f"osób pomagających" if lang == 'pl' else "people helping"
+        )
 def check_if_edition_is_finished(sheet, edition_key):
     """
     Sprawdza czy edycja jest zakończona (wszyscy uczestnicy odpadli).
@@ -263,8 +658,8 @@ def main():
     st.sidebar.markdown("---\n")
 
     # === 5. MENU STATYCZNE ===
+
     st.sidebar.subheader(_t('nav_static_header', lang))
-    
     static_buttons = [
         (_t('nav_historical_stats', lang), 'nav_historical_stats'),
         (_t('nav_rules', lang), 'nav_rules'),
@@ -303,40 +698,22 @@ def main():
     
     # Tytuł z wskaźnikami
     log_title = f"📋 Log (Admin) - Pomoc: {helper_percentage_all}% ({helper_percentage_recent}% z ostatnich 200)"
-    
     with st.sidebar.expander(log_title, expanded=False):
-        if sheet:
-            try:
-                df_log = load_google_sheet_data(sheet, "LogWpisow")
-                
-                if not df_log.empty:
-                    # ODWRÓCENIE: najnowsze na górze
-                    df_log_recent = df_log.iloc[::-1].head(5).copy()
-                    
-                    for idx, row in df_log_recent.iterrows():
-                        participant = row.get('Participant', 'N/A')
-                        timestamp = row.get('Timestamp', 'N/A')
-                        day = row.get('Day', 'N/A')
-                        status = row.get('Status', 'N/A')
-                        submitter = row.get('Submitter', 'N/A')
-                        
-                        # Ikona wskazująca czy to admin czy helper
-                        submitter_icon = "🤖" if submitter == 'poprzeczka (Admin)' else "🙋"
-                        
-                        try:
-                            ts_obj = pd.to_datetime(timestamp)
-                            time_str = ts_obj.strftime('%H:%M')
-                        except:
-                            time_str = str(timestamp)[-5:]
-                        
-                        st.markdown(f"{submitter_icon} **@{participant}** - Dzień {day} ({status}) - {time_str}")
-                else:
-                    st.info("Brak wpisów")
-            except Exception as e:
-                st.warning(f"Błąd: {e}")
-        else:
-            st.error("Brak połączenia")
-    
+        # Znalezienie aktualnej edycji
+        active_edition_key = None
+        for key, status_data in edition_statuses.items():
+            if status_data['status'] == 'ACTIVE':
+                active_edition_key = key
+                break
+        if not active_edition_key:
+            for key, status_data in edition_statuses.items():
+                if status_data['status'] == 'FINALIZATION':
+                    active_edition_key = key
+                    break
+        if not active_edition_key:
+            active_edition_key = 'november'
+        
+        show_admin_panel_expanded(lang=lang, sheet=sheet, edition_key=active_edition_key)
     st.sidebar.markdown("---\n")
 # === 6. ROUTING I WIDOK GŁÓWNY ===
     
@@ -368,6 +745,9 @@ def main():
         3. {_t('join_step_3', lang)}
         4. {_t('join_step_4', lang)}
         """)
+    elif st.session_state.nav_selection == 'admin_panel':
+        show_admin_panel(lang=lang, sheet=sheet)
+
     elif st.session_state.nav_selection == 'about_app':
         st.header(_t('about_app', lang))
         st.markdown(_t('about_app_text', lang))
