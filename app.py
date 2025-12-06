@@ -139,12 +139,9 @@ def show_admin_panel_expanded(lang='pl', sheet=None, edition_key='november'):
     
     # === NAZWA EDYCJI ===
     edition_name = MONTH_NAMES.get(edition_key, {}).get(lang, 'Edycja')
-    st.subheader(f"📋 Panel Administracyjny - {edition_name.upper()}")
-    
-    st.markdown("---")
     
     # === OSTATNIE WPISY (ŚCIŚLE) ===
-    st.subheader("📝 Ostatnie 30 wpisów")
+    st.subheader("📝 Ostatnie 30 wpisów:")
     
     df_log_recent = df_logs.copy()
     if 'Timestamp' in df_log_recent.columns:
