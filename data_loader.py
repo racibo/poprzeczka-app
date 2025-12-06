@@ -3,15 +3,33 @@ import streamlit as st
 import json
 from translations import _t
 
-def load_google_sheet_data(sheet, worksheet_name):
+# Zmiana nazwy argumentu 'sheet' na '_sheet' jest kluczowa dla st.cache_data!
+# Zapobiega to błędowi "UnhashableParamError".
+@st.cache_data(ttl=600, show_spinner="Pobieranie danych z Google Sheets...")
+def load_google_sheet_data(_sheet, worksheet_name):
+    """
+    Ładuje dane z Google Sheets.
+    Cache ustawiony na 10 minut (ttl=600 sekund).
+    Argument '_sheet' ma podkreślenie, aby Streamlit nie próbował go hashować.
+    """
     try:
-        worksheet = sheet.worksheet(worksheet_name)
+        if _sheet is None:
+            return pd.DataFrame()
+        
+        # Pobieranie danych
+        worksheet = _sheet.worksheet(worksheet_name)
         data = worksheet.get_all_records()
         return pd.DataFrame(data)
-    except Exception:
+    except Exception as e:
+        # W razie błędu zwracamy pusty DataFrame, nie cachujemy błędu
+        st.error(f"Błąd pobierania danych: {e}")
         return pd.DataFrame()
 
+@st.cache_data(ttl=300)  # Cache na 5 minut (rzadko się zmienia)
 def load_historical_data_from_json():
+    """
+    Ładuje dane historyczne z JSON z cache'owaniem.
+    """
     try:
         with open('historical_results.json', 'r') as f:
             data = json.load(f)
@@ -27,7 +45,6 @@ def load_historical_data_from_json():
         
         if not df.empty:
             df['miesiac'] = pd.to_datetime(df['miesiac_rok_str'], format='%m.%Y')
-            # POPRAWKA: Upewniamy się, że 'rezultat_raw' istnieje
             df['rezultat_raw'] = df['rezultat_uczestnika'].astype(str)
             df['rezultat_numeric'] = pd.to_numeric(df['rezultat_uczestnika'], errors='coerce')
             
@@ -40,10 +57,18 @@ def load_historical_data_from_json():
         return pd.DataFrame()
 
 def process_raw_data(df_raw, lang, expected_cols, sheet_name_for_error_msg):
+    """
+    Przetwarza surowe dane - NIE cachujemy bo to operacja lokalna na danych z pamięci.
+    """
     current_data = {}
     max_day_reported = 0
     
+    if df_raw.empty:
+         # Cicha obsługa pustego DF, żeby nie straszyć użytkownika na starcie
+        return {}, 0, True
+
     if not all(col in df_raw.columns for col in expected_cols):
+        # Sprawdzamy czy nagłówki się zgadzają tylko jeśli są dane
         st.error(_t('current_header_check_error', lang))
         return {}, 0, False
 
