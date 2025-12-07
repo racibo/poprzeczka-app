@@ -6,8 +6,33 @@ import numpy as np
 from datetime import datetime
 from translations import _t
 from data_loader import load_historical_data_from_json
+from page_chronicle import show_chronicle
 
 def show_historical_stats(lang):
+    st.header(_t('title', lang))
+    
+    df = load_historical_data_from_json() 
+
+    if df.empty:
+        st.info("Brak danych historycznych do wyświetlenia.")
+        st.stop()
+# === POPRAWKA OSTRZEŻENIA O NAZWACH KOLUMN ===
+    # Upewnia się, że wszystkie nazwy kolumn są typu string
+    df.columns = df.columns.astype(str) 
+    # ============================================
+
+    # === 2. WSTAWIAMY KRONIKĘ TUTAJ (NA GÓRZE) ===
+    # Używamy ekspandera, żeby domyślnie nie zajmowało to całej strony
+    # Ale użytkownik może sobie kliknąć i przeglądać
+    chronicle_label = "📜 KRONIKA ROZGRYWEK (Kliknij, aby rozwinąć)" if lang == 'pl' else "📜 COMPETITION CHRONICLE (Click to expand)"
+    
+    with st.expander(chronicle_label, expanded=False):
+        show_chronicle(df, lang)
+    
+    st.markdown("---") 
+    # ============================================
+
+    participant_col_name = _t('participant', lang)
     st.header(_t('title', lang))
     
     df = load_historical_data_from_json() 
