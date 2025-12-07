@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import json
+from datetime import datetime
 from translations import _t
 
 # Zmiana nazwy argumentu 'sheet' na '_sheet' jest kluczowa dla st.cache_data!
@@ -25,37 +26,62 @@ def load_google_sheet_data(_sheet, worksheet_name):
         st.error(f"Błąd pobierania danych: {e}")
         return pd.DataFrame()
 
+# W pliku data_loader.py
 @st.cache_data(ttl=300)  # Cache na 5 minut (rzadko się zmienia)
 def load_historical_data_from_json():
     """
     Ładuje dane historyczne z JSON z cache'owaniem.
     """
     try:
-        with open('historical_results.json', 'r') as f:
+        with open('historical_results.json', 'r', encoding='utf-8') as f:
             data = json.load(f)
+
+        df = pd.DataFrame()
+        records = []
         
-        rows = []
-        for user, user_data in data.items():
-            for period, stats in user_data.items():
-                row = {'uczestnik': user, 'miesiac_rok_str': period}
-                row.update(stats)
-                rows.append(row)
-        
-        df = pd.DataFrame(rows)
-        
-        if not df.empty:
-            df['miesiac'] = pd.to_datetime(df['miesiac_rok_str'], format='%m.%Y')
-            df['rezultat_raw'] = df['rezultat_uczestnika'].astype(str)
+        # Przetwarzanie danych
+        for participant, editions in data.items():
+            for edition_str, values in editions.items():
+                try:
+                    month, year = map(int, edition_str.split('.'))
+                    # Używamy zaimportowanej klasy datetime
+                    date_obj = datetime(year, month, 1)
+                except ValueError:
+                    # Pomijamy błędne daty
+                    continue
+                
+                # Dodajemy rekord
+                record = {
+                    'uczestnik': participant,
+                    'miesiac_rok_str': edition_str,
+                    'miesiac': date_obj,
+                    'rok': year,
+                    # Zmienne wyniki
+                    'miejsce': values.get('miejsce'),
+                    'rezultat_uczestnika': values.get('rezultat_uczestnika'),
+                    'status': values.get('status', 'Brak')
+                }
+                records.append(record)
+
+        if records:
+            df = pd.DataFrame(records)
+
+            # Poprawka na ostrzeżenie o mixed type
+            df.columns = df.columns.astype(str)
+            
+            # Konwersja kolumn
+            df['miesiac'] = pd.to_datetime(df['miesiac'])
+            df['miejsce'] = pd.to_numeric(df['miejsce'], errors='coerce').astype('Int64')
             df['rezultat_numeric'] = pd.to_numeric(df['rezultat_uczestnika'], errors='coerce')
             
-            unique_months = sorted(df['miesiac'].unique())
-            month_to_edition = {m: i+1 for i, m in enumerate(unique_months)}
+            # Wstawienie numeru edycji
+            all_months = df['miesiac'].sort_values().unique()
+            month_to_edition = {month: i + 1 for i, month in enumerate(all_months)}
             df['edycja_nr'] = df['miesiac'].map(month_to_edition)
             
         return df
     except FileNotFoundError:
         return pd.DataFrame()
-
 def process_raw_data(df_raw, lang, expected_cols, sheet_name_for_error_msg):
     """
     Przetwarza surowe dane - NIE cachujemy bo to operacja lokalna na danych z pamięci.
