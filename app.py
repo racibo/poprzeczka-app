@@ -17,10 +17,9 @@ from google_connect import connect_to_google_sheets
 from data_loader import load_google_sheet_data, process_raw_data
 
 # ==============================================================================
-# 🎯 KOD GOOGLE ANALYTICS
-# Wklejamy cały fragment z GA4, używając bloku markdown
+# 🎯 KOD GOOGLE ANALYTICS (Bezpośrednie wstawienie)
 # ==============================================================================
-GA_CODE = """
+st.markdown("""
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-TV1NG7TEL6"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -29,9 +28,7 @@ GA_CODE = """
 
   gtag('config', 'G-TV1NG7TEL6');
 </script>
-"""
-# Dodaj kod Analytics do strony używając niebezpiecznego HTML
-st.markdown(GA_CODE, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 # ==============================================================================
 
 
