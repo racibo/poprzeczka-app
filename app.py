@@ -140,7 +140,7 @@ def show_admin_panel_expanded(lang='pl', sheet=None, edition_key='november'):
     # === NAZWA EDYCJI ===
     edition_name = MONTH_NAMES.get(edition_key, {}).get(lang, 'Edycja')
     
-    # === OSTATNIE WPISY (ŚCIŚLE) ===
+    # === OSTATNIE WPISY (ZMODYFIKOWANA TABELA) ===
     st.subheader("📝 Ostatnie 30 wpisów:")
     
     df_log_recent = df_logs.copy()
@@ -155,15 +155,31 @@ def show_admin_panel_expanded(lang='pl', sheet=None, edition_key='november'):
             lambda x: format_timestamp_with_timezone(parse_timestamp_safely(x), 'Europe/Warsaw')
         )
     
-    # Wyświetl tylko ważne kolumny
-    display_cols = ['Participant', 'Day', 'Status', 'Timestamp', 'Submitter']
-    available_cols = [col for col in display_cols if col in df_display.columns]
+    # Definicja pożądanej kolejności kolumn
+    # Próbujemy znaleźć kolumnę "Notatki" lub "Notes", jeśli nazwa jest inna
+    notes_col = 'Notatki'
+    if notes_col not in df_display.columns and 'Notes' in df_display.columns:
+        notes_col = 'Notes'
+        
+    target_cols = ['Participant', 'Submitter', 'Timestamp', 'Day', 'Status', notes_col]
+    
+    # Wybieramy tylko te kolumny, które faktycznie istnieją w danych
+    available_cols = [col for col in target_cols if col in df_display.columns]
     
     st.dataframe(
         df_display[available_cols],
-        width="stretch",
+        # Zmieniono 'width=None' na 'width="stretch"'
+        width="stretch", 
         hide_index=True,
-        height=800
+        height=600,
+        column_config={
+            "Timestamp": st.column_config.TextColumn("Czas", width="medium"),
+            "Participant": st.column_config.TextColumn("Uczestnik", width="medium"),
+            "Submitter": st.column_config.TextColumn("Zgłaszający", width="medium"),
+            "Day": st.column_config.TextColumn("Dzień", width="small"),
+            "Status": st.column_config.TextColumn("Status", width="small"),
+            notes_col: st.column_config.TextColumn("Notatki", width="large"),
+        }
     )
     
     st.markdown("---")
@@ -175,7 +191,11 @@ def show_admin_panel_expanded(lang='pl', sheet=None, edition_key='november'):
     
     with col1:
         # Wybór dnia
-        editions_list = sorted(df_logs['Day'].unique())
+        if 'Day' in df_logs.columns:
+            editions_list = sorted(df_logs['Day'].unique())
+        else:
+            editions_list = []
+
         if editions_list:
             selected_day = st.selectbox(
                 f"📅 Etap (dzień) do raportu - {edition_name}:",
@@ -185,7 +205,7 @@ def show_admin_panel_expanded(lang='pl', sheet=None, edition_key='november'):
             )
         else:
             st.warning("Brak danych w logach")
-            return
+            selected_day = 1
         
         # Język
         post_lang = st.radio(
@@ -208,21 +228,18 @@ def show_admin_panel_expanded(lang='pl', sheet=None, edition_key='november'):
     # === PRZYCISK GENEROWANIA ===
     if st.button("✨ Generuj Post dla Etapu " + str(selected_day), type="primary", use_container_width=True):
         df_selected_stage = df_logs[df_logs['Day'].astype(str) == str(selected_day)]
-        participants_in_stage = sorted(df_selected_stage['Participant'].unique()) if 'Participant' in df_selected_stage.columns else []
         
         # === OBLICZ RANKING (OFICJALNY) ===
-        # Ładujemy dane z arkusza edycji
         try:
-            cfg = EDITIONS_CONFIG.get(edition_key, EDITIONS_CONFIG['november'])
-            sheet_name = cfg['sheet_name']
-            participants_list = cfg['participants']
+            cfg = EDITIONS_CONFIG.get(edition_key, EDITIONS_CONFIG.get('november', {}))
+            sheet_name = cfg.get('sheet_name', '')
+            participants_list = cfg.get('participants', [])
             
             df_raw_data = load_google_sheet_data(sheet, sheet_name)
             if not df_raw_data.empty:
                 expected_cols = ['Participant', 'Day', 'Status']
                 current_data, max_day, _ = process_raw_data(df_raw_data, post_lang_key, expected_cols, sheet_name)
                 
-                # Oblicz ranking oficjalny
                 from page_current_ranking import calculate_ranking
                 ranking_df, elimination_map = calculate_ranking(current_data, int(selected_day), post_lang_key, participants_list, ranking_type='official')
             else:
@@ -230,7 +247,7 @@ def show_admin_panel_expanded(lang='pl', sheet=None, edition_key='november'):
         except:
             ranking_df = pd.DataFrame()
         
-        # === GENERUJ POST ===
+        # === GENERUJ TREŚĆ POSTA ===
         md = f"# Raport Etapu {selected_day} - {edition_name}\n\n"
         
         if include_date:
@@ -252,11 +269,8 @@ def show_admin_panel_expanded(lang='pl', sheet=None, edition_key='november'):
             md += "\n"
         
         if include_stats:
-            # Liczba uczestników z KONFIGU (wszyscy którzy startują)
             cfg = EDITIONS_CONFIG.get(edition_key, {})
             total_participants = len(cfg.get('participants', [])) if cfg else 0
-            
-            # Z logów: ilu zaliczył
             passed = len(df_selected_stage[df_selected_stage['Status'].str.strip() == 'Zaliczone'])
             
             md += "## 📊 Statystyki Etapu\n\n"
@@ -299,85 +313,109 @@ def show_admin_panel_expanded(lang='pl', sheet=None, edition_key='november'):
             st.session_state.admin_post_edited = edited_content
         
         col_preview, col_copy = st.columns(2)
-        
         with col_preview:
             with st.expander("👁️ Podgląd HTML"):
                 st.markdown(st.session_state.admin_post_edited)
-        
         with col_copy:
             st.info("📋 Skopiuj (Ctrl+C)")
             st.code(st.session_state.admin_post_edited, language="markdown")
     
     st.markdown("---")
     
-    # === DYNAMIKA WPROWADZANIA DANYCH - WYKRES ===
-    st.subheader("📊 Dynamika Wprowadzania Danych")
+    # === DYNAMIKA WPROWADZANIA DANYCH - NOWY WYKRES LINIOWY ===
+    st.subheader("📊 Dynamika Pomocy (Wykres w Czasie)")
     
-    # Przygotuj dane dla wykresu
-    df_logs_sorted = df_logs.copy()
-    if 'Timestamp' in df_logs_sorted.columns:
-        df_logs_sorted['Timestamp_parsed'] = df_logs_sorted['Timestamp'].apply(parse_timestamp_safely)
-        df_logs_sorted = df_logs_sorted.sort_values('Timestamp_parsed')
+    # 1. Przygotowanie danych
+    df_chart = df_logs.copy()
+    if 'Timestamp' in df_chart.columns:
+        df_chart['Timestamp_parsed'] = df_chart['Timestamp'].apply(parse_timestamp_safely)
+        # Usuń wiersze bez daty
+        df_chart = df_chart.dropna(subset=['Timestamp_parsed'])
+        df_chart['Date'] = df_chart['Timestamp_parsed'].apply(lambda x: x.date())
+    else:
+        st.warning("Brak kolumny Timestamp do wygenerowania wykresu.")
+        return
+
+    # Oznaczamy czy wpis jest od pomocnika (nie Admin)
+    # Zakładamy, że admin to 'poprzeczka (Admin)' lub zawiera 'Admin'
+    df_chart['IsHelper'] = df_chart['Submitter'].apply(
+        lambda x: 0 if 'Admin' in str(x) else 1
+    )
     
-    total_entries = len(df_logs)
+    # Agregacja dzienna
+    daily_stats = df_chart.groupby('Date').agg(
+        TotalEntries=('Participant', 'count'),
+        HelperEntries=('IsHelper', 'sum')
+    ).sort_index()
     
-    # Liczba wpisów od różnych czasów
-    last_1_day = len(df_logs_sorted.tail(1))  # Ostatni wpis
-    last_2_days = len(df_logs_sorted.tail(int(total_entries * 0.05)) if total_entries > 0 else df_logs_sorted)
-    last_3_days = len(df_logs_sorted.tail(int(total_entries * 0.1)) if total_entries > 0 else df_logs_sorted)
-    last_4_days = len(df_logs_sorted.tail(int(total_entries * 0.15)) if total_entries > 0 else df_logs_sorted)
-    last_week = len(df_logs_sorted.tail(int(total_entries * 0.35)) if total_entries > 0 else df_logs_sorted)
-    last_2_weeks = len(df_logs_sorted.tail(int(total_entries * 0.65)) if total_entries > 0 else df_logs_sorted)
-    
-    # Procent od pomocników dla każdego okresu
-    def get_helper_pct(df_subset):
-        if len(df_subset) == 0:
-            return 0
-        admin_count = len(df_subset[df_subset['Submitter'].str.contains('Admin', case=False, na=False)]) if 'Submitter' in df_subset.columns else 0
-        helper_count = len(df_subset) - admin_count
-        return int((helper_count / len(df_subset) * 100)) if len(df_subset) > 0 else 0
-    
-    periods = [
-        ("Ostatni dzień", df_logs_sorted.tail(max(1, int(total_entries * 0.02))), "1️⃣"),
-        ("Ostatnie 2 dni", df_logs_sorted.tail(max(1, int(total_entries * 0.05))), "2️⃣"),
-        ("Ostatnie 3 dni", df_logs_sorted.tail(max(1, int(total_entries * 0.1))), "3️⃣"),
-        ("Ostatnie 4 dni", df_logs_sorted.tail(max(1, int(total_entries * 0.15))), "4️⃣"),
-        ("Ostatni tydzień", df_logs_sorted.tail(max(1, int(total_entries * 0.35))), "📅"),
-        ("Ostatnie 2 tygodnie", df_logs_sorted.tail(max(1, int(total_entries * 0.65))), "📆"),
-        ("Od początku", df_logs_sorted, "🌍"),
-    ]
-    
-    # Wykres
-    fig, ax = plt.subplots(figsize=(12, 5))
-    plt.style.use('dark_background')
-    ax.set_facecolor('#0e1117')
-    fig.patch.set_facecolor('#0e1117')
-    
-    period_labels = [p[0] for p in periods]
-    helper_percentages = [get_helper_pct(p[1]) for p in periods]
-    
-    bars = ax.barh(period_labels, helper_percentages, color='#00d9ff', edgecolor='#00a8cc', linewidth=2)
-    
-    # Dodaj wartości na słupkach
-    for i, (bar, pct) in enumerate(zip(bars, helper_percentages)):
-        ax.text(pct + 1, bar.get_y() + bar.get_height()/2, f"{pct}%", 
-                va='center', color='white', fontweight='bold', fontsize=10)
-    
-    ax.set_xlim(0, 105)
-    ax.set_xlabel("% Wpisów od Pomocników" if lang == 'pl' else "% Entries from Helpers", color='white')
-    ax.set_title("Dynamika Wprowadzania Danych" if lang == 'pl' else "Data Entry Dynamics", color='white', fontsize=14, fontweight='bold')
-    ax.tick_params(axis='x', colors='white')
-    ax.tick_params(axis='y', colors='white')
-    for spine in ax.spines.values():
-        spine.set_color('#444444')
-    
-    st.pyplot(fig)
-    
+    if daily_stats.empty:
+        st.info("Za mało danych do wygenerowania wykresu.")
+    else:
+        # Funkcja pomocnicza do obliczania procentu na oknach (Rolling Sum Helpers / Rolling Sum Total)
+        # Nie można robić średniej z procentów dziennych, trzeba sumować liczniki i mianowniki.
+        def calculate_rolling_pct(df, window):
+            rolled_helpers = df['HelperEntries'].rolling(window=window, min_periods=1).sum()
+            rolled_total = df['TotalEntries'].rolling(window=window, min_periods=1).sum()
+            # Unikamy dzielenia przez zero
+            return (rolled_helpers / rolled_total.replace(0, 1) * 100).fillna(0)
+
+        # 2. Obliczanie serii danych
+        # A. Pomoc w danym dniu
+        daily_stats['Pct_Daily'] = (daily_stats['HelperEntries'] / daily_stats['TotalEntries'].replace(0, 1) * 100).fillna(0)
+        
+        # B. Ostatnie 2 dni (Rolling 2)
+        daily_stats['Pct_2Day'] = calculate_rolling_pct(daily_stats, window=2)
+        
+        # C. Ostatni tydzień (Rolling 7)
+        daily_stats['Pct_7Day'] = calculate_rolling_pct(daily_stats, window=7)
+        
+        # D. Ostatni miesiąc (Rolling 30)
+        daily_stats['Pct_30Day'] = calculate_rolling_pct(daily_stats, window=30)
+        
+        # E. Od początku (Cumulative)
+        daily_stats['Cum_Helpers'] = daily_stats['HelperEntries'].cumsum()
+        daily_stats['Cum_Total'] = daily_stats['TotalEntries'].cumsum()
+        daily_stats['Pct_AllTime'] = (daily_stats['Cum_Helpers'] / daily_stats['Cum_Total'].replace(0, 1) * 100).fillna(0)
+        
+        # 3. Rysowanie Wykresu
+        fig, ax = plt.subplots(figsize=(12, 6))
+        plt.style.use('dark_background')
+        ax.set_facecolor('#0e1117')
+        fig.patch.set_facecolor('#0e1117')
+        
+        dates = daily_stats.index
+        
+        # Rysowanie linii z różnymi stylami
+        ax.plot(dates, daily_stats['Pct_Daily'], label='Dzień (Daily)', color='#88FFFF', alpha=0.5, linewidth=1, linestyle=':')
+        ax.plot(dates, daily_stats['Pct_2Day'], label='2 Dni (Rolling)', color='#00d9ff', linewidth=1.5, linestyle='--')
+        ax.plot(dates, daily_stats['Pct_7Day'], label='Tydzień (7 days)', color='#00ff9d', linewidth=2)
+        ax.plot(dates, daily_stats['Pct_30Day'], label='Miesiąc (30 days)', color='#ffcc00', linewidth=2)
+        ax.plot(dates, daily_stats['Pct_AllTime'], label='Od początku (All time)', color='#ff0055', linewidth=3)
+        
+        # Formatowanie
+        ax.set_ylim(0, 105)
+        ax.set_ylabel("% Pomocy (Entries form Helpers)", color='white')
+        ax.set_xlabel("Data", color='white')
+        ax.set_title("Dynamika Zaangażowania Społeczności", color='white', fontsize=14, fontweight='bold')
+        
+        # Legenda
+        ax.legend(loc='upper left', frameon=True, facecolor='#262730', edgecolor='white')
+        
+        # Siatka i kolory osi
+        ax.grid(color='#444444', linestyle='--', linewidth=0.5, alpha=0.5)
+        ax.tick_params(axis='x', colors='white', rotation=45)
+        ax.tick_params(axis='y', colors='white')
+        for spine in ax.spines.values():
+            spine.set_color('#444444')
+            
+        st.pyplot(fig)
+
     st.markdown("---")
     
-    # === STATYSTYKI GŁÓWNE ===
+    # === STATYSTYKI GŁÓWNE (LICZBY) ===
     st.subheader("📈 Statystyki Ogólne")
     
+    total_entries = len(df_logs)
     admin_count = len(df_logs[df_logs['Submitter'].str.contains('Admin', case=False, na=False)]) if 'Submitter' in df_logs.columns else 0
     helper_count = total_entries - admin_count
     helper_pct_all = int((helper_count / total_entries * 100)) if total_entries > 0 else 0
@@ -386,32 +424,16 @@ def show_admin_panel_expanded(lang='pl', sheet=None, edition_key='november'):
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric(
-            "Razem wpisów" if lang == 'pl' else "Total Entries",
-            total_entries,
-            delta=None
-        )
+        st.metric("Razem wpisów", total_entries)
     
     with col2:
-        st.metric(
-            "% od Pomocników" if lang == 'pl' else "% from Helpers",
-            f"{helper_pct_all}%",
-            delta=f"Ostatnie 30 min: {get_helper_pct(df_logs_sorted.tail(max(1, int(total_entries * 0.02))))}%" if lang == 'pl' else f"Last 30 min: {get_helper_pct(df_logs_sorted.tail(max(1, int(total_entries * 0.02))))}%"
-        )
+        st.metric("% od Pomocników (Total)", f"{helper_pct_all}%")
     
     with col3:
-        st.metric(
-            "Wpisy Admina" if lang == 'pl' else "Admin Entries",
-            admin_count,
-            delta=f"{helper_count} od pomocników" if lang == 'pl' else f"{helper_count} from helpers"
-        )
+        st.metric("Wpisy Admina", admin_count)
     
     with col4:
-        st.metric(
-            "Aktywni Pomocnicy" if lang == 'pl' else "Active Helpers",
-            unique_helpers,
-            delta=f"osób pomagających" if lang == 'pl' else "people helping"
-        )
+        st.metric("Aktywni Pomocnicy", unique_helpers)
 def check_if_edition_is_finished(sheet, edition_key):
     """
     Sprawdza czy edycja jest zakończona (wszyscy uczestnicy odpadli).
