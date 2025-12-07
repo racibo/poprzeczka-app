@@ -16,6 +16,25 @@ from page_historical_stats import show_historical_stats
 from google_connect import connect_to_google_sheets
 from data_loader import load_google_sheet_data, process_raw_data
 
+# ==============================================================================
+# 🎯 KOD GOOGLE ANALYTICS
+# Wklejamy cały fragment z GA4, używając bloku markdown
+# ==============================================================================
+GA_CODE = """
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TV1NG7TEL6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TV1NG7TEL6');
+</script>
+"""
+# Dodaj kod Analytics do strony używając niebezpiecznego HTML
+st.markdown(GA_CODE, unsafe_allow_html=True)
+# ==============================================================================
+
+
 # --- Ustawienia Strony ---
 st.set_page_config(
     layout="wide", 
