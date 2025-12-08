@@ -212,7 +212,7 @@ def show_historical_stats(lang):
     else:
         st.info(_t('no_data_selected', lang))
 
-    # === ZESTAWIENIE MIESIĘCZNE (TABELE) ===
+# === ZESTAWIENIE MIESIĘCZNE (TABELE) ===
     st.subheader(_t('monthly_summary', lang))
     st.write(_t('monthly_summary_desc', lang))
 
@@ -228,7 +228,7 @@ def show_historical_stats(lang):
                 values='rezultat_raw', 
                 aggfunc='first'
             )
-            monthly_results_pivot = monthly_results_pivot.fillna('—').replace({'None': '—', None: '—'})
+            monthly_results_pivot = monthly_results_pivot.fillna('–').replace({'None': '–', None: '–'})
             monthly_results_pivot = monthly_results_pivot.reindex(columns=sorted_columns)
             
             avg_result_sort = summary_data.groupby('uczestnik')['rezultat_numeric'].mean().sort_values(ascending=False)
@@ -237,17 +237,20 @@ def show_historical_stats(lang):
             monthly_results_display = monthly_results_pivot.reset_index().rename(columns={'uczestnik': participant_col_name})
             st.dataframe(monthly_results_display, width="stretch", hide_index=True)
         else:
-            st.error("Błąd danych: brak kolumny 'rezultat_raw'.")
+            st.info("ℹ️ Kolumna 'rezultat_raw' niedostępna - pomijam tabelę wyników.")
 
         # Tabela Miejsc
         st.subheader(_t('monthly_summary_positions', lang))
+        
         monthly_positions_pivot = summary_data.pivot_table(
             index='uczestnik',
             columns='miesiac_rok_str',
             values='miejsce',
-            aggfunc=lambda x: f"{int(x.iloc[0])}" if pd.notna(x.iloc[0]) else '—'
+            aggfunc='first'
         )
-        monthly_positions_pivot = monthly_positions_pivot.fillna('—').replace({'None': '—', None: '—'})
+        
+        monthly_positions_pivot = monthly_positions_pivot.astype(str)
+        monthly_positions_pivot = monthly_positions_pivot.replace({'<NA>': '–', 'nan': '–', 'None': '–', np.nan: '–'})
         monthly_positions_pivot = monthly_positions_pivot.reindex(columns=sorted_columns)
         
         avg_pos_sort = summary_data.groupby('uczestnik')['miejsce'].mean().sort_values()
@@ -257,7 +260,6 @@ def show_historical_stats(lang):
         st.dataframe(monthly_positions_display, width="stretch", hide_index=True)
     else:
         st.info(_t('no_data_selected', lang))
-
     # === WYŚCIG MEDALOWY ===
     st.subheader(_t('medal_race_title', lang))
     st.write(_t('medal_race_desc', lang))
@@ -354,6 +356,7 @@ def show_historical_stats(lang):
         heatmap_pivot = heatmap_pivot.reindex(columns=sorted_cols)
         avg_pos_hm = heatmap_df.groupby('uczestnik')['miejsce'].mean().sort_values().index
         heatmap_pivot = heatmap_pivot.reindex(index=avg_pos_hm)
+        heatmap_pivot = heatmap_pivot.astype(float)
 
         fig_heatmap, ax_heatmap = plt.subplots(figsize=(18, max(6, len(heatmap_pivot.index) * 0.5)))
         sns.heatmap(
