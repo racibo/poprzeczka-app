@@ -39,7 +39,7 @@ EDITIONS_CONFIG = OrderedDict([
         "start_date": date(2025, 11, 1),  # Edycja startuje 1 listopada
         "sheet_name": "BiezacaEdycja",
         "participants": PARTICIPANTS_NOVEMBER,
-        "is_manually_closed": False  # Zmień na True gdy wszyscy odpadną
+        "is_manually_closed": True  # Zmień na True gdy wszyscy odpadną
     }),
     ("december", {
         "start_date": date(2025, 12, 1),  # Edycja startuje 1 grudnia
@@ -54,3 +54,4 @@ EDITIONS_CONFIG = OrderedDict([
         "is_manually_closed": False  # Zmień na True gdy wszyscy odpadną
     }),
 ])
+
