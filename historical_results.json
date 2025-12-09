@@ -1227,6 +1227,11 @@
       "miejsce": null,
       "rezultat_uczestnika": null,
       "status": "PAUZA"
+    },
+    "11.2025": {
+      "status": null,
+      "miejsce": 10,
+      "rezultat_uczestnika": "17"
     }
   },
   "browery": {
@@ -1484,6 +1489,11 @@
       "miejsce": 5,
       "status": null,
       "rezultat_uczestnika": "21"
+    },
+    "11.2025": {
+      "status": null,
+      "miejsce": 12,
+      "rezultat_uczestnika": "11"
     }
   },
   "cezary-io": {
@@ -1751,6 +1761,11 @@
       "miejsce": 1,
       "status": null,
       "rezultat_uczestnika": "37"
+    },
+    "11.2025": {
+      "status": null,
+      "miejsce": 1,
+      "rezultat_uczestnika": "34"
     }
   },
   "deepresearch": {
@@ -2502,6 +2517,11 @@
       "miejsce": 11,
       "status": null,
       "rezultat_uczestnika": "11"
+    },
+    "11.2025": {
+      "status": null,
+      "miejsce": 9,
+      "rezultat_uczestnika": "17"
     }
   },
   "ervin-lemark": {
@@ -2754,6 +2774,11 @@
       "miejsce": 12,
       "status": null,
       "rezultat_uczestnika": "11"
+    },
+    "11.2025": {
+      "status": null,
+      "miejsce": 5,
+      "rezultat_uczestnika": "27"
     }
   },
   "fredkese": {
@@ -3021,6 +3046,11 @@
       "miejsce": 9,
       "status": null,
       "rezultat_uczestnika": "18"
+    },
+    "11.2025": {
+      "status": null,
+      "miejsce": 13,
+      "rezultat_uczestnika": "11"
     }
   },
   "grecki-bazar-ewy": {
@@ -3772,6 +3802,11 @@
       "miejsce": 13,
       "status": null,
       "rezultat_uczestnika": "10"
+    },
+    "11.2025": {
+      "status": null,
+      "miejsce": 11,
+      "rezultat_uczestnika": "13"
     }
   },
   "ilodz24hd": {
@@ -5017,6 +5052,11 @@
       "miejsce": 2,
       "status": null,
       "rezultat_uczestnika": "34"
+    },
+    "11.2025": {
+      "status": null,
+      "miejsce": 4,
+      "rezultat_uczestnika": "29"
     }
   },
   "marianomariano": {
@@ -5284,6 +5324,11 @@
       "miejsce": 6,
       "status": null,
       "rezultat_uczestnika": "18"
+    },
+    "11.2025": {
+      "status": null,
+      "miejsce": 14,
+      "rezultat_uczestnika": "2"
     }
   },
   "merthin": {
@@ -5551,6 +5596,11 @@
       "miejsce": 7,
       "status": null,
       "rezultat_uczestnika": "18"
+    },
+    "11.2025": {
+      "status": null,
+      "miejsce": 7,
+      "rezultat_uczestnika": "19"
     }
   },
   "new.things": {
@@ -5817,6 +5867,11 @@
     "10.2025": {
       "miejsce": 3,
       "status": null,
+      "rezultat_uczestnika": "25"
+    },
+    "11.2025": {
+      "status": null,
+      "miejsce": 6,
       "rezultat_uczestnika": "25"
     }
   },
@@ -6085,6 +6140,11 @@
       "miejsce": 4,
       "status": null,
       "rezultat_uczestnika": "23"
+    },
+    "11.2025": {
+      "status": null,
+      "miejsce": 3,
+      "rezultat_uczestnika": "33"
     }
   },
   "santacruz.sports": {
@@ -6604,6 +6664,11 @@
       "miejsce": 8,
       "status": null,
       "rezultat_uczestnika": "18"
+    },
+    "11.2025": {
+      "status": null,
+      "miejsce": 8,
+      "rezultat_uczestnika": "17"
     }
   },
   "masoom": {
@@ -9049,6 +9114,18 @@
       "miejsce": 10,
       "status": null,
       "rezultat_uczestnika": "13"
+    },
+    "11.2025": {
+      "status": null,
+      "miejsce": 15,
+      "rezultat_uczestnika": "1"
+    }
+  },
+  "navidjahanshahi": {
+    "11.2025": {
+      "status": null,
+      "miejsce": 2,
+      "rezultat_uczestnika": "33"
     }
   }
 }
