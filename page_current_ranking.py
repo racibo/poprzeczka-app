@@ -156,7 +156,7 @@ def calculate_current_stats(data, max_day, lang, participants_list):
     return df_streaks[df_streaks["Seria"].isin(top_3_values) & (df_streaks["Seria"] > 0)] 
 
 def calculate_rabbit_stats(data, max_day, elimination_map, lang, participants_list):
-    """Oblicza 'Zające' - aktywni uczestnicy z największą liczbą potknięć."""
+    """Oblicza 'Zajęce' - aktywni uczestnicy z największą liczbą potknięć."""
     stumbles = []
     for participant in participants_list:
         is_active = elimination_map.get(participant) is None or elimination_map.get(participant) > max_day
@@ -171,10 +171,11 @@ def calculate_rabbit_stats(data, max_day, elimination_map, lang, participants_li
             if fails_count > 0:
                 stumbles.append({"Uczestnik": participant, "Potknięcia": fails_count})
     
-    df_stumbles = pd.DataFrame(stumbles).sort_values(by="Potknięcia", ascending=False)
-    
-    if df_stumbles.empty:
+    # NOWA LINIA - Sprawdzenie czy lista jest pusta PRZED konwersją na DataFrame
+    if not stumbles:
         return pd.DataFrame(columns=["Uczestnik", "Potknięcia"])
+    
+    df_stumbles = pd.DataFrame(stumbles).sort_values(by="Potknięcia", ascending=False)
 
     top_values = sorted(df_stumbles["Potknięcia"].unique(), reverse=True)[:3]
     return df_stumbles[df_stumbles["Potknięcia"].isin(top_values)]
@@ -1008,7 +1009,7 @@ def show_current_edition_dashboard(lang, edition_key="november"):
             for _, row in df_rabbits.iterrows():
                 mention(label=f"**{row['Uczestnik']}** ({row['Potknięcia']} wpadek)", icon="🐰", url=f"https://hive.blog/@{row['Uczestnik']}")
         else:
-            st.info("Brak wybitnych zająców.")
+            st.info("Edycja zakończona")
 
     st.markdown("---")
     # === NOWY WYKRES WYŚCIGU (RACE CHART) ===
