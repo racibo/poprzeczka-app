@@ -6,7 +6,7 @@ from collections import OrderedDict
 PARTICIPANTS_LIST_BASE = [
     "navidjahanshahi", "new.things", "cezary-io", "manuvert", "racibo", 
     "ervin-lemark", "merthin", "sk1920", "edycu007", "ataraksja", 
-    "homesteadlt", "browery", "fredkese", "marianomariano"
+    "homesteadlt", "browery", "fredkese", "marianomariano", "patif2025"
 ]
 
 # Listy dla konkretnych edycji
