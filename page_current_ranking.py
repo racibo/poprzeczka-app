@@ -56,28 +56,42 @@ def calculate_ranking(data, max_day_reported, lang, participants_list, ranking_t
 
         highest_completed = max(completed_stages) if completed_stages else 0
         
-        # --- NOWA LOGIKA STATUSU ---
+        # --- NOWA LOGIKA: NIEZALICZONE vs BRAK DANYCH ---
         # Sprawdzamy czy ostatni dzień w complete_stages ma dane dla tego uczestnika
         last_official_day = complete_stages[-1] if complete_stages else 0
         
-        if ranking_type == 'live':
-            # W rankingu LIVE (z niepełnymi danymi)
-            if eliminated_on_day and eliminated_on_day <= last_official_day:
-                # Uczestnik odpadł, ALE tylko jeśli potwierdzenie jest w complete_stages
-                status_text = _t('ranking_status_eliminated', lang, eliminated_on_day)
-            elif last_official_day > 0 and last_official_day in days_data:
-                # Mamy oficjalne dane za ostatni dzień
-                status_text = _t('ranking_status_active', lang)
+        # NIEZALICZONE: tylko potwierdzone niezaliczenia (z formularza)
+        # To znaczy: są w days_data z statusem "Niezaliczone"
+        confirmed_failed_stages = []
+        all_missing_data_days = []
+        
+        # Iterujemy od dnia 1 aż do ostatniego dnia z danymi dla tego uczestnika
+        max_day_for_this_user = max((int(k) for k in days_data.keys()), default=0)
+        check_until_day = max(last_official_day, max_day_for_this_user)
+
+        for day in range(1, check_until_day + 1):
+            if day in days_data:
+                if days_data[day]["status"] == "Niezaliczone":
+                    confirmed_failed_stages.append(day)
             else:
-                # Brakuje nam oficjalnych danych
-                status_text = "Brak danych" if lang == 'pl' else "No data"
-        else:
-            # W rankingu OFFICIAL (tylko potwierdzone dane)
-            if eliminated_on_day:
-                status_text = _t('ranking_status_eliminated', lang, eliminated_on_day)
-            else:
-                status_text = _t('ranking_status_active', lang)
-        # --- KONIEC NOWEJ LOGIKI STATUSU ---
+                if day <= last_official_day:
+                    all_missing_data_days.append(day)
+        
+        # Też dodajemy domniemane niezaliczenia poza last_official_day
+        # (dni bez danych po last_official_day, aż do eliminacji lub max_day_reported)
+        if eliminated_on_day and eliminated_on_day > last_official_day:
+            # Uczestnik miał 3 porażki, ale niektóre były domniemane
+            for day in range(last_official_day + 1, eliminated_on_day + 1):
+                if day not in days_data:
+                    all_missing_data_days.append(day)
+        
+        confirmed_failed_stages.sort()
+        all_missing_data_days.sort()
+        
+        # Formatuj kolumny do wyświetlenia
+        confirmed_failed_str = ", ".join(map(str, confirmed_failed_stages[:10])) + ("..." if len(confirmed_failed_stages) > 10 else "")
+        missing_data_str = ", ".join(map(str, all_missing_data_days)) if all_missing_data_days else ""
+        # --- KONIEC NOWEJ LOGIKI ---
         
         def get_failure_tuple(p_failures, p_highest):
             start_day = max(p_highest, max_day_reported) if not eliminated_on_day else p_highest
@@ -85,40 +99,23 @@ def calculate_ranking(data, max_day_reported, lang, participants_list, ranking_t
                 start_day = eliminated_on_day
             return tuple(1 if d in p_failures else 0 for d in range(start_day, 0, -1))
 
-        failed_stages_str = ", ".join(map(str, sorted(failed_stages)[:10])) + ("..." if len(failed_stages) > 10 else "")
-
         if ranking_type == 'live':
             failed_col_key = 'ranking_col_failed_list_live'
             if not eliminated_on_day and consecutive_fails == 2:
-                failed_stages_str += " ◀"
+                confirmed_failed_str += "❗"
         else: # 'official'
             failed_col_key = 'ranking_col_failed_list_official'
-            failed_stages_str = ", ".join(map(str, sorted(failed_stages)))
-
-        # --- OBLICZAMY BRAK DANYCH ---
-        # Brak danych to dni bez żadnego wpisu (aż do ostatniego dnia z danymi)
-        last_day_with_data = max((int(k) for k in days_data.keys()), default=0) if days_data else 0
-        missing_data_days = []
-        
-        if ranking_type == 'live':
-            # Dla rankingu LIVE - dni bez danych aż do ostatniego dnia z danymi
-            for day in range(1, last_day_with_data + 1):
-                if day not in days_data:
-                    missing_data_days.append(day)
-        
-        missing_data_str = ", ".join(map(str, missing_data_days)) if missing_data_days else ""
-        # --- KONIEC OBLICZANIA BRAK DANYCH ---
+            confirmed_failed_str = ", ".join(map(str, sorted(failed_stages)))
 
         ranking_data.append({
             _t('ranking_col_participant', lang): participant,
             _t('ranking_col_highest_pass', lang): highest_completed,
             "sort_key_failure_tuple": get_failure_tuple(failed_stages, highest_completed),
-            _t(failed_col_key, lang): failed_stages_str,
+            _t(failed_col_key, lang): confirmed_failed_str,
             "missing_data_days": missing_data_str,
             "eliminated_on_day": eliminated_on_day 
         })
-        elimination_map[participant] = eliminated_on_day 
-    
+        elimination_map[participant] = eliminated_on_day  
     def sort_key(entry):
         return (
             -entry[_t('ranking_col_highest_pass', lang)], 
