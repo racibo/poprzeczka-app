@@ -83,8 +83,9 @@ translations = {
         'ranking_col_rank': "Miejsce",
         'ranking_col_participant': "Uczestnik",
         'ranking_col_highest_pass': "Najw. Zaliczone",
+        'ranking_col_missing_data': "Brak danych",
         'ranking_col_status': "Status",
-        'ranking_col_failed_list_live': "Niezaliczone (nieoficjalnie)",
+        'ranking_col_failed_list_live': "Niezaliczone",
         'ranking_col_failed_list_official': "Niezaliczone",
         'ranking_status_active': "W grze",
         'ranking_status_eliminated': "Odpadł (Dzień {0})",
@@ -437,8 +438,9 @@ translations = {
         'ranking_col_participant': "User",
         'ranking_col_highest_pass': "Highest Pass",
         'ranking_col_status': "Status",
-        'ranking_col_failed_list_live': "Failed (live)",
+        'ranking_col_failed_list_live': "Failed",
         'ranking_col_failed_list_official': "Failed",
+        'ranking_col_missing_data': "Missing data",
         'ranking_status_active': "Active",
         'ranking_status_eliminated': "Out (Day {0})",
         'ranking_selection_instruction': "ℹ️ **About this ranking:** It takes into account all available data (mixed timeframes). Some participants may have gaps, while others are up to date. This allows the ranking to update immediately after new entries.",
@@ -696,4 +698,3 @@ translations = {
 def _t(key, lang, *args):
     text = translations[lang].get(key, f"MISSING_KEY: {key}")
     return text.format(*args) if args else text
-
