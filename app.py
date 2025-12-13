@@ -787,37 +787,42 @@ def main():
         st.header(_t('about_app', lang))
         st.markdown(_t('about_app_text', lang))
         
-        # === SZYBKIE LINKI ===
+# === SZYBKIE LINKI ===
         st.subheader(_t('quick_links_header', lang))
         BASE_URL = "https://poprzeczka.streamlit.app/" 
         
-        for edition_key in VISIBLE_EDITIONS_KEYS:
-            status_data = edition_statuses.get(edition_key, {})
-            status = status_data.get('status', 'UNKNOWN')
-            
-            # Pokaż linki tylko dla AKTYWNYCH i FINISZUJĄCYCH
-            if status == 'UPCOMING': 
-                continue
+        st.markdown(f"""
+        Poniższe linki otwierają stronę główną w wybranym języku. 
+        Aplikacja automatycznie załaduje aktualną edycję, a menu boczne pozwoli na swobodne przełączanie się między miesiącami.
+        """)
+        
+        # Proste linki tylko z parametrem języka
+        link_pl = f"{BASE_URL}?lang=pl"
+        link_en = f"{BASE_URL}?lang=en"
+        
+        st.markdown(f"🇵🇱 **Polska wersja:** [{link_pl}]({link_pl})")
+        st.markdown(f"🇬🇧 **English version:** [{link_en}]({link_en})")
 
-            m_pl = MONTH_NAMES[edition_key]['pl']
-            m_en = MONTH_NAMES[edition_key]['en']
-            p_pl = MONTH_NAMES[edition_key]['url_param_pl']
-            p_en = MONTH_NAMES[edition_key]['url_param_en']
+        # Opcjonalnie: Linki bezpośrednie do formularzy (jeśli chcesz je zachować, ale też ogólne)
+        # Jeśli nie chcesz linków do formularzy tutaj, możesz pominąć poniższy blok 'if'
+        
+        active_edition_key = None
+        for key, status_data in edition_statuses.items():
+            if status_data['status'] == 'ACTIVE':
+                active_edition_key = key
+                break
+        
+        if active_edition_key:
+            st.markdown("---")
+            st.markdown(f"📝 **Szybki dostęp do formularza (Obecna edycja):**")
+            p_pl = MONTH_NAMES[active_edition_key]['url_param_pl']
+            p_en = MONTH_NAMES[active_edition_key]['url_param_en']
             
-            st.markdown(f"**{m_pl} / {m_en}**")
+            form_pl = f"{BASE_URL}?page=formularz&edition={p_pl}&lang=pl"
+            form_en = f"{BASE_URL}?page=formularz&edition={p_en}&lang=en"
             
-            # Linki do Rankingów
-            u_r_pl = f"{BASE_URL}?page=ranking&edition={p_pl}&lang=pl"
-            u_r_en = f"{BASE_URL}?page=ranking&edition={p_en}&lang=en"
-            st.markdown(f"- {_t('quick_links_ranking', lang)} {_t('quick_links_language_pl', lang)}: [{u_r_pl}]({u_r_pl})")
-            st.markdown(f"- {_t('quick_links_ranking', lang)} {_t('quick_links_language_en', lang)}: [{u_r_en}]({u_r_en})")
-            
-            # Linki do Formularzy (tylko jeśli aktywna LUB finalizująca)
-            if status in ['ACTIVE', 'FINALIZATION']:
-                u_f_pl = f"{BASE_URL}?page=formularz&edition={p_pl}&lang=pl"
-                u_f_en = f"{BASE_URL}?page=formularz&edition={p_en}&lang=en"
-                st.markdown(f"- {_t('quick_links_form', lang)} {_t('quick_links_language_pl', lang)}: [{u_f_pl}]({u_f_pl})")
-                st.markdown(f"- {_t('quick_links_form', lang)} {_t('quick_links_language_en', lang)}: [{u_f_en}]({u_f_en})")
+            st.markdown(f"- [Formularz PL]({form_pl})")
+            st.markdown(f"- [Form EN]({form_en})")
 
         st.markdown("---\n")
         st.markdown(f"**URL do wklejenia** (Link do strony startowej):")
