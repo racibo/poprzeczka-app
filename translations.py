@@ -427,7 +427,7 @@ translations = {
         # --- RANKING ---
         'current_header': "📊 Ranking",
         'current_no_data': "No data.",
-        'current_ranking_header': "Ranking with incomplete data"
+        'current_ranking_header': "Ranking with incomplete data",
         'current_official_ranking_header': "Official Ranking",
         'current_official_stage_selector': "Select Stage:",
         'current_official_ranking_desc': "The following standings are based on **Stage {0}**. This is the last (or selected) day for which all active participants have complete data (explicit or inferred).",
@@ -696,3 +696,4 @@ translations = {
 def _t(key, lang, *args):
     text = translations[lang].get(key, f"MISSING_KEY: {key}")
     return text.format(*args) if args else text
+
