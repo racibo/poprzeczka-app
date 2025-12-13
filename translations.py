@@ -74,7 +74,7 @@ translations = {
         # --- RANKING ---
         'current_header': "📊 Ranking Edycji",
         'current_no_data': "Brak danych.",
-        'current_ranking_header': "Aktualna Klasyfikacja",
+        'current_ranking_header': "Klasyfikacja z niepełnymi danymi",
         'current_official_ranking_header': "Oficjalna Klasyfikacja",
         'current_official_stage_selector': "Wybierz etap:",
         'current_official_ranking_desc': "Poniższa klasyfikacja jest oparta o **Etap {0}**. Jest to ostatni (lub wybrany) dzień, dla którego wszyscy aktywni uczestnicy posiadają kompletne dane (jawne lub wywnioskowane).",
@@ -336,10 +336,28 @@ translations = {
         'scatter_plot_title': "Wyniki uczestników w poszczególnych edycjach (z miejscami)",
         'scatter_plot_desc': "Wykres punktowy przedstawiający wyniki każdego uczestnika w kolejnych edycjach. Kolor punktu oznacza zajęte miejsce.",
         'position_legend': "Miejsce",
+        # --- KRONIKA HISTORYCZNA ---
+        'chronicle_title': "🏆 Kronika Historyczna",
+        'chronicle_description': "Kompletna historia wszystkich edycji, podzielona na lata.",
+        'chronicle_record_new': "🏆🔥 (REKORD) – Ustanowiono nowy rekord wszech czasów.",
+        'chronicle_pb': "⭐ (PB) – Pobił swój rekord życiowy.",
+        'chronicle_col_rank': "Miejsce",
+        'chronicle_col_participant': "Uczestnik",
+        'chronicle_col_result': "Wynik",
+        'chronicle_no_data': "Brak danych do wyświetlenia.",
     },
     'en': {
         'app_title': "Crossbar Challenge Analysis",
-        
+
+        # --- CHRONICLE ---
+        'chronicle_title': "🏆 Competition Chronicle",
+        'chronicle_description': "Complete history of all editions, organized by year.",
+        'chronicle_record_new': "🏆🔥 (RECORD) – New all-time record established.",
+        'chronicle_pb': "⭐ (PB) – Personal best achieved.",
+        'chronicle_col_rank': "Position",
+        'chronicle_col_participant': "Participant",
+        'chronicle_col_result': "Result",
+        'chronicle_no_data': "No data to display.",     
         # --- MENU HEADER ---
         'nav_header': "📋 Menu",
         'nav_editions_expander': "📋 Editions & Rankings",
@@ -409,7 +427,7 @@ translations = {
         # --- RANKING ---
         'current_header': "📊 Ranking",
         'current_no_data': "No data.",
-        'current_ranking_header': "Live Ranking",
+        'current_ranking_header': "Ranking with incomplete data"
         'current_official_ranking_header': "Official Ranking",
         'current_official_stage_selector': "Select Stage:",
         'current_official_ranking_desc': "The following standings are based on **Stage {0}**. This is the last (or selected) day for which all active participants have complete data (explicit or inferred).",
