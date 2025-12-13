@@ -21,7 +21,7 @@ def clean_title_for_chart(text):
     text = re.sub(r'[\u2600-\u27FF]', '', text)  # Symbole
     return text.strip()
 
-def calculate_ranking(data, max_day_reported, lang, participants_list, ranking_type='live'):
+def calculate_ranking(data, max_day_reported, lang, participants_list, ranking_type='live', complete_stages=None):
     """Oblicza ranking na podstawie zasad gry."""
     ranking_data = []
     elimination_map = {} 
@@ -55,7 +55,29 @@ def calculate_ranking(data, max_day_reported, lang, participants_list, ranking_t
                 break 
 
         highest_completed = max(completed_stages) if completed_stages else 0
-        status_text = _t('ranking_status_eliminated', lang, eliminated_on_day) if eliminated_on_day else _t('ranking_status_active', lang)
+        
+        # --- NOWA LOGIKA STATUSU ---
+        # Sprawdzamy czy ostatni dzień w complete_stages ma dane dla tego uczestnika
+        last_official_day = complete_stages[-1] if complete_stages else 0
+        
+        if ranking_type == 'live':
+            # W rankingu LIVE (z niepełnymi danymi)
+            if eliminated_on_day and eliminated_on_day <= last_official_day:
+                # Uczestnik odpadł, ALE tylko jeśli potwierdzenie jest w complete_stages
+                status_text = _t('ranking_status_eliminated', lang, eliminated_on_day)
+            elif last_official_day > 0 and last_official_day in days_data:
+                # Mamy oficjalne dane za ostatni dzień
+                status_text = _t('ranking_status_active', lang)
+            else:
+                # Brakuje nam oficjalnych danych
+                status_text = "Brak danych" if lang == 'pl' else "No data"
+        else:
+            # W rankingu OFFICIAL (tylko potwierdzone dane)
+            if eliminated_on_day:
+                status_text = _t('ranking_status_eliminated', lang, eliminated_on_day)
+            else:
+                status_text = _t('ranking_status_active', lang)
+        # --- KONIEC NOWEJ LOGIKI STATUSU ---
         
         def get_failure_tuple(p_failures, p_highest):
             start_day = max(p_highest, max_day_reported) if not eliminated_on_day else p_highest
@@ -68,17 +90,31 @@ def calculate_ranking(data, max_day_reported, lang, participants_list, ranking_t
         if ranking_type == 'live':
             failed_col_key = 'ranking_col_failed_list_live'
             if not eliminated_on_day and consecutive_fails == 2:
-                failed_stages_str += " ❗"
+                failed_stages_str += " ◀"
         else: # 'official'
             failed_col_key = 'ranking_col_failed_list_official'
             failed_stages_str = ", ".join(map(str, sorted(failed_stages)))
+
+        # --- OBLICZAMY BRAK DANYCH ---
+        # Brak danych to dni bez żadnego wpisu (aż do ostatniego dnia z danymi)
+        last_day_with_data = max((int(k) for k in days_data.keys()), default=0) if days_data else 0
+        missing_data_days = []
+        
+        if ranking_type == 'live':
+            # Dla rankingu LIVE - dni bez danych aż do ostatniego dnia z danymi
+            for day in range(1, last_day_with_data + 1):
+                if day not in days_data:
+                    missing_data_days.append(day)
+        
+        missing_data_str = ", ".join(map(str, missing_data_days)) if missing_data_days else ""
+        # --- KONIEC OBLICZANIA BRAK DANYCH ---
 
         ranking_data.append({
             _t('ranking_col_participant', lang): participant,
             _t('ranking_col_highest_pass', lang): highest_completed,
             "sort_key_failure_tuple": get_failure_tuple(failed_stages, highest_completed),
-            _t('ranking_col_status', lang): status_text,
             _t(failed_col_key, lang): failed_stages_str,
+            "missing_data_days": missing_data_str,
             "eliminated_on_day": eliminated_on_day 
         })
         elimination_map[participant] = eliminated_on_day 
@@ -119,14 +155,18 @@ def calculate_ranking(data, max_day_reported, lang, participants_list, ranking_t
     cols_to_return = [
         rank_col_name, 
         _t('ranking_col_participant', lang), 
-        _t('ranking_col_highest_pass', lang), 
-        _t('ranking_col_status', lang)
+        _t('ranking_col_highest_pass', lang)
     ]
     if failed_col_name in df_ranking.columns:
         cols_to_return.append(failed_col_name)
     
+    # Dodaj kolumnę "Brak danych" dla rankingu LIVE
+    if ranking_type == 'live':
+        missing_col_name = _t('ranking_col_missing_data', lang)
+        df_ranking = df_ranking.rename(columns={"missing_data_days": missing_col_name})
+        cols_to_return.append(missing_col_name)
+    
     return df_ranking[cols_to_return], elimination_map
-
 def calculate_current_stats(data, max_day, lang, participants_list):
     """Oblicza najdłuższe serie zaliczeń."""
     streaks = []
@@ -839,12 +879,18 @@ def show_current_edition_dashboard(lang, edition_key="november"):
     if not success_data or max_day_reported == 0:
         return
 
-    # --- Ranking Live ---
+# --- Ranking Live ---
     st.subheader(_t('current_ranking_header', lang))
+    
+    # Obliczamy complete_stages PRZED calculate_ranking
+    # TYMCZASOWO ustawiamy elimination_map na pusty słownik
+    elimination_map = {}
+    complete_stages = find_last_complete_stage(current_data, elimination_map, max_day_reported, participants_list)
+    
     try:
-        ranking_df, elimination_map = calculate_ranking(current_data, max_day_reported, lang, participants_list, ranking_type='live')
+        ranking_df, elimination_map = calculate_ranking(current_data, max_day_reported, lang, participants_list, ranking_type='live', complete_stages=complete_stages)
         
-        st.info(_t('ranking_selection_instruction', lang))
+        st.info(_t('ranking_selection_instruction', lang))        
 
         ranking_df_display = ranking_df.copy()
         
@@ -884,7 +930,7 @@ def show_current_edition_dashboard(lang, edition_key="november"):
         
     st.markdown("---")
 
-# --- Ranking Oficjalny ---
+    # --- Ranking Oficjalny ---
     st.subheader(_t('current_official_ranking_header', lang))
     complete_stages = find_last_complete_stage(current_data, elimination_map, max_day_reported, participants_list)
     
