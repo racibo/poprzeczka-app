@@ -39,15 +39,6 @@ def show_submission_form(lang, edition_key="november", is_active=True):
     users_list = sorted(participants_list)
     submitters_list = sorted(SUBMITTER_LIST)
 
-    # === 1. KOMUNIKAT SUKCESU (Trwały) ===
-    if 'last_submission' in st.session_state and st.session_state.last_submission:
-        details = st.session_state.last_submission
-        msg = _t('form_success_message', lang, details['participant'], details['day'], details['status_translated'])
-        if details.get('file_link'):
-            msg += f" | 🖼️ [Zobacz zdjęcie]({details['file_link']})"
-        st.success(msg)
-        st.session_state.last_submission = None 
-
     # Funkcja formatująca dla selectbox
     def format_option(option):
         if option is None:
@@ -106,6 +97,17 @@ def show_submission_form(lang, edition_key="november", is_active=True):
             
             # Wyświetlamy podpowiedź (caption jest mniejszy i szary, idealny do tego celu)
             st.caption(label_text) # st.markdown(label_text) jeśli chcesz większy tekst
+
+            # --- KOMUNIKAT SUKCESU (Tutaj, bezpośrednio pod datą) ---
+            if 'last_submission' in st.session_state and st.session_state.last_submission:
+                details = st.session_state.last_submission
+                msg = _t('form_success_message', lang, details['participant'], details['day'], details['status_translated'])
+                if details.get('file_link'):
+                    msg += f" | 🖼️ [Zobacz zdjęcie]({details['file_link']})"
+                st.success(msg)
+                st.session_state.last_submission = None
+            # --- KONIEC KOMUNIKATU ---
+
         # --- KONIEC NOWEGO KODU ---
         
     st.markdown(f"**{_t('form_status_label', lang)}**")
@@ -484,5 +486,7 @@ def show_submission_form(lang, edition_key="november", is_active=True):
                             # Używamy zmiennej helper_pool_pct w stopce
                             draft_text = f"""{_t('draft_intro', lang, f'@{selected_participant_for_draft}')}\n\n{_t('draft_main_text', lang, official_stage, f'@{selected_participant_for_draft}', current_rank, prev_user, next_user, w_participant, last_reported_day, last_status_text)}\n\n{analysis_part}\n\n{_t('draft_footer', lang, str(helper_pool_pct))}"""
                             st.text_area(_t('draft_copy_label', lang), value=draft_text, height=300)
-                    else: st.warning(_t('draft_no_data', lang))
-            except Exception as e: st.error(_t('draft_error', lang, str(e)))
+                    else:
+                        st.warning(_t('draft_no_data', lang))
+            except Exception as e:
+                st.error(_t('draft_error', lang, str(e)))
