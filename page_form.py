@@ -8,28 +8,50 @@ from google_connect import connect_to_google_sheets, upload_file_to_hosting, app
 from page_current_ranking import calculate_ranking, find_last_complete_stage
 from data_loader import load_google_sheet_data, process_raw_data, load_historical_data_from_json
 
-# Zmień definicję funkcji:
-def show_submission_form(lang, edition_key="november", is_active=True):
+# Zmień definicję funkcji, dodając argument status_code
+def show_submission_form(lang, edition_key="december", is_active=True):
     
-    # Pobieramy config
-    cfg = EDITIONS_CONFIG.get(edition_key) # Używamy teraz EDITIONS_CONFIG z config.py
+    # 1. Pobieramy config
+    cfg = EDITIONS_CONFIG.get(edition_key)
     if not cfg:
         st.error("Błąd konfiguracji edycji.")
         return
 
-    # Pobieramy nazwę z MONTH_NAMES
+    # 2. Obliczamy status daty
+    today = datetime.now().date()
+    start_date = cfg['start_date']
+    is_upcoming = start_date > today
+
+    # 3. Pobieramy nazwy (Upewnij się, że te linie są OSOBNO)
     from config import MONTH_NAMES
     edition_label = MONTH_NAMES[edition_key][lang]
     sheet_name = cfg['sheet_name']
     participants_list = cfg['participants']
 
-# === BLOKADA FORMULARZA ===
+    # === LOGIKA BLOKADY / WYŚWIETLANIA ===
+    
+    # PRZYPADEK A: Edycja przyszła (np. Luty) -> Pokaż info o dacie startu
+    if is_upcoming:
+        st.header(_t('form_header', lang, edition_label))
+        start_fmt = start_date.strftime('%d.%m.%Y')
+        st.info(f"⏳ {_t('edition_starts_soon', lang, edition_label)}")
+        st.markdown(f"📅 Start edycji: **{start_fmt}**")
+        st.markdown(_t('join_intro', lang))
+        return # Tutaj kończymy, nie ładujemy reszty formularza
+
+    # PRZYPADEK B: Edycja jest stara/zamknięta i nie jest przyszła
     if not is_active:
         st.header(_t('form_header', lang, edition_label))
         st.error(_t('form_error_edition_closed', lang, edition_label))
         return
+
+    # PRZYPADEK C: Edycja jest aktywna (Grudzień/Styczeń po starcie)
+    # Tuta zaczyna się właściwy formularz...
+    st.header(_t('form_header', lang, edition_label))
+    
     # ===========================
     
+    # ... (DALEJ RESZTA KODU BEZ ZMIAN: Nawiązujemy połączenie...)  
     # Nawiązujemy połączenie RAZ na początku funkcji
     sheet = connect_to_google_sheets()
     if not sheet:
