@@ -844,10 +844,16 @@ def check_if_edition_is_finished(sheet, sheet_name, participants_list, lang='pl'
     except Exception:
         # W razie błędu (np. brak arkusza) zakładamy, że nie jest zakończona (bezpieczniej)
         return False
-def show_current_edition_dashboard(lang, edition_key="november"):
-    """Wyświetla dashboard dla wybranej edycji."""
+def show_current_edition_dashboard(lang, edition_key="december"):
+    # Pobieramy konfigurację dla wybranej edycji
+    cfg = EDITIONS_CONFIG.get(edition_key)
     
-    cfg = EDITIONS_CONFIG.get(edition_key, EDITIONS_CONFIG['november'])
+    # Zabezpieczenie: jeśli edycja nie istnieje (np. ktoś wszedł w stary link do listopada)
+    if not cfg:
+        edition_key = "december"
+        cfg = EDITIONS_CONFIG.get(edition_key)
+        
+    # POBIERANIE NAZWY ARKUSZA (To jest linia 852, gdzie był błąd)
     sheet_name = cfg['sheet_name']
     label = MONTH_NAMES[edition_key][lang]
     participants_list = cfg['participants']  # <--- POBIERAMY LISTĘ Z CONFIGA
