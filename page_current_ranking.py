@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 import time
 import numpy as np
-from datetime import datetime 
+from datetime import datetime, timedelta
 from streamlit_extras.mention import mention
 from translations import _t
 from config import EDITIONS_CONFIG, MONTH_NAMES
@@ -16,10 +16,19 @@ from data_loader import load_google_sheet_data, load_historical_data_from_json, 
 def clean_title_for_chart(text):
     """Usuwa emotikony z tekstu, aby uniknąć ostrzeżeń matplotlib (Missing Glyph)."""
     import re
-    # Usuwa wszystkie emotikony (nie tylko wybrane)
-    text = re.sub(r'[\U0001F300-\U0001F9FF]', '', text)  # Emotikony Unicode
-    text = re.sub(r'[\u2600-\u27FF]', '', text)  # Symbole
+    text = re.sub(r'[\U0001F300-\U0001F9FF]', '', text) 
+    text = re.sub(r'[\u2600-\u27FF]', '', text) 
     return text.strip()
+
+def fmt_user(username, lang):
+    """
+    Formatuje nazwę użytkownika.
+    Dla EN dodaje @ (powiadomienie).
+    Dla PL dodaje pogrubienie (brak powiadomienia, żeby nie dublować).
+    """
+    if lang == 'en':
+        return f"@{username}"
+    return f"**{username}**"
 
 def calculate_ranking(data, max_day_reported, lang, participants_list, ranking_type='live', complete_stages=None):
     """Oblicza ranking na podstawie zasad gry."""
@@ -56,16 +65,12 @@ def calculate_ranking(data, max_day_reported, lang, participants_list, ranking_t
 
         highest_completed = max(completed_stages) if completed_stages else 0
         
-        # --- NOWA LOGIKA: NIEZALICZONE vs BRAK DANYCH ---
-        # Sprawdzamy czy ostatni dzień w complete_stages ma dane dla tego uczestnika
+        # --- LOGIKA: NIEZALICZONE vs BRAK DANYCH ---
         last_official_day = complete_stages[-1] if complete_stages else 0
         
-        # NIEZALICZONE: tylko potwierdzone niezaliczenia (z formularza)
-        # To znaczy: są w days_data z statusem "Niezaliczone"
         confirmed_failed_stages = []
         all_missing_data_days = []
         
-        # Iterujemy od dnia 1 aż do ostatniego dnia z danymi dla tego uczestnika
         max_day_for_this_user = max((int(k) for k in days_data.keys()), default=0)
         check_until_day = max(last_official_day, max_day_for_this_user)
 
@@ -77,10 +82,7 @@ def calculate_ranking(data, max_day_reported, lang, participants_list, ranking_t
                 if day <= last_official_day:
                     all_missing_data_days.append(day)
         
-        # Też dodajemy domniemane niezaliczenia poza last_official_day
-        # (dni bez danych po last_official_day, aż do eliminacji lub max_day_reported)
         if eliminated_on_day and eliminated_on_day > last_official_day:
-            # Uczestnik miał 3 porażki, ale niektóre były domniemane
             for day in range(last_official_day + 1, eliminated_on_day + 1):
                 if day not in days_data:
                     all_missing_data_days.append(day)
@@ -88,10 +90,8 @@ def calculate_ranking(data, max_day_reported, lang, participants_list, ranking_t
         confirmed_failed_stages.sort()
         all_missing_data_days.sort()
         
-        # Formatuj kolumny do wyświetlenia
         confirmed_failed_str = ", ".join(map(str, confirmed_failed_stages[:10])) + ("..." if len(confirmed_failed_stages) > 10 else "")
         missing_data_str = ", ".join(map(str, all_missing_data_days)) if all_missing_data_days else ""
-        # --- KONIEC NOWEJ LOGIKI ---
         
         def get_failure_tuple(p_failures, p_highest):
             start_day = max(p_highest, max_day_reported) if not eliminated_on_day else p_highest
@@ -116,6 +116,7 @@ def calculate_ranking(data, max_day_reported, lang, participants_list, ranking_t
             "eliminated_on_day": eliminated_on_day 
         })
         elimination_map[participant] = eliminated_on_day  
+
     def sort_key(entry):
         return (
             -entry[_t('ranking_col_highest_pass', lang)], 
@@ -157,13 +158,13 @@ def calculate_ranking(data, max_day_reported, lang, participants_list, ranking_t
     if failed_col_name in df_ranking.columns:
         cols_to_return.append(failed_col_name)
     
-    # Dodaj kolumnę "Brak danych" dla rankingu LIVE
     if ranking_type == 'live':
         missing_col_name = _t('ranking_col_missing_data', lang)
         df_ranking = df_ranking.rename(columns={"missing_data_days": missing_col_name})
         cols_to_return.append(missing_col_name)
     
     return df_ranking[cols_to_return], elimination_map
+
 def calculate_current_stats(data, max_day, lang, participants_list):
     """Oblicza najdłuższe serie zaliczeń."""
     streaks = []
@@ -208,7 +209,6 @@ def calculate_rabbit_stats(data, max_day, elimination_map, lang, participants_li
             if fails_count > 0:
                 stumbles.append({"Uczestnik": participant, "Potknięcia": fails_count})
     
-    # NOWA LINIA - Sprawdzenie czy lista jest pusta PRZED konwersją na DataFrame
     if not stumbles:
         return pd.DataFrame(columns=["Uczestnik", "Potknięcia"])
     
@@ -269,19 +269,14 @@ def show_historical_context(df_historical, lang, participants_list):
         st.info(_t('current_ranking_historical_no_data', lang))
         return
 
-# Modyfikacja: Najpierw standardowe statystyki bez liczby edycji
     stats = hist_data.groupby('uczestnik').agg(
         pb_result=pd.NamedAgg(column='rezultat_numeric', aggfunc='max'),
         avg_result=pd.NamedAgg(column='rezultat_numeric', aggfunc='mean'),
-        # Tu usunęliśmy błędne zliczanie edycji
         best_position=pd.NamedAgg(column='miejsce', aggfunc='min'),
         medals_top3=pd.NamedAgg(column='miejsce', aggfunc=lambda x: (x <= 3).sum())
     )
 
-    # Obliczamy liczbę edycji ODDZIELNIE, biorąc pod uwagę tylko te z wynikiem (nie NaN)
     real_editions_count = hist_data.dropna(subset=['rezultat_numeric']).groupby('uczestnik')['edycja_nr'].nunique()
-    
-    # Dodajemy poprawną kolumnę do tabeli statystyk
     stats['editions_count'] = real_editions_count
     
     last_3_editions_nr = sorted(df_historical['edycja_nr'].unique())[-3:]
@@ -445,7 +440,7 @@ def show_daily_rank_progression(current_data, complete_stages, lang, participant
         st.pyplot(fig)
 
 def show_stage_analysis(current_data, max_day_reported, elimination_map, complete_stages, lang, participants_list):
-    """Wyświetla statystyki trudności etapów (wykres + tekst)."""
+    """Wyświetla statystyki trudności etapów."""
     
     if 'stage_analysis_expanded' not in st.session_state:
         st.session_state.stage_analysis_expanded = False
@@ -536,7 +531,6 @@ def show_stage_analysis(current_data, max_day_reported, elimination_map, complet
             st.pyplot(fig)
             
         st.divider()
-        
         st.markdown(f"**{txt['tool_header']}**")
         
         col_sel, col_btn = st.columns([3, 1])
@@ -655,208 +649,79 @@ def show_survival_comparison(current_data, max_day_reported, df_historical, lang
 
         st.pyplot(fig)
 
-def get_past_winners_positions(df_historical, current_ranking_df, lang):
-    """Znajduje obecne pozycje zwycięzców poprzednich 3 edycji."""
-    if df_historical.empty:
-        return []
-    
-    all_editions = sorted(df_historical['miesiac_rok_str'].unique(), key=lambda x: datetime.strptime(x, '%m.%Y'), reverse=True)
-    last_3_editions = all_editions[:3]
-    
-    recent_hist = df_historical[df_historical['miesiac_rok_str'].isin(last_3_editions)]
-    past_winners = recent_hist[recent_hist['miejsce'] == 1]['uczestnik'].unique().tolist()
-    
-    current_positions = []
-    participant_col = _t('ranking_col_participant', lang)
-    rank_col = _t('ranking_col_rank', lang)
-    
-    for winner in past_winners:
-        if winner in current_ranking_df[participant_col].values:
-            rank = current_ranking_df[current_ranking_df[participant_col] == winner][rank_col].values[0]
-            current_positions.append(f"@{winner} ({rank})")
-            
-    return current_positions
-
-def generate_weekly_summary_markdown(week_num, current_data, df_historical, df_logs, lang, participants_list):
-    """Generuje tekst podsumowania dla konkretnego tygodnia (np. 7, 14, 21 dzień)."""
-    
-    day_limit = week_num * 7
-    
-    # 1. Ranking na dany dzień
-    ranking_df, elimination_map = calculate_ranking(current_data, day_limit, lang, participants_list, ranking_type='live')
-    participant_col = _t('ranking_col_participant', lang)
-    rank_col = _t('ranking_col_rank', lang)
-    
-    # Liderzy (Miejsce 1)
-    leaders = ranking_df[ranking_df[rank_col] == 1][participant_col].tolist()
-    leaders_str = ", ".join([f"@{l}" for l in leaders])
-    leader_text = _t('weekly_leader_sg', lang, leaders_str) if len(leaders) == 1 else _t('weekly_leader_pl', lang, leaders_str)
-    
-    # Pościg (Miejsca 2-5) - Tylko jeśli liderów jest mniej niż 5
-    chasing_str = ""
-    chasers_md = ""
-    if len(leaders) < 5:
-        chasers = ranking_df[(ranking_df[rank_col] > 1) & (ranking_df[rank_col] <= 5)][participant_col].tolist()
-        if chasers:
-            chasing_str = ", ".join([f"@{c}" for c in chasers])
-            chasers_md = _t('weekly_chasers', lang, chasing_str)
-    
-    # 2. Byli zwycięzcy (ost 3 edycje)
-    past_winners_info = get_past_winners_positions(df_historical, ranking_df, lang)
-    past_winners_str = ", ".join(past_winners_info) if past_winners_info else "brak danych"
-    
-    # 3. Liczba uczestników
-    started_count = len(participants_list)
-    active_count = 0
-    for p in participants_list:
-        elim_day = elimination_map.get(p)
-        if elim_day is None or elim_day > day_limit:
-            active_count += 1
-            
-    status_word = "nadal" if active_count == started_count else ("już tylko" if lang == 'pl' else "only")
-    
-    # 4. Porównanie historyczne (proste)
-    comparison_str = "brak danych historycznych"
-    if not df_historical.empty:
-        editions = df_historical['miesiac_rok_str'].unique()
-        hist_active_pcts = []
-        for ed in editions:
-            ed_df = df_historical[df_historical['miesiac_rok_str'] == ed]
-            total_ed = len(ed_df)
-            active_at_limit = ((ed_df['rezultat_numeric'] + 3) > day_limit).sum()
-            if total_ed > 0:
-                hist_active_pcts.append(active_at_limit / total_ed)
-        
-        if hist_active_pcts:
-            avg_hist_pct = sum(hist_active_pcts) / len(hist_active_pcts)
-            current_pct = active_count / started_count if started_count > 0 else 0
-            diff = current_pct - avg_hist_pct
-            
-            if diff > 0.1: comparison_str = "jest zauważalnie lepiej" if lang == 'pl' else "is noticeably better"
-            elif diff > 0.05: comparison_str = "jest lepiej" if lang == 'pl' else "is better"
-            elif diff < -0.1: comparison_str = "jest zauważalnie gorzej" if lang == 'pl' else "is noticeably worse"
-            elif diff < -0.05: comparison_str = "jest gorzej" if lang == 'pl' else "is worse"
-            else: comparison_str = "jest podobnie" if lang == 'pl' else "is similar"
-            
-    # 5. Algorytm Nagród
-    rewards_str = ""
-    helper_pct_val = 0
-    
-    if not df_logs.empty and 'Submitter' in df_logs.columns:
-        df_logs['Day_Num'] = pd.to_numeric(df_logs['Day'], errors='coerce')
-        logs_subset = df_logs[df_logs['Day_Num'] <= day_limit]
-        
-        if not logs_subset.empty:
-            helpers_subset = logs_subset[logs_subset['Submitter'] != 'poprzeczka (Admin)']
-            
-            total_subset_entries = len(logs_subset)
-            if total_subset_entries > 0:
-                helper_pct_val = int((len(helpers_subset) / total_subset_entries) * 100)
-            
-            P = helper_pct_val
-            
-            if P > 0:
-                helper_pool = P * 0.80
-                leader_pool = P * 0.20
-                user_rewards = {}
-                
-                helper_counts = helpers_subset['Submitter'].value_counts()
-                total_helper_entries = helper_counts.sum()
-                
-                for user, count in helper_counts.items():
-                    share = (count / total_helper_entries) * helper_pool
-                    user_rewards[user] = user_rewards.get(user, 0) + share
-                    
-                top_leaders = ranking_df[(ranking_df[rank_col] <= 5)][participant_col].unique()
-                top_leaders = top_leaders[:5] 
-                
-                if len(top_leaders) > 0:
-                    share_per_leader = leader_pool / len(top_leaders)
-                    for leader in top_leaders:
-                        user_rewards[leader] = user_rewards.get(leader, 0) + share_per_leader
-                
-                final_rewards = []
-                for user, val in user_rewards.items():
-                    r_val = round(val)
-                    if r_val > 0:
-                        final_rewards.append((user, r_val))
-                
-                final_rewards.sort(key=lambda x: x[1], reverse=True)
-                
-                # Limit max 7 osób
-                final_rewards = final_rewards[:7]
-                
-                rewards_list = [f"{val}% - @{user}" for user, val in final_rewards]
-                rewards_str = ", ".join(rewards_list)
-
-    # SZABLON MD
-    summary_text = f"""
-{_t('weekly_intro', lang, week_num)}
-{leader_text} {chasers_md}
-{_t('weekly_winners', lang, past_winners_str)}
-
-{_t('weekly_participants', lang, started_count, day_limit, active_count, status_word)}
-{_t('weekly_comparison', lang, comparison_str)}
-
-{_t('weekly_footer_new', lang, helper_pct_val)}
-{rewards_str}
-"""
-    return summary_text
-
-# === Główna Funkcja Strony ===
-# page_current_ranking.py - (Fragmenty do dodania/zmiany)
-
-# ... (zachowaj importy i istniejące funkcje calculate_ranking, show_current_edition_dashboard itp.) ...
-
-# DODAJ TĘ FUNKCJĘ NA KOŃCU PLIKU (lub przed show_current_edition_dashboard):
-
-def check_if_edition_is_finished(sheet, sheet_name, participants_list, lang='pl'):
+def generate_milestone_summary(milestone_day, current_data, df_historical, df_logs, lang, participants_list, elimination_map):
     """
-    Automatycznie sprawdza, czy edycja jest zakończona (wszyscy odpadli).
-    Zwraca True, jeśli tak.
+    Generuje raporty bez użycia zewnętrznego pliku tłumaczeń (unika MISSING_KEY).
     """
-    try:
-        # Pobieramy dane (zakładamy, że data_loader ma cache, więc to nie będzie za wolne)
-        df_raw = load_google_sheet_data(sheet, sheet_name)
-        if df_raw.empty:
-            return False
-            
-        expected_cols = ['Participant', 'Day', 'Status']
-        # Używamy process_raw_data aby uzyskać czyste dane
-        current_data, max_day, _ = process_raw_data(df_raw, lang, expected_cols, sheet_name)
-        
-        if max_day == 0:
-            return False
+    titles = {
+        'pl': {5: "🤝 Pomocnicy Poprzeczki", 10: "🏅 Medaliści Poprzeczki", 15: "🚀 Rekordy Życiowe", 20: "🌍 Rekordy Wszechczasów", 25: "🧠 Taktycy", 30: "🔥 Żelazne Serie"},
+        'en': {5: "🤝 Helpers", 10: "🏅 Medalists", 15: "🚀 Personal Bests", 20: "🌍 All-time Records", 25: "🧠 Tacticians", 30: "🔥 Iron Streaks"}
+    }
+    
+    title = titles.get(lang, titles['pl']).get(milestone_day, "Raport")
+    md = f"### {title}\n\n"
 
-        # Obliczamy ranking na ostatni dzień
-        # Jeśli wszyscy mają przypisany 'eliminated_on_day', to edycja zakończona
-        _, elimination_map = calculate_ranking(current_data, max_day, lang, participants_list, ranking_type='live')
-        
-        # Sprawdzamy czy każdy uczestnik jest w mapie eliminacji
-        all_eliminated = True
+    # DZIEŃ 5 - POMOCNICY
+    if milestone_day == 5:
+        md += "Dzięki tym osobom łatwiej utrzymać ciągłość rywalizacji! 🚀\n\n" if lang == 'pl' else "Thanks to these people, it's easier to keep the competition going! 🚀\n\n"
+        if not df_logs.empty and 'Submitter' in df_logs.columns:
+            helpers = df_logs[df_logs['Submitter'] != 'poprzeczka (Admin)']['Submitter'].value_counts().head(3)
+            txt = "Najaktywniejsi w raportowaniu: " if lang == 'pl' else "Most active in reporting: "
+            md += txt + ", ".join([f"{fmt_user(u, lang)} ({c})" for u, c in helpers.items()])
+        else:
+            md += "Brak danych."
+
+    # DZIEŃ 10 - MEDALIŚCI
+    elif milestone_day == 10:
+        if not df_historical.empty:
+            medals = df_historical[df_historical['miejsce'] <= 3]['uczestnik'].value_counts().head(3)
+            txt = "Uczestnicy z największą liczbą podium w historii: " if lang == 'pl' else "Participants with most podiums in history: "
+            md += txt + ", ".join([f"{fmt_user(u, lang)} ({c})" for u, c in medals.items()])
+        else:
+            md += "Brak danych historycznych."
+
+    # DZIEŃ 15 - REKORDY ŻYCIOWE (Zmieniony tekst)
+    elif milestone_day == 15:
+        if lang == 'pl':
+            md += "Mamy już dane z **15 etapów**! Póki co najbliżej pobicia swoich rekordów życiowych są uczestnicy z czołówki rankingu. Za parę dni przekonamy się, czy uda im się utrzymać tę formę i oficjalnie ustanowić nowe rekordy!"
+        else:
+            md += "We have data from **15 stages**! So far, the leaders are closest to breaking their personal bests. In a few days, we will see if they can maintain this form and officially set new records!"
+
+    # DZIEŃ 20 - REKORDY WSZECHCZASÓW
+    elif milestone_day == 20:
+        md += "Analizujemy historyczne wyniki... Czy obecne tempo pozwoli komuś zbliżyć się do rekordu wszechczasów?" if lang == 'pl' else "Analyzing historical results... Will current pace allow someone to approach the all-time record?"
+
+    # DZIEŃ 25 - TAKTYCY
+    elif milestone_day == 25:
+        md += "Czas na taktykę! Na tym etapie liczy się nie tylko siła, ale i umiejętne zarządzanie potknięciami.\n\n" if lang == 'pl' else "Tactics time! At this stage, it's not just strength, but smart management of stumbles.\n\n"
+        tacticians = []
         for p in participants_list:
-            if p not in elimination_map or elimination_map[p] is None:
-                all_eliminated = False
-                break
-        
-        return all_eliminated
+            if elimination_map.get(p) is None or elimination_map.get(p) > 25:
+                fails = sum(1 for d in range(1, 26) if current_data.get(p, {}).get(d, {}).get('status') != "Zaliczone")
+                if fails > 0: tacticians.append((p, fails))
+        tacticians.sort(key=lambda x: x[1], reverse=True)
+        txt = "Aktywni z największą liczbą 'luk' w zaliczeniach: " if lang == 'pl' else "Active with most 'gaps': "
+        if tacticians:
+            md += txt + ", ".join([f"{fmt_user(p, lang)} ({f})" for p, f in tacticians[:3]])
 
-    except Exception:
-        # W razie błędu (np. brak arkusza) zakładamy, że nie jest zakończona (bezpieczniej)
-        return False
+    # DZIEŃ 30 - SERIE
+    elif milestone_day == 30:
+        df_streaks = calculate_current_stats(current_data, 30, lang, participants_list)
+        txt = "Liderzy serii zaliczeń: " if lang == 'pl' else "Streak leaders: "
+        if not df_streaks.empty:
+            md += txt + ", ".join([f"{fmt_user(row['Uczestnik'], lang)} ({row['Seria']})" for _, row in df_streaks.head(3).iterrows()])
+
+    return md
+
 def show_current_edition_dashboard(lang, edition_key="december"):
-    # Pobieramy konfigurację dla wybranej edycji
     cfg = EDITIONS_CONFIG.get(edition_key)
-    
-    # Zabezpieczenie: jeśli edycja nie istnieje (np. ktoś wszedł w stary link do listopada)
     if not cfg:
         edition_key = "december"
         cfg = EDITIONS_CONFIG.get(edition_key)
         
-    # POBIERANIE NAZWY ARKUSZA (To jest linia 852, gdzie był błąd)
     sheet_name = cfg['sheet_name']
     label = MONTH_NAMES[edition_key][lang]
-    participants_list = cfg['participants']  # <--- POBIERAMY LISTĘ Z CONFIGA
+    participants_list = cfg['participants']
     
     st.header(f"{_t('current_header', lang)}: {label}")
     
@@ -866,7 +731,7 @@ def show_current_edition_dashboard(lang, edition_key="december"):
     try:
         df_raw_data = load_google_sheet_data(sheet, sheet_name)
     except Exception:
-        st.error(f"Nie znaleziono arkusza: {sheet_name}. Utwórz go w Google Sheets!")
+        st.error(f"Nie znaleziono arkusza: {sheet_name}.")
         return
 
     df_raw_logs = load_google_sheet_data(sheet, "LogWpisow")
@@ -882,24 +747,18 @@ def show_current_edition_dashboard(lang, edition_key="december"):
     if not success_data or max_day_reported == 0:
         return
 
-# --- Ranking Live ---
+    # --- Ranking Live ---
     st.subheader(_t('current_ranking_header', lang))
     
-    # Obliczamy complete_stages PRZED calculate_ranking
-    # TYMCZASOWO ustawiamy elimination_map na pusty słownik
     elimination_map = {}
     complete_stages = find_last_complete_stage(current_data, elimination_map, max_day_reported, participants_list)
     
     try:
         ranking_df, elimination_map = calculate_ranking(current_data, max_day_reported, lang, participants_list, ranking_type='live', complete_stages=complete_stages)
-        
         st.info(_t('ranking_selection_instruction', lang))        
 
         ranking_df_display = ranking_df.copy()
-        
-        # --- FIX: Konwersja nazw kolumn na napisy ---
         ranking_df_display.columns = ranking_df_display.columns.astype(str)
-        # --------------------------------------------
 
         selection = st.dataframe(
             ranking_df_display, 
@@ -913,22 +772,13 @@ def show_current_edition_dashboard(lang, edition_key="december"):
             selected_index = selection.selection.rows[0]
             participant_col = _t('ranking_col_participant', lang)
             rank_col = _t('ranking_col_rank', lang)
-            
             selected_participant = ranking_df_display.iloc[selected_index][participant_col]
             selected_rank = ranking_df_display.iloc[selected_index][rank_col]
             
-            show_selected_participant_details(
-                selected_participant, 
-                selected_rank, 
-                df_historical, 
-                current_data, 
-                max_day_reported, 
-                lang
-            )
+            show_selected_participant_details(selected_participant, selected_rank, df_historical, current_data, max_day_reported, lang)
         
     except Exception as e:
         st.error(_t('current_ranking_error', lang, e))
-        st.exception(e) 
         elimination_map = {} 
         
     st.markdown("---")
@@ -939,28 +789,15 @@ def show_current_edition_dashboard(lang, edition_key="december"):
     
     if complete_stages:
         default_stage = complete_stages[-1]
-        
-        # Jeśli jest tylko jeden etap, używamy selectbox zamiast select_slider
         if len(complete_stages) == 1:
-            selected_stage = st.selectbox(
-                _t('current_official_stage_selector', lang),
-                options=complete_stages,
-                index=0
-            )
+            selected_stage = st.selectbox(_t('current_official_stage_selector', lang), options=complete_stages, index=0)
         else:
-            selected_stage = st.select_slider(
-                _t('current_official_stage_selector', lang),
-                options=complete_stages, 
-                value=default_stage 
-            )
+            selected_stage = st.select_slider(_t('current_official_stage_selector', lang), options=complete_stages, value=default_stage)
+        
         st.info(_t('current_official_ranking_desc', lang, selected_stage))
         try:
             official_ranking_df, _ = calculate_ranking(current_data, selected_stage, lang, participants_list, ranking_type='official')
-            
-            # --- FIX: Konwersja nazw kolumn na napisy ---
             official_ranking_df.columns = official_ranking_df.columns.astype(str)
-            # --------------------------------------------
-            
             st.dataframe(official_ranking_df, width="stretch", hide_index=True)
         except Exception as e:
             st.error(_t('current_ranking_error', lang, e))
@@ -968,34 +805,46 @@ def show_current_edition_dashboard(lang, edition_key="december"):
         st.info(_t('current_official_ranking_none', lang))
     
     st.markdown("---")
-    # === ZACHĘTA DO WPROWADZANIA DANYCH (CTA) ===
-    st.info(_t('cta_header', lang))
-    st.markdown(_t('cta_description', lang))
     
+    # === CTA Formularz ===
+    st.info(_t('cta_header', lang))
     col_cta1, col_cta2 = st.columns(2)
     with col_cta1:
         lang_param = MONTH_NAMES[edition_key]['url_param_pl']
-        form_url_pl = f"https://poprzeczka.streamlit.app/?page=formularz&edition={lang_param}&lang=pl"
-        st.link_button(_t('cta_button_pl', lang), form_url_pl, use_container_width=True)
+        st.link_button(_t('cta_button_pl', lang), f"https://poprzeczka.streamlit.app/?page=formularz&edition={lang_param}&lang=pl", use_container_width=True)
     with col_cta2:
         lang_param = MONTH_NAMES[edition_key]['url_param_en']
-        form_url_en = f"https://poprzeczka.streamlit.app/?page=formularz&edition={lang_param}&lang=en"
-        st.link_button(_t('cta_button_en', lang), form_url_en, use_container_width=True)
+        st.link_button(_t('cta_button_en', lang), f"https://poprzeczka.streamlit.app/?page=formularz&edition={lang_param}&lang=en", use_container_width=True)
     
     st.markdown("---")
 
-    # --- Podsumowania Tygodniowe (PRZENIESIONE TUTAJ) ---
+    # === PODSUMOWANIA AUTOMATYCZNE (TYGODNIOWE + KAMIENIE MILOWE) ===
     max_complete_day = complete_stages[-1] if complete_stages else 0
-    weeks_completed = max_complete_day // 7
     
+    # 1. Tygodniowe
+    weeks_completed = max_complete_day // 7
     if weeks_completed > 0:
+        st.subheader("📅 " + (_t('weekly_summary_header', lang) if 'weekly_summary_header' in _t.__globals__ else "Podsumowania Okresowe / Periodic Summaries"))
         for w in range(1, weeks_completed + 1):
             with st.expander(_t('weekly_summary_title', lang, w, w*7), expanded=False):
-                summary_md = generate_weekly_summary_markdown(w, current_data, df_historical, df_raw_logs, lang, participants_list)
-                st.code(summary_md, language="markdown")
-        st.markdown("---")
+                st.markdown(generate_weekly_summary_markdown(w, current_data, df_historical, df_raw_logs, lang, participants_list))
 
-    # --- Kompletność ---
+    # 2. Kamienie Milowe (Milestones: 5, 10, 15, 20, 25, 30) - ODWRÓCONA CHRONOLOGIA
+    all_milestones = [5, 10, 15, 20, 25, 30]
+    # Filtrujemy tylko osiągnięte i sortujemy malejąco (najnowszy na górze)
+    achieved_milestones = [m for m in all_milestones if max_complete_day >= m]
+    achieved_milestones.sort(reverse=True)
+    
+    if achieved_milestones:
+        st.subheader("🚩 Raporty Specjalne / Special Reports")
+        for i, m in enumerate(achieved_milestones):
+            # Pierwszy (najnowszy) jest rozwinięty domyślnie
+            with st.expander(f"Dzień/Day {m}", expanded=(i == 0)):
+                st.markdown(generate_milestone_summary(m, current_data, df_historical, df_raw_logs, lang, participants_list, elimination_map))
+                
+    st.markdown("---")
+
+    # --- Reszta Dashboardu ---
     st.subheader(_t('current_completeness_header', lang))
     
     pivot_data = []
@@ -1027,32 +876,23 @@ def show_current_edition_dashboard(lang, edition_key="december"):
         ).reindex(columns=days_to_show, fill_value="").reindex(index=sorted(participants_list))
         
         completeness_pivot_display = completeness_pivot.reset_index()
-        # --- FIX: Konwersja nazw kolumn na napisy ---
         completeness_pivot_display.columns = completeness_pivot_display.columns.astype(str)
-        # --------------------------------------------
-        
-        # UŻYWAMY width="stretch" ZAMIAST use_container_width
         st.dataframe(completeness_pivot_display, width="stretch", hide_index=True)
     else:
         st.info(_t('current_completeness_no_data', lang))
 
     st.subheader(_t('current_stats_header', lang))
-    
     col1, col2 = st.columns(2)
-
     with col1:
         st.markdown(f"**{_t('current_stats_streaks', lang)}**")
-        st.caption(_t('current_stats_streaks_desc', lang))
         df_streaks = calculate_current_stats(current_data, max_day_reported, lang, participants_list)
         if not df_streaks.empty:
             for _, row in df_streaks.iterrows():
                 mention(label=f"**{row['Uczestnik']}** ({row['Seria']} {_t('current_stats_streaks_days', lang)})", icon="🔥", url=f"https://hive.blog/@{row['Uczestnik']}")
         else:
             st.info("Brak znaczących serii.")
-    
     with col2:
         st.markdown(f"**{_t('stats_rabbits_title', lang)}**")
-        st.caption(_t('stats_rabbits_desc', lang))
         df_rabbits = calculate_rabbit_stats(current_data, max_day_reported, elimination_map, lang, participants_list)
         if not df_rabbits.empty:
             for _, row in df_rabbits.iterrows():
@@ -1061,95 +901,64 @@ def show_current_edition_dashboard(lang, edition_key="december"):
             st.info("Edycja zakończona")
 
     st.markdown("---")
-    # === NOWY WYKRES WYŚCIGU (RACE CHART) ===
+    
+    # Wykres wyścigu
     st.subheader(_t('current_stats_race_header', lang))
-    st.info(_t('current_stats_race_desc', lang))
-    
     max_axis_day = max(31, max_day_reported)
+    if 'race_current_day' not in st.session_state: st.session_state.race_current_day = max_day_reported
     
-    # Inicjalizacja sesji dla numeru dnia
-    if 'race_current_day' not in st.session_state:
-        st.session_state.race_current_day = max_day_reported
-    
-    # Kolumny kontrolne (tytuł, - , dzień, + , przycisk animacji)
     c_label, c_minus, c_input, c_plus, c_anim = st.columns([2, 1, 1, 1, 2])
-    
     with c_label:
         mode = st.radio(_t('current_stats_race_mode', lang), (_t('current_stats_race_mode_manual', lang), _t('current_stats_race_mode_anim', lang)), horizontal=True, label_visibility="collapsed")
     
-    # Obsługa przycisków +/-
     def decrease_day():
-        if st.session_state.race_current_day > 1:
-            st.session_state.race_current_day -= 1
-            
+        if st.session_state.race_current_day > 1: st.session_state.race_current_day -= 1
     def increase_day():
-        if st.session_state.race_current_day < max_day_reported:
-            st.session_state.race_current_day += 1
+        if st.session_state.race_current_day < max_day_reported: st.session_state.race_current_day += 1
             
-    with c_minus:
-        st.button(_t('race_btn_prev', lang), on_click=decrease_day, use_container_width=True)
-    with c_plus:
-        st.button(_t('race_btn_next', lang), on_click=increase_day, use_container_width=True)
-    with c_input:
-        # Input numeryczny, zsynchronizowany z sesją
-        st.number_input(_t('race_input_label', lang), min_value=1, max_value=max_day_reported, key='race_current_day', label_visibility="collapsed")
+    with c_minus: st.button(_t('race_btn_prev', lang), on_click=decrease_day, use_container_width=True)
+    with c_plus: st.button(_t('race_btn_next', lang), on_click=increase_day, use_container_width=True)
+    with c_input: st.number_input(_t('race_input_label', lang), min_value=1, max_value=max_day_reported, key='race_current_day', label_visibility="collapsed")
         
     chart_placeholder = st.empty()
-    
-    # Kolory
     colors = plt.cm.tab20(np.linspace(0, 1, len(participants_list)))
     color_map = {p: colors[i] for i, p in enumerate(sorted(participants_list))}
 
     def draw_chart(day):
         df_race = get_race_data_for_day(current_data, day, lang, participants_list)
-        # Sortujemy - ODWRACAMY ORDER aby A było na górze (dla barh)
         df_race = df_race.sort_index(ascending=False)
-        
-        fig, ax = plt.subplots(figsize=(10, max(6, len(participants_list)*0.3))) # Wysokość zależna od liczby graczy
+        fig, ax = plt.subplots(figsize=(10, max(6, len(participants_list)*0.3)))
         plt.style.use('dark_background')
         ax.set_facecolor('#0e1117')
         fig.patch.set_facecolor('#0e1117')
-        
         bars = ax.barh(df_race.index, df_race[_t('current_stats_race_total', lang)], color=[color_map.get(p, 'gray') for p in df_race.index])
-        
         ax.set_xlim(0, max_axis_day) 
-        # CZYSTY TYTUŁ (bez emotikon)
         ax.set_title(clean_title_for_chart(f"{_t('current_stats_race_day', lang)}: {day}"), color='white')
         ax.tick_params(axis='x', colors='white')
         ax.tick_params(axis='y', colors='white')
-        for spine in ax.spines.values():
-            spine.set_color('#444444')
-        
-        # Dodanie wartości na końcu słupka
+        for spine in ax.spines.values(): spine.set_color('#444444')
         for bar in bars:
             width = bar.get_width()
             ax.text(width + 0.5, bar.get_y() + bar.get_height()/2, f'{int(width)}', ha='left', va='center', color='white', fontsize=8)
-
         plt.tight_layout()
         return fig
 
     if mode == _t('current_stats_race_mode_anim', lang):
         with c_anim:
             if st.button(_t('current_stats_race_button', lang), type="primary", use_container_width=True):
-                # Animacja
                 for day in range(1, max_day_reported + 1):
                     fig = draw_chart(day)
-                    with chart_placeholder.container():
-                        st.pyplot(fig)
+                    with chart_placeholder.container(): st.pyplot(fig)
                     plt.close(fig)
                     time.sleep(0.1)
-                # USUNIĘTO reset stanu sesji tutaj, aby uniknąć błędu StreamlitAPIException
     else:
-        # Tryb ręczny - rysujemy dla aktualnego dnia z sesji
         fig = draw_chart(st.session_state.race_current_day)
-        with chart_placeholder.container():
-            st.pyplot(fig)
+        with chart_placeholder.container(): st.pyplot(fig)
         plt.close(fig)
 
     st.markdown("---")
     
-    expander_title = "📉 Pokaż wykres przebiegu rywalizacji (Historia miejsc)" if lang == 'pl' else "📉 Show Competition Progress (Rank History)"
-    with st.expander(expander_title):
+    with st.expander("📉 " + (_t('rank_history_expander', lang) if 'rank_history_expander' in _t.__globals__ else "Historia Miejsc")):
         show_daily_rank_progression(current_data, complete_stages, lang, participants_list)
         
     show_survival_comparison(current_data, max_day_reported, df_historical, lang, elimination_map, complete_stages, participants_list)
@@ -1162,322 +971,126 @@ def show_current_edition_dashboard(lang, edition_key="december"):
         with st.expander(_t('current_ranking_historical_expander', lang)):
             show_historical_context(df_historical, lang, participants_list)
 
-def show_social_post_generator(lang, ranking_df, elimination_map, current_data, max_day_reported, 
-                               df_historical, participants_list, current_edition_label):
-    """Generator postów do social media."""
+def get_past_winners_positions(df_historical, current_ranking_df, lang):
+    """Znajduje obecne pozycje zwycięzców poprzednich 3 edycji."""
+    if df_historical.empty:
+        return []
     
-    st.markdown("---")
-    st.subheader("📱 Generator Postów do Social Media")
-    st.caption("Wybierz elementy i skopiuj gotowy post")
+    all_editions = sorted(df_historical['miesiac_rok_str'].unique(), key=lambda x: datetime.strptime(x, '%m.%Y'), reverse=True)
+    last_3_editions = all_editions[:3]
+    recent_hist = df_historical[df_historical['miesiac_rok_str'].isin(last_3_editions)]
+    past_winners = recent_hist[recent_hist['miejsce'] == 1]['uczestnik'].unique().tolist()
     
-    if 'generated_post' not in st.session_state:
-        st.session_state.generated_post = ""
-    if 'post_edited' not in st.session_state:
-        st.session_state.post_edited = ""
+    current_positions = []
+    participant_col = _t('ranking_col_participant', lang)
+    rank_col = _t('ranking_col_rank', lang)
     
-    with st.expander("⚙️ Konfiguracja Posta", expanded=True):
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.markdown("**📊 Zawartość Posta**")
-            include_title = st.checkbox("📋 Tytuł", value=True, key="inc_title")
-            include_top3 = st.checkbox("🏆 Top 3 Ranking", value=True, key="inc_top3")
-            include_top5 = st.checkbox("🥇 Top 5 Ranking (zamiast Top 3)", value=False, key="inc_top5")
-            include_stats = st.checkbox("📊 Statystyki (aktywni/wyeliminowani)", value=True, key="inc_stats")
-            include_new_eliminated = st.checkbox("👋 Nowo Wyeliminowani", value=False, key="inc_elim")
-        
-        with col2:
-            st.markdown("**🎯 Opcje Dodatkowe**")
-            include_history = st.checkbox("📈 Porównanie z Historią", value=False, key="inc_hist")
-            include_past_winners = st.checkbox("🥇 Byli Zwycięzcy", value=False, key="inc_past_win")
-            include_form_cta = st.checkbox("📝 Zachęta do Formularza", value=True, key="inc_cta")
-            include_helper_mention = st.checkbox("🙋 Podziękowanie Pomocnikom", value=False, key="inc_help")
-            include_footer = st.checkbox("💬 Zachęta do Komentarzy", value=True, key="inc_footer")
-            include_hashtags = st.checkbox("#️⃣ Hashtagi", value=True, key="inc_hash")
-        
-        st.divider()
-        
-        st.markdown("**👥 Wspominania (Mentions)**")
-        mention_option = st.radio(
-            "Którzy uczestnicy mają zostać wspominani?",
-            ("Nikt", "Tylko Top 3", "Tylko Top 5", "Wszyscy aktywni", "Własny wybór"),
-            key="mention_opt"
-        )
-        
-        mentioned_participants = []
-        if mention_option == "Tylko Top 3":
-            mentioned_participants = ranking_df.head(3)[_t('ranking_col_participant', lang)].tolist()
-        elif mention_option == "Tylko Top 5":
-            mentioned_participants = ranking_df.head(5)[_t('ranking_col_participant', lang)].tolist()
-        elif mention_option == "Wszyscy aktywni":
-            mentioned_participants = [p for p in participants_list 
-                                     if elimination_map.get(p) is None or elimination_map.get(p) > max_day_reported]
-        elif mention_option == "Własny wybór":
-            mentioned_participants = st.multiselect(
-                "Wybierz uczestników:",
-                options=participants_list,
-                key="custom_mentions"
-            )
-        
-        st.divider()
-        
-        st.markdown("**⚙️ Ustawienia**")
-        col_lang, col_helper = st.columns(2)
-        
-        with col_lang:
-            post_lang = st.radio("Język posta:", ("Polski", "English"), key="post_lang")
-            lang_key = 'pl' if post_lang == "Polski" else 'en'
-        
-        with col_helper:
-            show_helper = st.checkbox("Ktoś pomaga w zbieraniu danych?", value=False, key="has_helper")
-            if show_helper:
-                helper_name = st.text_input("Imię/nick pomocnika:", key="helper_input")
-            else:
-                helper_name = ""
-        
-        st.divider()
-        
-        custom_title = st.text_input(
-            "Tytuł (pozostaw puste dla domyślnego):",
-            value="",
-            placeholder=f"Ranking {current_edition_label} - Etap {max_day_reported}",
-            key="custom_title"
-        )
-        
-        col_gen, col_clear = st.columns([3, 1])
-        with col_gen:
-            if st.button("🎯 Generuj Post", type="primary", use_container_width=True):
-                st.session_state.generated_post = _generate_social_post(
-                    title=custom_title or f"Ranking {current_edition_label} - Etap {max_day_reported}",
-                    ranking_df=ranking_df,
-                    elimination_map=elimination_map,
-                    current_data=current_data,
-                    max_day_reported=max_day_reported,
-                    df_historical=df_historical,
-                    participants_list=participants_list,
-                    lang=lang_key,
-                    include_title=include_title,
-                    include_top3=include_top3,
-                    include_top5=include_top5,
-                    include_stats=include_stats,
-                    include_new_eliminated=include_new_eliminated,
-                    include_history=include_history,
-                    include_past_winners=include_past_winners,
-                    include_form_cta=include_form_cta,
-                    include_helper_mention=include_helper_mention,
-                    helper_name=helper_name,
-                    include_footer=include_footer,
-                    include_hashtags=include_hashtags,
-                    mentioned_participants=mentioned_participants
-                )
-                st.session_state.post_edited = st.session_state.generated_post
-                st.rerun()
-        
-        with col_clear:
-            if st.button("🗑️ Wyczyść", use_container_width=True):
-                st.session_state.generated_post = ""
-                st.session_state.post_edited = ""
-                st.rerun()
-    
-    if st.session_state.generated_post:
-        st.markdown("---")
-        st.subheader("✏️ Edycja Posta")
-        
-        edited_post = st.text_area(
-            "Edytuj swój post (możesz zmieniać tekst):",
-            value=st.session_state.post_edited,
-            height=300,
-            key="post_textarea"
-        )
-        
-        if edited_post != st.session_state.post_edited:
-            st.session_state.post_edited = edited_post
-        
-        st.markdown("---")
-        st.subheader("📋 Gotowy Post")
-        
-        st.code(st.session_state.post_edited, language="markdown")
-        
-        col_copy, col_preview, col_new = st.columns(3)
-        
-        with col_copy:
-            st.caption("Skopiuj ręcznie (Ctrl+C/Cmd+C)")
-        
-        with col_preview:
-            with st.expander("👁️ Podgląd HTML"):
-                st.markdown(st.session_state.post_edited)
-        
-        with col_new:
-            if st.button("✨ Nowy Post", use_container_width=True):
-                st.session_state.generated_post = ""
-                st.session_state.post_edited = ""
-                st.rerun()
-
-
-def _generate_social_post(title, ranking_df, elimination_map, current_data, max_day_reported, df_historical,
-                        participants_list, lang, include_title, include_top3, include_top5, include_stats,
-                        include_new_eliminated, include_history, include_past_winners, include_form_cta,
-                        include_helper_mention, helper_name, include_footer, include_hashtags, mentioned_participants):
-    """Generuje markdown posta na podstawie wybranych opcji."""
-    
-    md = ""
-    
-    if include_title:
-        md += f"# {title}\n\n"
-        if lang == 'pl':
-            md += f"**Etap {max_day_reported}** | {datetime.now().strftime('%d.%m.%Y o %H:%M')}\n\n"
-        else:
-            md += f"**Stage {max_day_reported}** | {datetime.now().strftime('%m/%d/%Y at %H:%M')}\n\n"
-    
-    if mentioned_participants:
-        mentions = " ".join([f"@{p}" for p in mentioned_participants])
-        if lang == 'pl':
-            md += f"🎯 **Czołówka:** {mentions}\n\n"
-        else:
-            md += f"🎯 **Top Performers:** {mentions}\n\n"
-    
-    if include_top3 or include_top5:
-        top_n = 5 if include_top5 else 3
-        
-        if lang == 'pl':
-            md += f"## 🏆 Top {top_n} Ranking\n\n"
-            md += "| Miejsce | Uczestnik | Najwyżej |\n|---|---|---|\n"
-        else:
-            md += f"## 🏆 Top {top_n} Ranking\n\n"
-            md += "| Place | Participant | Highest |\n|---|---|---|\n"
-        
-        participant_col = _t('ranking_col_participant', lang)
-        rank_col = _t('ranking_col_rank', lang)
-        highest_col = _t('ranking_col_highest_pass', lang)
-        
-        top_ranking = ranking_df.head(top_n)
-        
-        for idx, row in top_ranking.iterrows():
-            rank = row[rank_col]
-            participant = row[participant_col]
-            highest = row[highest_col]
-            md += f"| {rank} | [@{participant}](https://hive.blog/@{participant}) | {highest} |\n"
-        
-        md += "\n"
-    
-    if include_stats:
-        active_count = 0
-        total_count = len(participants_list)
-        
-        for p in participants_list:
-            elim_day = elimination_map.get(p)
-            if elim_day is None or elim_day > max_day_reported:
-                active_count += 1
-        
-        passed_today = 0
-        for p in participants_list:
-            p_data = current_data.get(p, {})
-            if max_day_reported in p_data and p_data[max_day_reported].get('status') == "Zaliczone":
-                passed_today += 1
-        
-        if lang == 'pl':
-            md += "## 📊 Statystyki\n\n"
-            md += f"- **Aktywnych:** {active_count}/{total_count}\n"
-            md += f"- **Zaliczyli etap:** {passed_today}\n"
-            md += f"- **Wyeliminowani:** {total_count - active_count}\n\n"
-        else:
-            md += "## 📊 Statistics\n\n"
-            md += f"- **Active:** {active_count}/{total_count}\n"
-            md += f"- **Passed stage:** {passed_today}\n"
-            md += f"- **Eliminated:** {total_count - active_count}\n\n"
-    
-    if include_new_eliminated:
-        new_eliminated = []
-        if max_day_reported > 1:
-            for p in participants_list:
-                elim_day = elimination_map.get(p)
-                if elim_day == max_day_reported:
-                    new_eliminated.append(p)
-        
-        if new_eliminated:
-            if lang == 'pl':
-                md += "## 👋 Wyeliminowani w tym etapie\n\n"
-            else:
-                md += "## 👋 Eliminated This Stage\n\n"
+    for winner in past_winners:
+        if winner in current_ranking_df[participant_col].values:
+            rank = current_ranking_df[current_ranking_df[participant_col] == winner][rank_col].values[0]
+            current_positions.append(f"@{winner} ({rank})")
             
-            for p in new_eliminated:
-                md += f"- [@{p}](https://hive.blog/@{p})\n"
-            md += "\n"
+    return current_positions
+
+def generate_weekly_summary_markdown(week_num, current_data, df_historical, df_logs, lang, participants_list):
+    """Generuje tekst podsumowania dla konkretnego tygodnia."""
+    day_limit = week_num * 7
+    ranking_df, elimination_map = calculate_ranking(current_data, day_limit, lang, participants_list, ranking_type='live')
+    participant_col = _t('ranking_col_participant', lang)
+    rank_col = _t('ranking_col_rank', lang)
     
-    if include_history and not df_historical.empty:
+    leaders = ranking_df[ranking_df[rank_col] == 1][participant_col].tolist()
+    leaders_str = ", ".join([fmt_user(l, lang) for l in leaders])
+    
+    leader_text = _t('weekly_leader_sg', lang, leaders_str) if len(leaders) == 1 else _t('weekly_leader_pl', lang, leaders_str)
+    
+    chasing_str = ""
+    chasers_md = ""
+    if len(leaders) < 5:
+        chasers = ranking_df[(ranking_df[rank_col] > 1) & (ranking_df[rank_col] <= 5)][participant_col].tolist()
+        if chasers:
+            chasing_str = ", ".join([fmt_user(c, lang) for c in chasers])
+            chasers_md = _t('weekly_chasers', lang, chasing_str)
+    
+    past_winners_info = get_past_winners_positions(df_historical, ranking_df, lang)
+    past_winners_str = ", ".join(past_winners_info) if past_winners_info else "brak danych"
+    
+    started_count = len(participants_list)
+    active_count = 0
+    for p in participants_list:
+        elim_day = elimination_map.get(p)
+        if elim_day is None or elim_day > day_limit:
+            active_count += 1
+            
+    status_word = "nadal" if active_count == started_count else ("już tylko" if lang == 'pl' else "only")
+    
+    comparison_str = "brak danych historycznych"
+    if not df_historical.empty:
         editions = df_historical['miesiac_rok_str'].unique()
         hist_active_pcts = []
-        
         for ed in editions:
             ed_df = df_historical[df_historical['miesiac_rok_str'] == ed]
             total_ed = len(ed_df)
-            active_at_limit = ((ed_df['rezultat_numeric'] + 3) > max_day_reported).sum()
+            active_at_limit = ((ed_df['rezultat_numeric'] + 3) > day_limit).sum()
             if total_ed > 0:
-                hist_active_pcts.append((active_at_limit / total_ed) * 100)
+                hist_active_pcts.append(active_at_limit / total_ed)
         
         if hist_active_pcts:
-            active_count = len([p for p in participants_list if elimination_map.get(p) is None or elimination_map.get(p) > max_day_reported])
-            total_count = len(participants_list)
-            current_pct = (active_count / total_count * 100) if total_count > 0 else 0
             avg_hist_pct = sum(hist_active_pcts) / len(hist_active_pcts)
+            current_pct = active_count / started_count if started_count > 0 else 0
+            diff = current_pct - avg_hist_pct
             
-            if lang == 'pl':
-                md += "## 📈 Porównanie z Historią\n\n"
-                md += f"- **Ta edycja (aktywni):** {current_pct:.1f}%\n"
-                md += f"- **Średnia Historyczna:** {avg_hist_pct:.1f}%\n\n"
-            else:
-                md += "## 📈 Historical Comparison\n\n"
-                md += f"- **This Edition (Active):** {current_pct:.1f}%\n"
-                md += f"- **Historical Average:** {avg_hist_pct:.1f}%\n\n"
-    
-    if include_past_winners and not df_historical.empty:
-        all_editions = sorted(df_historical['miesiac_rok_str'].unique(), 
-                            key=lambda x: datetime.strptime(x, '%m.%Y'), reverse=True)
-        last_3_editions = all_editions[:3]
-        
-        recent_hist = df_historical[df_historical['miesiac_rok_str'].isin(last_3_editions)]
-        winners = recent_hist[recent_hist['miejsce'] == 1]['uczestnik'].unique().tolist()
-        
-        if winners:
-            if lang == 'pl':
-                md += "## 🥇 Byli Zwycięzcy\n\n"
-            else:
-                md += "## 🥇 Former Champions\n\n"
+            if diff > 0.1: comparison_str = "jest zauważalnie lepiej" if lang == 'pl' else "is noticeably better"
+            elif diff > 0.05: comparison_str = "jest lepiej" if lang == 'pl' else "is better"
+            elif diff < -0.1: comparison_str = "jest zauważalnie gorzej" if lang == 'pl' else "is noticeably worse"
+            elif diff < -0.05: comparison_str = "jest gorzej" if lang == 'pl' else "is worse"
+            else: comparison_str = "jest podobnie" if lang == 'pl' else "is similar"
             
-            for winner in winners:
-                md += f"- [@{winner}](https://hive.blog/@{winner})\n"
-            md += "\n"
-    
-    if include_helper_mention and helper_name:
-        if lang == 'pl':
-            md += f"## 🙋 Podziękowanie\n\n"
-            md += f"Dziękujemy **@{helper_name}** za pomoc w zbieraniu danych! 🤝\n\n"
-        else:
-            md += f"## 🙋 Thanks\n\n"
-            md += f"Thanks to **@{helper_name}** for helping us collect the data! 🤝\n\n"
-    
-    if include_form_cta:
-        if lang == 'pl':
-            md += "## 📝 Chcesz Wybrać Wyzwanie?\n\n"
-            md += "Wypełnij formularz i dołącz do POPRZECZKI!\n\n"
-            md += "👉 [Formularz CTA]\n\n"
-        else:
-            md += "## 📝 Want to Join?\n\n"
-            md += "Fill out the form and join POPRZECZKA!\n\n"
-            md += "👉 [Form CTA]\n\n"
-    
-    if include_footer:
-        if lang == 'pl':
-            md += "---\n\n"
-            md += "💬 **Co myślisz o tym etapie?** Napisz komentarz poniżej!\n\n"
-        else:
-            md += "---\n\n"
-            md += "💬 **What do you think about this stage?** Leave a comment below!\n\n"
-    
-    if include_hashtags:
-        if lang == 'pl':
-            md += "#poprzeczka #hive #ranking #wyzwanie #sport"
-        else:
-            md += "#poprzeczka #hive #ranking #challenge #sports"
-    
-    return md
+    rewards_str = ""
+    helper_pct_val = 0
+    if not df_logs.empty and 'Submitter' in df_logs.columns:
+        df_logs['Day_Num'] = pd.to_numeric(df_logs['Day'], errors='coerce')
+        logs_subset = df_logs[df_logs['Day_Num'] <= day_limit]
+        if not logs_subset.empty:
+            helpers_subset = logs_subset[logs_subset['Submitter'] != 'poprzeczka (Admin)']
+            total_subset_entries = len(logs_subset)
+            if total_subset_entries > 0:
+                helper_pct_val = int((len(helpers_subset) / total_subset_entries) * 100)
+            P = helper_pct_val
+            if P > 0:
+                helper_pool = P * 0.80
+                leader_pool = P * 0.20
+                user_rewards = {}
+                helper_counts = helpers_subset['Submitter'].value_counts()
+                total_helper_entries = helper_counts.sum()
+                for user, count in helper_counts.items():
+                    share = (count / total_helper_entries) * helper_pool
+                    user_rewards[user] = user_rewards.get(user, 0) + share
+                top_leaders = ranking_df[(ranking_df[rank_col] <= 5)][participant_col].unique()
+                top_leaders = top_leaders[:5] 
+                if len(top_leaders) > 0:
+                    share_per_leader = leader_pool / len(top_leaders)
+                    for leader in top_leaders:
+                        user_rewards[leader] = user_rewards.get(leader, 0) + share_per_leader
+                final_rewards = []
+                for user, val in user_rewards.items():
+                    r_val = round(val)
+                    if r_val > 0:
+                        final_rewards.append((user, r_val))
+                final_rewards.sort(key=lambda x: x[1], reverse=True)
+                final_rewards = final_rewards[:7]
+                rewards_list = [f"{val}% - {fmt_user(user, lang)}" for user, val in final_rewards]
+                rewards_str = ", ".join(rewards_list)
+
+    summary_text = f"""
+{_t('weekly_intro', lang, week_num)}
+{leader_text} {chasers_md}
+{_t('weekly_winners', lang, past_winners_str)}
+
+{_t('weekly_participants', lang, started_count, day_limit, active_count, status_word)}
+{_t('weekly_comparison', lang, comparison_str)}
+
+{_t('weekly_footer_new', lang, helper_pct_val)}
+{rewards_str}
+"""
+    return summary_text
