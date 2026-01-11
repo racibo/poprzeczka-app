@@ -42,7 +42,7 @@ EDITIONS_CONFIG = OrderedDict([
         "start_date": date(2025, 12, 1),
         "sheet_name": "EdycjaGrudzien",
         "participants": PARTICIPANTS_DECEMBER,
-        "is_manually_closed": False 
+        "is_manually_closed": True 
     }),
     ("january", {
         "start_date": date(2026, 1, 1),
@@ -57,3 +57,4 @@ EDITIONS_CONFIG = OrderedDict([
         "is_manually_closed": False
     }),
 ])
+
