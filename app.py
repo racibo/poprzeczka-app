@@ -276,7 +276,7 @@ def main():
         
         edition_statuses[key] = {'status': status, 'icon': icon}
     
-    VISIBLE_EDITIONS_KEYS = list(EDITIONS_CONFIG.keys()) 
+    VISIBLE_EDITIONS_KEYS = [k for k, v in EDITIONS_CONFIG.items() if not v.get('is_hidden', False)] 
     
     default_nav_key = "nav_historical_stats"
     active_edition_key = None
