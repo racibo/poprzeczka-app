@@ -43,13 +43,13 @@ DEFAULT_EDITIONS_CONFIG = OrderedDict([
         "sheet_name": "EdycjaGrudzien",
         "participants": PARTICIPANTS_DECEMBER,
         "is_manually_closed": True,
-        "is_hidden": False # Nowa flaga do ukrywania w menu
+        "is_hidden": True # Nowa flaga do ukrywania w menu
     }),
     ("january", {
         "start_date": date(2026, 1, 1),
         "sheet_name": "EdycjaStyczen",
         "participants": PARTICIPANTS_JANUARY,
-        "is_manually_closed": False,
+        "is_manually_closed": True,
         "is_hidden": False
     }),
     ("february", {
