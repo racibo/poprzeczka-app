@@ -6,7 +6,7 @@ import os
 
 # === LISTY UCZESTNIKÓW (BAZOWE) ===
 PARTICIPANTS_LIST_BASE = [
-    "navidjahanshahi", "new.things", "cezary-io", "manuvert", "racibo", 
+    "new.things", "cezary-io", "manuvert", "racibo", 
     "ervin-lemark", "merthin", "sk1920", "edycu007", "ataraksja", 
     "homesteadlt", "browery", "fredkese", "marianomariano", "patif2025"
 ]
@@ -108,3 +108,4 @@ def load_config_with_overrides():
 
 # Ładujemy konfigurację przy starcie
 EDITIONS_CONFIG = load_config_with_overrides()
+
