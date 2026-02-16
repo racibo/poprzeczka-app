@@ -20,7 +20,7 @@ PARTICIPANTS_JANUARY = [
     if p not in ["patif2025", "ataraksja"]
 ]
 
-PARTICIPANTS_FEBRUARY = list(PARTICIPANTS_LIST_BASE) 
+PARTICIPANTS_FEBRUARY = [p for p in PARTICIPANTS_LIST_BASE if p not in ["patif2025", "ataraksja"]]
 
 SUBMITTER_LIST = sorted(list(set(PARTICIPANTS_LIST_BASE + ["poprzeczka (Admin)"])))
 ALL_POSSIBLE_PARTICIPANTS = sorted(list(set(PARTICIPANTS_DECEMBER + PARTICIPANTS_JANUARY + PARTICIPANTS_FEBRUARY)))
@@ -108,4 +108,5 @@ def load_config_with_overrides():
 
 # Ładujemy konfigurację przy starcie
 EDITIONS_CONFIG = load_config_with_overrides()
+
 
