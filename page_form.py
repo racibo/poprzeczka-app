@@ -248,209 +248,159 @@ def show_submission_form(lang, edition_key="december", is_active=True):
         # === NAJWIĘKSI POMOCNICY ===
         st.markdown("---")
         st.subheader(_t('current_stats_top_submitters', lang))
-        st.info(_t('helpers_info_text', lang))
 
         if sheet:
             try:
                 df_logs = load_google_sheet_data(sheet, "LogWpisow")
                 
                 if not df_logs.empty:
-                    df_logs_subset = df_logs.tail(200).copy() 
-                else:
-                    df_logs_subset = pd.DataFrame()
-
-                # --- AGREGACJA TOP 5 LIDERÓW ---
-                all_top_leaders = set()
-                leader_bonus_editions = ['november', 'december'] 
-                part_col = _t('ranking_col_participant', lang)
-                
-                for ed_key in leader_bonus_editions:
-                    ed_cfg = EDITIONS_CONFIG.get(ed_key)
-                    if ed_cfg:
-                        ed_sheet_name = ed_cfg['sheet_name']
-                        ed_participants_list = ed_cfg['participants']
-                        
-                        df_ed_results = load_google_sheet_data(sheet, ed_sheet_name)
-                        
-                        if not df_ed_results.empty:
-                            expected_data_cols = ['Participant', 'Day', 'Status', 'Timestamp', 'Notes']
-                            current_data_proc, max_day_proc, elimination_map_live = process_raw_data(df_ed_results, lang, expected_data_cols, ed_sheet_name)
-                            
-                            ranking_live, elimination_map_live = calculate_ranking(current_data_proc, max_day_proc, lang, ed_participants_list, ranking_type='live')
-                            complete_stages = find_last_complete_stage(current_data_proc, elimination_map_live, max_day_proc, ed_participants_list)
-                            
-                            official_stage = complete_stages[-1] if complete_stages else 1
-                            ranking_df, _ = calculate_ranking(current_data_proc, official_stage, lang, ed_participants_list, ranking_type='official')
-                            
-                            if not ranking_df.empty:
-                                top_5_ed_leaders = ranking_df.head(5)[part_col].tolist()
-                                all_top_leaders.update(top_5_ed_leaders)
-                
-                if not df_logs_subset.empty:
                     proper_headers = ['Submitter', 'Participant', 'Day', 'Status', 'Timestamp', 'Edition', 'Notes']
-                    df_logs_subset.columns = proper_headers[:len(df_logs_subset.columns)]
-                    
-                    total_entries = len(df_logs_subset)
-                    helpers_subset = df_logs_subset[df_logs_subset['Submitter'] != 'poprzeczka (Admin)']
-                    community_entries = len(helpers_subset)
-                    
-                    P = 0
-                    if total_entries > 0:
-                        P = int((community_entries / total_entries) * 100)
-                    
-                    helper_pool = P * 0.80
-                    leader_pool = P * 0.20
-                    
-                    helper_counts = helpers_subset['Submitter'].value_counts()
-                    num_leaders = len(all_top_leaders) 
-                    
-                    bonus_per_leader = 0
-                    if num_leaders > 0:
-                        bonus_per_leader = leader_pool / num_leaders 
-                    
-                    rewards_data = []
-                    all_beneficiaries = set(helper_counts.index.tolist()) | all_top_leaders 
-                    
-                    for user in all_beneficiaries:
-                        user_entries = helper_counts.get(user, 0)
-                        h_share = 0
-                        if community_entries > 0:
-                            h_share = (user_entries / community_entries) * helper_pool
-                        
-                        l_share = bonus_per_leader if user in all_top_leaders else 0
-                        
-                        total_raw = h_share + l_share
-                        total_rounded = round(total_raw)
-                        
-                        details_str = _t('helpers_details_format', lang, h_share, l_share, total_rounded)
-                        
-                        if total_rounded > 0:
-                            rewards_data.append({
-                                "Uczestnik": f"@{user}",
-                                "Nagroda": f"{total_rounded}%",
-                                "Szczegóły wyliczenia": details_str,
-                                "_sort_val": total_rounded
-                            })
-                    
-                    rewards_data.sort(key=lambda x: x['_sort_val'], reverse=True)
-                    top_rewards = rewards_data[:7]
-                    
-                    st.session_state['helper_pool_P'] = P 
+                    df_logs.columns = proper_headers[:len(df_logs.columns)]
 
-                    if top_rewards:
-                        df_display = pd.DataFrame(top_rewards).drop(columns=['_sort_val'])
-                        st.dataframe(
-                            df_display,
-                            width="stretch",
-                            hide_index=True,
-                            column_config={
-                                "Uczestnik": st.column_config.TextColumn(_t('helpers_col_participant', lang), width="small"),
-                                "Nagroda": st.column_config.TextColumn(_t('helpers_col_reward', lang), width="small"),
-                                "Szczegóły wyliczenia": st.column_config.TextColumn(_t('helpers_col_details', lang), width="large"),
-                            }
+                # --- WYBÓR DATY OD KTÓREJ LICZYMY POMOC ---
+                if lang == 'pl':
+                    date_label = "📅 Obliczaj pomoc od daty:"
+                    date_help = "Wkłady przed tą datą nie będą uwzględniane przy liczeniu pomocy."
+                else:
+                    date_label = "📅 Count contributions from date:"
+                    date_help = "Contributions before this date won't be counted."
+
+                help_from_date = st.date_input(
+                    date_label,
+                    value=cfg.get('start_date', datetime.now().date()),
+                    help=date_help,
+                    key=f"help_date_{edition_key}"
+                )
+
+                # --- AGREGACJA POMOCY (od wybranej daty) ---
+                df_logs_filtered = pd.DataFrame()
+                total_entries = 0
+                community_entries = 0
+                helper_counts = pd.Series(dtype=int)
+
+                if not df_logs.empty and 'Timestamp' in df_logs.columns:
+                    df_logs['Timestamp_parsed'] = pd.to_datetime(df_logs['Timestamp'], errors='coerce')
+                    help_from_dt = datetime.combine(help_from_date, datetime.min.time())
+                    df_logs_filtered = df_logs[df_logs['Timestamp_parsed'] >= help_from_dt].copy()
+
+                    total_entries = len(df_logs_filtered)
+                    helpers_subset = df_logs_filtered[df_logs_filtered['Submitter'] != 'poprzeczka (Admin)']
+                    community_entries = len(helpers_subset)
+                    helper_counts = helpers_subset['Submitter'].value_counts()
+
+                P = 0
+                if total_entries > 0:
+                    P = int((community_entries / total_entries) * 100)
+
+                st.session_state['helper_pool_P'] = P
+
+                helper_pool = P * 0.80   # 80% puli za pomoc
+                leader_pool = P * 0.20   # 20% puli za liderowanie
+
+                # --- AGREGACJA LIDEROWANIA ---
+                # 1. Ostatnia oficjalna klasyfikacja BIEŻĄCEJ edycji
+                all_leaders = set()
+                part_col = _t('ranking_col_participant', lang)
+                rank_col = _t('ranking_col_rank', lang)
+
+                try:
+                    df_ed_results = load_google_sheet_data(sheet, sheet_name)
+                    if not df_ed_results.empty:
+                        expected_data_cols = ['Participant', 'Day', 'Status', 'Timestamp', 'Notes']
+                        current_data_proc, max_day_proc, _ = process_raw_data(df_ed_results, lang, expected_data_cols, sheet_name)
+                        ranking_live, elim_map_live = calculate_ranking(current_data_proc, max_day_proc, lang, participants_list, ranking_type='live')
+                        complete_stages_curr = find_last_complete_stage(current_data_proc, elim_map_live, max_day_proc, participants_list)
+                        
+                        if complete_stages_curr:
+                            official_stage = complete_stages_curr[-1]
+                            ranking_official, _ = calculate_ranking(current_data_proc, official_stage, lang, participants_list, ranking_type='official')
+                            if not ranking_official.empty:
+                                # Bierzemy wszystkich na miejscu 1 (ex aequo)
+                                min_rank = ranking_official[rank_col].min()
+                                leaders_current = ranking_official[ranking_official[rank_col] == min_rank][part_col].tolist()
+                                all_leaders.update(leaders_current)
+                except Exception:
+                    pass
+
+                # 2. Miejsca 1-3 z ostatniej ZAKOŃCZONEJ edycji (dane historyczne)
+                df_historical = load_historical_data_from_json()
+                if not df_historical.empty:
+                    all_editions_sorted = sorted(df_historical['edycja_nr'].unique())
+                    if all_editions_sorted:
+                        last_finished_edition = all_editions_sorted[-1]
+                        last_ed_df = df_historical[df_historical['edycja_nr'] == last_finished_edition]
+                        medalists = last_ed_df[last_ed_df['miejsce'] <= 3]['uczestnik'].tolist()
+                        all_leaders.update(medalists)
+
+                num_leaders = len(all_leaders)
+                bonus_per_leader = (leader_pool / num_leaders) if num_leaders > 0 else 0
+
+                # --- OBLICZANIE NAGRÓD ---
+                rewards_data = []
+                all_beneficiaries = set(helper_counts.index.tolist()) | all_leaders
+
+                for user in all_beneficiaries:
+                    user_entries = helper_counts.get(user, 0)
+                    h_share = 0
+                    if community_entries > 0:
+                        h_share = (user_entries / community_entries) * helper_pool
+
+                    l_share = bonus_per_leader if user in all_leaders else 0
+
+                    total_raw = h_share + l_share
+                    total_rounded = round(total_raw)
+
+                    if total_rounded > 0 or h_share > 0 or l_share > 0:
+                        if lang == 'pl':
+                            details_str = f"pomoc {h_share:.1f}%, liderowanie +{l_share:.1f}%. Razem ≈ {total_rounded}%"
+                        else:
+                            details_str = f"help {h_share:.1f}%, leading +{l_share:.1f}%. Total ≈ {total_rounded}%"
+
+                        rewards_data.append({
+                            "Uczestnik": f"@{user}",
+                            "Nagroda": f"{total_rounded}%",
+                            "Szczegóły wyliczenia": details_str,
+                            "_h_share": h_share,
+                            "_l_share": l_share,
+                            "_sort_val": total_raw
+                        })
+
+                rewards_data.sort(key=lambda x: x['_sort_val'], reverse=True)
+                top_rewards = rewards_data[:7]
+
+                if top_rewards:
+                    df_display = pd.DataFrame(top_rewards).drop(columns=['_h_share', '_l_share', '_sort_val'])
+                    st.dataframe(
+                        df_display,
+                        width="stretch",
+                        hide_index=True,
+                        column_config={
+                            "Uczestnik": st.column_config.TextColumn(_t('helpers_col_participant', lang), width="small"),
+                            "Nagroda": st.column_config.TextColumn(_t('helpers_col_reward', lang), width="small"),
+                            "Szczegóły wyliczenia": st.column_config.TextColumn(_t('helpers_col_details', lang), width="large"),
+                        }
+                    )
+                    admin_entries = total_entries - community_entries
+                    if lang == 'pl':
+                        caption_text = (
+                            f"Pula nagród: **{P}%** (społeczność wprowadziła {community_entries} z {total_entries} wpisów, "
+                            f"admin {admin_entries}). "
+                            f"Podział: 80% za pomoc, 20% za liderowanie. "
+                            f"Liderzy uwzględnieni: {num_leaders} os."
                         )
-                        caption_text = _t('helpers_footer_pool_full', lang, P, community_entries, total_entries - community_entries, total_entries)
-                        st.caption(caption_text)
                     else:
-                        st.info("Brak danych do wyliczenia nagród.")
-                else: 
-                    st.info("Brak wpisów w logu.")
+                        caption_text = (
+                            f"Reward pool: **{P}%** (community entered {community_entries} of {total_entries} entries, "
+                            f"admin {admin_entries}). "
+                            f"Split: 80% for help, 20% for leading. "
+                            f"Leaders counted: {num_leaders}."
+                        )
+                    st.caption(caption_text)
+                else:
+                    st.info("Brak danych do wyliczenia nagród." if lang == 'pl' else "No data to calculate rewards.")
 
             except Exception as e:
                 st.warning(f"Nie udało się pobrać danych do tabeli pomocników: {e}")
-
-        # === GENERATOR DRAFTU ===
-        st.markdown("---")
-        st.header(_t('draft_header', lang, edition_label))
-        
-        p_nov = EDITIONS_CONFIG.get('november', {}).get('participants', [])
-        p_dec = EDITIONS_CONFIG.get('december', {}).get('participants', [])
-        all_participants_draft = sorted(list(set(p_nov + p_dec)))
-        
-        selected_participant_for_draft = st.selectbox(
-            _t('draft_select_label', lang), 
-            options=[None] + all_participants_draft, 
-            format_func=lambda x: _t('form_participant_placeholder', lang) if x is None else x,
-            key=f"draft_sel_{edition_key}"
-        )
-
-        if selected_participant_for_draft:
-            with st.spinner(_t('draft_loading', lang)):
-                try:
-                    if sheet:
-                        df_raw_data = load_google_sheet_data(sheet, sheet_name)
-                        expected_data_cols = ['Participant', 'Day', 'Status', 'Timestamp', 'Notes']
-                        current_data, max_day_reported, _ = process_raw_data(df_raw_data, lang, expected_data_cols, sheet_name)
-                        
-                        ranking_df, elimination_map_live = calculate_ranking(current_data, max_day_reported, lang, participants_list, ranking_type='live')
-                        complete_stages = find_last_complete_stage(current_data, elimination_map_live, max_day_reported, participants_list)
-                        official_stage = complete_stages[-1] if complete_stages else 1
-                        ranking_df, elimination_map_official = calculate_ranking(current_data, official_stage, lang, participants_list, ranking_type='official')
-                        df_historical = load_historical_data_from_json()
-                        
-                        # Logika językowa
-                        female_users = ['ataraksja', 'asia-pl', 'patif2025']
-                        is_female = selected_participant_for_draft in female_users
-                        w_participant = _t('word_participant_f', lang) if is_female else _t('word_participant_m', lang)
-                        w_chance = _t('word_chance_f', lang) if is_female else _t('word_chance_m', lang)
-                        w_eliminated = _t('word_eliminated_f', lang) if is_female else _t('word_eliminated_m', lang)
-                        w_achieved = _t('word_achieved_f', lang) if is_female else _t('word_achieved_m', lang)
-                        w_missing = _t('word_missing_f', lang) if is_female else _t('word_missing_m', lang)
-                        w_broke = _t('word_broke_f', lang) if is_female else _t('word_broke_m', lang)
-
-                        part_col = _t('ranking_col_participant', lang)
-                        rank_col = _t('ranking_col_rank', lang)
-                        
-                        user_row = ranking_df[ranking_df[part_col] == selected_participant_for_draft]
-                        
-                        if not user_row.empty:
-                            current_rank = user_row.iloc[0][rank_col]
-                            idx = user_row.index[0]
-                            prev_user = f"@{ranking_df.iloc[idx-1][part_col]}" if idx > 0 else ("nikt" if lang == 'pl' else "no one")
-                            next_user = f"@{ranking_df.iloc[idx+1][part_col]}" if idx < len(ranking_df) - 1 else ("nikt" if lang == 'pl' else "no one")
-                            
-                            p_days = current_data.get(selected_participant_for_draft, {})
-                            if p_days:
-                                last_reported_day = max(p_days.keys())
-                                s_raw = p_days[last_reported_day]['status']
-                                last_status_text = _t('draft_status_pass', lang) if s_raw == "Zaliczone" else _t('draft_status_fail', lang)
-                            else:
-                                last_reported_day = 0
-                                last_status_text = "Brak danych"
-                            
-                            elim_day = elimination_map_official.get(selected_participant_for_draft)
-                            avg_res, pb_res, diff_to_pb, pb_message = "brak danych", "brak danych", "X", ""
-                            
-                            if not df_historical.empty:
-                                hist_p = df_historical[df_historical['uczestnik'] == selected_participant_for_draft]
-                                if not hist_p.empty:
-                                    avg = hist_p['rezultat_numeric'].mean()
-                                    pb = hist_p['rezultat_numeric'].max()
-                                    if pd.notna(avg): avg_res = f"{avg:.0f}"
-                                    if pd.notna(pb): 
-                                        pb_res = f"{pb:.0f}"
-                                        current_score = user_row.iloc[0][_t('ranking_col_highest_pass', lang)]
-                                        if current_score < pb: diff_to_pb = f"{pb - current_score:.0f}"
-                                        else: pb_message = _t('draft_pb_congrats', lang, w_broke, w_participant, current_score)
-
-                            helper_pool_pct = st.session_state.get('helper_pool_P', 0)
-                            
-                            if elim_day:
-                                elim_str = w_eliminated.format(elim_day)
-                                analysis_part = _t('draft_analysis_eliminated', lang, f"@{selected_participant_for_draft}", elim_str, w_achieved, avg_res, pb_message)
-                            else:
-                                if pb_message: 
-                                    analysis_part = _t('draft_analysis_active', lang, f"@{selected_participant_for_draft}", w_chance, w_achieved, avg_res, pb_res, w_missing, diff_to_pb)
-                                    analysis_part += f"\n\n{pb_message}" 
-                                else: 
-                                    analysis_part = _t('draft_analysis_active', lang, f"@{selected_participant_for_draft}", w_chance, w_achieved, avg_res, pb_res, w_missing, diff_to_pb)
-                                
-                            draft_text = f"""{_t('draft_intro', lang, f'@{selected_participant_for_draft}')}\n\n{_t('draft_main_text', lang, official_stage, f'@{selected_participant_for_draft}', current_rank, prev_user, next_user, w_participant, last_reported_day, last_status_text)}\n\n{analysis_part}\n\n{_t('draft_footer', lang, str(helper_pool_pct))}"""
-                            st.text_area(_t('draft_copy_label', lang), value=draft_text, height=300)
-                        else:
-                            st.warning(_t('draft_no_data', lang))
-                except Exception as e:
-                    st.error(_t('draft_error', lang, str(e)))
 
     # =========================================================
     # === PANEL ORGANIZATORA (Widoczny ZAWSZE na dole) ===
