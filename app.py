@@ -486,43 +486,6 @@ def main():
         st.header(_t('about_app', lang))
         st.markdown(_t('about_app_text', lang))
 
-    # === SZYBKIE LINKI (Zagnieżdżone w MAIN) ===
-    st.subheader(_t('quick_links_header', lang))
-    BASE_URL = "https://poprzeczka.streamlit.app/" 
-            
-    st.markdown(f"""
-    Poniższe linki otwierają stronę główną w wybranym języku. 
-    Aplikacja automatycznie załaduje aktualną edycję.
-    """)
-            
-    link_pl = f"{BASE_URL}?lang=pl"
-    link_en = f"{BASE_URL}?lang=en"
-            
-    st.markdown(f"🇵🇱 **Polska wersja:** [{link_pl}]({link_pl})")
-    st.markdown(f"🇬🇧 **English version:** [{link_en}]({link_en})")
-
-    # Linki do formularza obecnej edycji
-    active_key_links = None
-    for key, status_data in edition_statuses.items():
-        if status_data['status'] == 'ACTIVE':
-            active_key_links = key
-            break
-            
-    if active_key_links:
-        st.markdown("---")
-        st.markdown(f"📝 **Szybki dostęp do formularza (Obecna edycja):**")
-        p_pl = MONTH_NAMES[active_key_links]['url_param_pl']
-        p_en = MONTH_NAMES[active_key_links]['url_param_en']
-        
-        form_pl = f"{BASE_URL}?page=formularz&edition={p_pl}&lang=pl"
-        form_en = f"{BASE_URL}?page=formularz&edition={p_en}&lang=en"
-        
-        st.markdown(f"- [Formularz PL]({form_pl})")
-        st.markdown(f"- [Form EN]({form_en})")
-
-    st.markdown("---\n")
-    st.markdown(f"**URL do wklejenia** (Link do strony startowej):")
-    st.code(BASE_URL)
 
 if __name__ == '__main__':
     try:
