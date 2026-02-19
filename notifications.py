@@ -4,11 +4,12 @@ from email.mime.multipart import MIMEMultipart
 import streamlit as st
 import pandas as pd
 from config import EDITIONS_CONFIG
+# Importujemy oficjalną funkcję obliczania rankingu, aby dane były spójne
+from page_current_ranking import calculate_ranking
 
 def send_email(recipients, subject, html_content):
     """
     Wysyła wiadomość e-mail korzystając z danych w st.secrets["email"].
-    Obsługuje wielu odbiorców naraz przy użyciu pola BCC.
     """
     if not recipients:
         return False
@@ -23,7 +24,6 @@ def send_email(recipients, subject, html_content):
         st.error(f"❌ Błąd konfiguracji secrets [email]: {e}")
         return False
 
-    # Opakowanie treści w ładny szablon HTML
     styled_html = f"""
     <html>
     <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
@@ -57,7 +57,6 @@ def send_email(recipients, subject, html_content):
 
     try:
         server = smtplib.SMTP(smtp_server, smtp_port)
-        server.set_debuglevel(0)
         server.starttls()
         server.login(sender_email, sender_password)
         server.sendmail(sender_email, dest_list, msg.as_string())
@@ -69,7 +68,7 @@ def send_email(recipients, subject, html_content):
 
 def check_and_send_notifications(conn, edition_key, current_user, current_day, current_status):
     """
-    Główna funkcja sprawdzająca warunki wysyłki po dodaniu nowego wpisu.
+    Sprawdza warunki wysyłki, używając oficjalnej logiki rankingu z page_current_ranking.py.
     """
     cfg = EDITIONS_CONFIG.get(edition_key)
     if not cfg:
@@ -82,7 +81,7 @@ def check_and_send_notifications(conn, edition_key, current_user, current_day, c
         st.warning(f"⚠️ Nie można odczytać arkusza 'Emails' lub wyników: {e}")
         return
 
-    # 1. OSTRZEŻENIE O 3. PRÓBIE
+    # 1. OSTRZEŻENIE O 3. PRÓBIE (Bez zmian, logika specyficzna dla powiadomień)
     user_row = df_emails[df_emails['Participant'] == current_user]
     if not user_row.empty:
         user_email = user_row.iloc[0]['Email']
@@ -96,30 +95,19 @@ def check_and_send_notifications(conn, edition_key, current_user, current_day, c
             if len(last_two) == 2 and all(last_two['Status'] == "Niezaliczone"):
                 if user_lang == "PL":
                     subj = "⚠️ Ostrzeżenie: Druga porażka z rzędu!"
-                    body = f"""
-                    <h2 style="color: #d32f2f;">Uwaga {current_user}!</h2>
-                    <p>To Twój <b>drugi niezaliczony etap z rzędu</b>.</p>
-                    <p style="background-color: #fff3e0; padding: 10px; border-left: 5px solid #ff9800;">
-                        Pamiętaj, że <b>trzecia porażka</b> oznacza automatyczne odpadnięcie z gry.
-                    </p>
-                    <p>Trzymamy kciuki za jutrzejszy trening!</p>
-                    """
+                    body = f"""<h2 style="color: #d32f2f;">Uwaga {current_user}!</h2>
+                    <p>To Twój <b>drugi niezaliczony etap z rzędu</b>. Pamiętaj, że trzecia porażka oznacza odpadnięcie!</p>"""
                 else:
-                    subj = "⚠️ Warning: Second failure in a row!"
-                    body = f"""
-                    <h2 style="color: #d32f2f;">Attention {current_user}!</h2>
-                    <p>This is your <b>second failed stage in a row</b>.</p>
-                    <p style="background-color: #fff3e0; padding: 10px; border-left: 5px solid #ff9800;">
-                        Remember, the <b>third failure</b> results in automatic elimination from the game.
-                    </p>
-                    <p>We're crossing our fingers for your next workout!</p>
-                    """
+                    subj = "⚠️ Warning: 2nd failure!"
+                    body = f"""<h2 style="color: #d32f2f;">Attention {current_user}!</h2>
+                    <p>This is your 2nd failure. The 3rd means elimination!</p>"""
                 send_email([user_email], subj, body)
 
     # 2. KOMPLET WYNIKÓW DNIA (ZBIORCZE)
     day_entries = df_results[df_results['Day'].astype(str) == str(current_day)]
     reporters_today = day_entries['Participant'].unique().tolist()
     
+    # Funkcja sprawdzająca aktywnych graczy
     def get_active_participants(df, initial_list):
         active = []
         for p in initial_list:
@@ -136,18 +124,30 @@ def check_and_send_notifications(conn, edition_key, current_user, current_day, c
         subscribers = df_emails[df_emails['Alert_Results'].astype(str).str.upper().isin(['TRUE', 'PRAWDA', 'YES'])]
         
         if not subscribers.empty:
-            # Tworzenie tabeli rankingu
-            ranking = df_results[df_results['Status'] == 'Zaliczone'].groupby('Participant').size().sort_values(ascending=False)
+            # === KLUCZOWA ZMIANA: Używamy oficjalnej funkcji calculate_ranking ===
+            # Pobieramy ranking dokładnie tak, jak robi to podstrona "Ranking"
+            official_ranking_df = calculate_ranking(
+                data=df_results, 
+                max_day_reported=current_day, 
+                lang='pl', # język bazowy do obliczeń
+                participants_list=cfg['participants']
+            )
             
+            # Budujemy tabelę na podstawie oficjalnych danych
             rank_rows = ""
-            for i, (p, s) in enumerate(ranking.items(), 1):
+            for i, row in official_ranking_df.iterrows():
+                p_name = row['Participant']
+                # Szukamy kolumny z punktami (zazwyczaj 'Score' lub 'Zaliczone')
+                p_score = row.get('Zaliczone', row.get('Score', 0))
+                
                 medal = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else f"{i}."
                 bg = "#f1f8e9" if i <= 3 else "transparent"
+                
                 rank_rows += f"""
                 <tr style="background-color: {bg};">
                     <td style="padding: 8px; border-bottom: 1px solid #eee;">{medal}</td>
-                    <td style="padding: 8px; border-bottom: 1px solid #eee;">{p}</td>
-                    <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;"><b>{s}</b></td>
+                    <td style="padding: 8px; border-bottom: 1px solid #eee;">{p_name}</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;"><b>{p_score}</b></td>
                 </tr>"""
 
             rank_table = f"""
@@ -165,24 +165,9 @@ def check_and_send_notifications(conn, edition_key, current_user, current_day, c
             # Wysyłka PL
             pl_emails = subscribers[subscribers['Language'] == 'PL']['Email'].dropna().tolist()
             if pl_emails:
-                subj_pl = f"🏁 Komplet wyników - Etap {current_day}"
-                body_pl = f"""
-                <h3>Wszyscy aktywni uczestnicy przesłali raporty!</h3>
-                <p>Etap {current_day} został oficjalnie zakończony. Oto aktualna klasyfikacja:</p>
-                {rank_table}
-                <p style="margin-top: 20px;">Powodzenia w kolejnym dniu!</p>
-                """
-                send_email(pl_emails, subj_pl, body_pl)
+                send_email(pl_emails, f"🏁 Wyniki Etapu {current_day}", f"<h3>Komplet wyników!</h3>{rank_table}")
 
             # Wysyłka EN
             en_emails = subscribers[subscribers['Language'] == 'EN']['Email'].dropna().tolist()
             if en_emails:
-                subj_en = f"🏁 Day {current_day} Results - All in!"
-                body_en = f"""
-                <h3>All active participants have submitted their reports!</h3>
-                <p>Stage {current_day} is now officially complete. Current standings:</p>
-                {rank_table}
-                <p style="margin-top: 20px;">Good luck tomorrow!</p>
-                """
-                send_email(en_emails, subj_en, body_en)
-
+                send_email(en_emails, f"🏁 Stage {current_day} Results", f"<h3>All results are in!</h3>{rank_table}")
