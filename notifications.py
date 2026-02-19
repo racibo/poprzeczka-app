@@ -5,145 +5,141 @@ import streamlit as st
 import pandas as pd
 from config import EDITIONS_CONFIG
 
-# --- FUNKCJA WYSYŁAJĄCA EMAIL ---
 def send_email(recipients, subject, html_content):
+    """
+    Wysyła wiadomość e-mail korzystając z danych w st.secrets["email"].
+    Obsługuje wielu odbiorców naraz przy użyciu pola BCC.
+    """
     if not recipients:
-        return
+        return False
         
-    sender_email = st.secrets["email"]["sender"]
-    sender_password = st.secrets["email"]["password"]
-    smtp_server = st.secrets["email"]["smtp_server"]
-    smtp_port = st.secrets["email"]["smtp_port"]
+    try:
+        conf = st.secrets["email"]
+        sender_email = conf["sender"]
+        sender_password = conf["password"]
+        smtp_server = conf["smtp_server"]
+        smtp_port = conf["smtp_port"]
+    except Exception as e:
+        st.error(f"❌ Błąd konfiguracji secrets [email]: {e}")
+        return False
 
     msg = MIMEMultipart()
     msg['From'] = f"Poprzeczka Bot <{sender_email}>"
     msg['Subject'] = subject
-    # Ukrywamy odbiorców (BCC)
-    msg['Bcc'] = ", ".join(recipients) 
     
+    # Obsługa wielu odbiorców (BCC - ukryta kopia), aby chronić prywatność
+    if isinstance(recipients, list) and len(recipients) > 1:
+        msg['Bcc'] = ", ".join(recipients)
+        dest_list = [sender_email] # Technicznie wysyłamy do siebie, reszta widzi tylko ukrytą kopię
+    else:
+        dest_list = recipients if isinstance(recipients, list) else [recipients]
+        msg['To'] = dest_list[0]
+
     msg.attach(MIMEText(html_content, 'html'))
 
     try:
         server = smtplib.SMTP(smtp_server, smtp_port)
+        server.set_debuglevel(0)
         server.starttls()
         server.login(sender_email, sender_password)
-        server.sendmail(sender_email, recipients, msg.as_string())
+        server.sendmail(sender_email, dest_list, msg.as_string())
         server.quit()
         return True
     except Exception as e:
-        print(f"Błąd wysyłania emaila: {e}")
+        st.error(f"❌ Błąd serwera poczty (SMTP): {e}")
         return False
 
-# --- GŁÓWNA LOGIKA POWIADOMIEŃ ---
 def check_and_send_notifications(conn, edition_key, current_user, current_day, current_status):
     """
-    Ta funkcja jest wywoływana PO zapisaniu wyniku do bazy.
-    Sprawdza dwa warunki:
-    1. Czy użytkownik ma 2 niezaliczone pod rząd -> Alert Warning
-    2. Czy wpłynął komplet wyników -> Alert Results
+    Główna funkcja sprawdzająca warunki wysyłki po dodaniu nowego wpisu.
+    Uwzględnia tylko graczy, którzy nie zostali jeszcze wyeliminowani.
     """
-    
-    # 1. Pobieramy konfigurację i dane
-    edition_config = EDITIONS_CONFIG[edition_key]
-    sheet_name = edition_config['sheet_name']
-    participants_list = edition_config['participants']
-    
-    # Pobieramy aktualne wyniki i bazę maili
-    # Używamy ttl=0, żeby mieć najświeższe dane
-    df_results = conn.read(worksheet=sheet_name, ttl=0) 
-    try:
-        df_emails = conn.read(worksheet="Emails", ttl=0)
-    except:
-        return # Brak zakładki Emails
-
-    # Jeśli użytkownik nie ma maila w bazie, to nic nie robimy dla niego indywidualnie
-    user_prefs = df_emails[df_emails['Participant'] == current_user]
-    user_email = user_prefs['Email'].iloc[0] if not user_prefs.empty else None
-    user_lang = user_prefs['Language'].iloc[0] if not user_prefs.empty else "PL"
-    wants_warning = user_prefs['Alert_Warning'].iloc[0] if not user_prefs.empty else False
-
-    # === SCENARIUSZ 1: OSTRZEŻENIE O 3. PRÓBIE ===
-    if current_status == "Niezaliczone" and user_email and wants_warning:
-        # Sprawdzamy historię tego użytkownika
-        user_history = df_results[df_results['Participant'] == current_user].sort_values('Day')
-        # Bierzemy ostatnie 2 wpisy
-        last_two = user_history.tail(2)
-        
-        # Jeśli są dokładnie 2 wpisy i oba są "Niezaliczone"
-        if len(last_two) == 2 and all(last_two['Status'] == "Niezaliczone"):
-            send_warning_email(user_email, user_lang)
-
-    # === SCENARIUSZ 2: KOMPLET WYNIKÓW ===
-    # Sprawdzamy ile osób już zaraportowało ten dzień
-    results_today = df_results[df_results['Day'] == current_day]
-    unique_reporters = results_today['Participant'].nunique()
-    total_participants = len(participants_list)
-
-    if unique_reporters >= total_participants:
-        # Mamy komplet! Wysyłamy do wszystkich subskrybentów
-        send_results_email(df_emails, df_results, current_day, edition_key)
-
-
-def send_warning_email(email, lang):
-    if lang == "PL":
-        subject = "⚠️ Uwaga! Przed Tobą trzecia próba"
-        body = """
-        <h3>Cześć!</h3>
-        <p>Właśnie zanotowałeś drugi niezaliczony etap z rzędu.</p>
-        <p style="color: red; font-weight: bold;">Pamiętaj: trzecia nieudana próba oznacza odpadnięcie z rywalizacji.</p>
-        <p>Powodzenia jutro!</p>
-        """
-    else:
-        subject = "⚠️ Warning! 3rd attempt ahead"
-        body = """
-        <h3>Hi!</h3>
-        <p>You have just recorded your second failed stage in a row.</p>
-        <p style="color: red; font-weight: bold;">Remember: a third failed attempt means elimination from the competition.</p>
-        <p>Good luck tomorrow!</p>
-        """
-    send_email([email], subject, body)
-
-
-def send_results_email(df_emails, df_results, day, edition):
-    # Filtrujemy tylko tych, którzy chcą wyniki
-    subscribers = df_emails[df_emails['Alert_Results'] == True] # lub "TRUE" zależnie od formatu w GSheets
-    
-    if subscribers.empty:
+    cfg = EDITIONS_CONFIG.get(edition_key)
+    if not cfg:
         return
 
-    # Obliczamy ranking
-    ranking = df_results[df_results['Status'] == 'Zaliczone'].groupby('Participant').size().sort_values(ascending=False)
+    try:
+        # Odczyt danych z arkuszy (używamy conn.read dla Streamlit GSheets Connection)
+        # ttl=0 jest kluczowe, aby widzieć właśnie dodany wiersz
+        df_results = conn.read(worksheet=cfg['sheet_name'], ttl=0)
+        df_emails = conn.read(worksheet="Emails", ttl=0)
+    except Exception as e:
+        st.warning(f"⚠️ Nie można odczytać arkusza 'Emails' lub wyników: {e}")
+        return
+
+    # 1. OSTRZEŻENIE O 3. PRÓBIE (INDYWIDUALNE)
+    user_row = df_emails[df_emails['Participant'] == current_user]
+    if not user_row.empty:
+        user_email = user_row.iloc[0]['Email']
+        user_lang = user_row.iloc[0]['Language']
+        wants_warning = str(user_row.iloc[0]['Alert_Warning']).upper() in ['TRUE', 'PRAWDA', 'YES']
+        
+        if current_status == "Niezaliczone" and wants_warning:
+            # Pobieramy historię tego konkretnego użytkownika
+            history = df_results[df_results['Participant'] == current_user].sort_values('Day')
+            last_two = history.tail(2)
+            
+            # Jeśli dwa ostatnie statusy to porażki
+            if len(last_two) == 2 and all(last_two['Status'] == "Niezaliczone"):
+                if user_lang == "PL":
+                    subj = "⚠️ Ostrzeżenie: Druga porażka z rzędu!"
+                    body = f"Cześć <b>{current_user}</b>!<br><br>To Twój drugi niezaliczony etap z rzędu. Pamiętaj, że trzeci oznacza automatyczne odpadnięcie z gry!"
+                else:
+                    subj = "⚠️ Warning: Second failure in a row!"
+                    body = f"Hi <b>{current_user}</b>!<br><br>This is your second failed stage in a row. Remember, the third one means automatic elimination from the game!"
+                
+                send_email([user_email], subj, body)
+
+    # 2. KOMPLET WYNIKÓW DNIA (ZBIORCZE)
     
-    # Dzielimy odbiorców na języki
-    pl_emails = subscribers[subscribers['Language'] == 'PL']['Email'].tolist()
-    en_emails = subscribers[subscribers['Language'] == 'EN']['Email'].tolist()
+    # Sprawdzamy, kto już wysłał raport dzisiaj
+    day_entries = df_results[df_results['Day'].astype(str) == str(current_day)]
+    reporters_today = day_entries['Participant'].unique().tolist()
+    
+    # Funkcja wyliczająca aktywnych graczy (tych, którzy mają mniej niż 3 porażki)
+    def get_active_participants(df, initial_list):
+        active = []
+        for p in initial_list:
+            p_history = df[df['Participant'] == p]
+            fail_count = len(p_history[p_history['Status'] == 'Niezaliczone'])
+            if fail_count < 3:
+                active.append(p)
+        return active
 
-    # Generujemy tabelę HTML
-    table_html = "<ol>"
-    for user, score in ranking.items():
-        table_html += f"<li><b>{user}</b>: {score} pkt</li>"
-    table_html += "</ol>"
+    current_active_players = get_active_participants(df_results, cfg['participants'])
+    
+    # Sprawdzamy czy wszyscy aktywni gracze przesłali już raport za ten dzień
+    is_complete = all(player in reporters_today for player in current_active_players)
 
-    # Wysyłka PL
-    if pl_emails:
-        subj_pl = f"🏁 Komplet wyników: Etap {day}"
-        body_pl = f"""
-        <h2>Podsumowanie dnia {day}</h2>
-        <p>Wszyscy uczestnicy przesłali swoje wyniki.</p>
-        <h3>Aktualna klasyfikacja:</h3>
-        {table_html}
-        <p><a href="https://poprzeczka.streamlit.app">Zobacz w aplikacji</a></p>
-        """
-        send_email(pl_emails, subj_pl, body_pl)
+    # Jeśli jest komplet i są jacykolwiek raportujący
+    if is_complete and len(reporters_today) > 0:
+        # Filtrujemy tylko tych, którzy chcą dostawać raporty zbiorcze
+        subscribers = df_emails[df_emails['Alert_Results'].astype(str).str.upper().isin(['TRUE', 'PRAWDA', 'YES'])]
+        
+        if not subscribers.empty:
+            # Tworzymy uproszczony ranking na podstawie liczby zaliczonych dni
+            ranking = df_results[df_results['Status'] == 'Zaliczone'].groupby('Participant').size().sort_values(ascending=False)
+            rank_html = "<ul>"
+            for p, s in ranking.items():
+                rank_html += f"<li>{p}: {s} pkt</li>"
+            rank_html += "</ul>"
 
-    # Wysyłka EN
-    if en_emails:
-        subj_en = f"🏁 Full Results: Stage {day}"
-        body_en = f"""
-        <h2>Day {day} Summary</h2>
-        <p>All participants have submitted their results.</p>
-        <h3>Current Standing:</h3>
-        {table_html}
-        <p><a href="https://poprzeczka.streamlit.app">Open App</a></p>
-        """
-        send_email(en_emails, subj_en, body_en)
+            # --- WYSYŁKA PL ---
+            pl_emails = subscribers[subscribers['Language'] == 'PL']['Email'].dropna().tolist()
+            if pl_emails:
+                subj_pl = f"🏁 Wyniki dnia {current_day} - Komplet!"
+                body_pl = (
+                    f"Wszyscy aktywni uczestnicy ({len(current_active_players)} osób) przesłali już swoje raporty za dzień {current_day}.<br><br>"
+                    f"<b>Aktualna punktacja:</b><br>{rank_html}"
+                )
+                send_email(pl_emails, subj_pl, body_pl)
+
+            # --- WYSYŁKA EN ---
+            en_emails = subscribers[subscribers['Language'] == 'EN']['Email'].dropna().tolist()
+            if en_emails:
+                subj_en = f"🏁 Results for day {current_day} - All in!"
+                body_en = (
+                    f"All active participants ({len(current_active_players)} people) have submitted their reports for day {current_day}.<br><br>"
+                    f"<b>Current standings:</b><br>{rank_html}"
+                )
+                send_email(en_emails, subj_en, body_en)
