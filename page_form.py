@@ -9,8 +9,14 @@ from google_connect import connect_to_google_sheets, upload_file_to_hosting, app
 from page_current_ranking import calculate_ranking, find_last_complete_stage
 from data_loader import load_google_sheet_data, process_raw_data, load_historical_data_from_json
 
+# === NOWY FRAGMENT: Importowanie logiki powiadomień ===
+try:
+    from notifications import check_and_send_notifications
+except ImportError:
+    def check_and_send_notifications(*args, **kwargs): pass
+
 def show_submission_form(lang, edition_key="december", is_active=True):
-    
+
     # 1. Pobieramy config
     cfg = EDITIONS_CONFIG.get(edition_key)
     if not cfg:
@@ -177,9 +183,9 @@ def show_submission_form(lang, edition_key="december", is_active=True):
                 timestamp = datetime.now().isoformat()
                 
                 def map_status(ui_status):
-                    if ui_status == _t('form_status_pass', lang): return "Zaliczone"
-                    if ui_status == _t('form_status_fail', lang): return "Niezaliczone"
-                    return "Brak raportu"
+                      if ui_status == _t('form_status_pass', lang): return "Zaliczone"
+                      if ui_status == _t('form_status_fail', lang): return "Niezaliczone"
+                      return "Brak raportu"
 
                 status_key = map_status(status_val)
                 
@@ -189,7 +195,14 @@ def show_submission_form(lang, edition_key="december", is_active=True):
                     
                     ws_log = sheet.worksheet("LogWpisow")
                     ws_log.append_row([submitter, participant, day_input, status_key, timestamp, edition_key, full_notes])
-                    
+                    with st.spinner("📧 Sprawdzam powiadomienia..."):
+                          check_and_send_notifications(
+                                conn=sheet, 
+                                edition_key=edition_key, 
+                                current_user=participant, 
+                                current_day=day_input, 
+                                current_status=status_key
+                          )
                     st.session_state.last_submission = {
                         'participant': participant,
                         'day': day_input,
@@ -402,7 +415,7 @@ def show_submission_form(lang, edition_key="december", is_active=True):
             except Exception as e:
                 st.warning(f"Nie udało się pobrać danych do tabeli pomocników: {e}")
 
-    # =========================================================
+# =========================================================
     # === PANEL ORGANIZATORA (Widoczny ZAWSZE na dole) ===
     # =========================================================
     st.markdown("---")
@@ -413,7 +426,6 @@ def show_submission_form(lang, edition_key="december", is_active=True):
             st.success("Dostęp przyznany.")
             
             # Wybór edycji do zarządzania
-            # Musimy znaleźć index obecnej edycji na liście kluczy
             all_keys = list(EDITIONS_CONFIG.keys())
             try:
                 curr_index = all_keys.index(edition_key)
@@ -455,8 +467,6 @@ def show_submission_form(lang, edition_key="december", is_active=True):
 
             # 2. STATUS EDYCJI
             st.subheader("2. Status Edycji")
-            
-            # Zamknięcie edycji
             is_closed = target_cfg.get('is_manually_closed', False)
             st.write(f"Stan obecny: **{'ZAMKNIĘTA' if is_closed else 'OTWARTA'}**")
             
@@ -495,6 +505,14 @@ def show_submission_form(lang, edition_key="december", is_active=True):
             
             with st.expander("Podgląd Configu JSON"):
                 st.json(EDITIONS_CONFIG)
-                
-        elif password:
-            st.error("Błędne hasło.")
+
+            # --- SEKCJA 5: NEWSLETTER (Wersja Bezpieczna) ---
+            st.divider()
+            st.subheader("5. Powiadomienia")
+            if st.button("🔄 Sprawdź i wyślij newsletter"):
+                try:
+                    # Przekazujemy None zamiast conn - notifications samo sobie poradzi
+                    check_and_send_notifications(None, target_edition, "Admin", 0, "Manual")
+                    st.success("Wywołano procedurę. Sprawdź okno DEBUG powyżej.")
+                except Exception as e:
+                    st.error(f"Błąd: {e}")
