@@ -23,17 +23,18 @@ PARTICIPANTS_JANUARY = [
 
 PARTICIPANTS_FEBRUARY = [p for p in PARTICIPANTS_LIST_BASE if p not in ["patif2025", "ataraksja"]]
 
-# === NOWA LISTA: MARZEC ===
-# Bierzemy bazę, usuwamy nieaktywnych i DOKLEJAMY nowego gracza tylko tutaj
 PARTICIPANTS_MARCH = [p for p in PARTICIPANTS_LIST_BASE if p not in ["patif2025", "ataraksja"]] + ["stranger27"]
+
+# === NOWA LISTA: KWIECIEŃ ===
+PARTICIPANTS_APRIL = [p for p in PARTICIPANTS_LIST_BASE if p not in ["patif2025", "ataraksja"]] + ["stranger27"]
 
 
 # === LISTY POMOCNICZE ===
 # Dodajemy stranger27 ręcznie do submitterów, bo nie ma go w BASE
 SUBMITTER_LIST = sorted(list(set(PARTICIPANTS_LIST_BASE + ["poprzeczka (Admin)", "stranger27"])))
 
-# Aktualizacja wszystkich możliwych uczestników o listę marcową
-ALL_POSSIBLE_PARTICIPANTS = sorted(list(set(PARTICIPANTS_DECEMBER + PARTICIPANTS_JANUARY + PARTICIPANTS_FEBRUARY + PARTICIPANTS_MARCH)))
+# Aktualizacja wszystkich możliwych uczestników o listę marcową i kwietniową
+ALL_POSSIBLE_PARTICIPANTS = sorted(list(set(PARTICIPANTS_DECEMBER + PARTICIPANTS_JANUARY + PARTICIPANTS_FEBRUARY + PARTICIPANTS_MARCH + PARTICIPANTS_APRIL)))
 
 # ID folderu na Google Drive
 GOOGLE_DRIVE_FOLDER_ID = "1b-mUxDmKEUoOyLtTePeb7RaJWGfO_Xre"
@@ -45,6 +46,7 @@ MONTH_NAMES = {
     "january":  {"pl": "Styczeń",  "en": "January",  "icon": "⛄", "url_param_pl": "styczen",  "url_param_en": "january"},
     "february": {"pl": "Luty",     "en": "February", "icon": "💘", "url_param_pl": "luty",     "url_param_en": "february"},
     "march":    {"pl": "Marzec",   "en": "March",    "icon": "🌱", "url_param_pl": "marzec",   "url_param_en": "march"},
+    "april":    {"pl": "Kwiecień", "en": "April",    "icon": "🌸", "url_param_pl": "kwiecien", "url_param_en": "april"},
 }
 
 # === DOMYŚLNA KONFIGURACJA ===
@@ -61,20 +63,27 @@ DEFAULT_EDITIONS_CONFIG = OrderedDict([
         "sheet_name": "EdycjaStyczen",
         "participants": PARTICIPANTS_JANUARY,
         "is_manually_closed": True,
-        "is_hidden": True # Ukrywamy styczeń, żeby nie zagracać menu
+        "is_hidden": True
     }),
     ("february", {
         "start_date": date(2026, 2, 1),
         "sheet_name": "EdycjaLuty",
         "participants": PARTICIPANTS_FEBRUARY,
-        "is_manually_closed": True, # Zamykamy Luty
-        "is_hidden": False
+        "is_manually_closed": True,
+        "is_hidden": True  # Ukryto - wyniki są w statystykach
     }),
-    ("march", { # === NOWA EDYCJA ===
+    ("march", {
         "start_date": date(2026, 3, 1),
         "sheet_name": "EdycjaMarzec",
         "participants": PARTICIPANTS_MARCH,
-        "is_manually_closed": False, # Otwarta
+        "is_manually_closed": False,
+        "is_hidden": False
+    }),
+    ("april", {  # === NOWA EDYCJA ===
+        "start_date": date(2026, 4, 1),
+        "sheet_name": "EdycjaKwiecien",
+        "participants": PARTICIPANTS_APRIL,
+        "is_manually_closed": False,  # Otwarta
         "is_hidden": False
     }),
 ])
