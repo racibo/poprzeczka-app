@@ -123,6 +123,14 @@ def show_submission_form(lang, edition_key="december", is_active=True):
                 
                 st.caption(label_text)
 
+                # --- LINK DO PROFILU UCZESTNIKA ---
+                if participant:
+                    hive_profile_url = f"https://peakd.com/@{participant}/posts"
+                    if lang == 'pl':
+                        st.caption(f"👤 Uczestnik: [@{participant}]({hive_profile_url})")
+                    else:
+                        st.caption(f"👤 Participant: [@{participant}]({hive_profile_url})")
+
                 # --- KOMUNIKAT SUKCESU ---
                 if 'last_submission' in st.session_state and st.session_state.last_submission:
                     details = st.session_state.last_submission
@@ -141,10 +149,12 @@ def show_submission_form(lang, edition_key="december", is_active=True):
         )
 
         st.write("")
+        is_saving = st.session_state.get(f"saving_{edition_key}", False)
+        btn_label = ("⏳ Zapisywanie, poczekaj chwilę..." if lang == 'pl' else "⏳ Saving, please wait...") if is_saving else _t('form_submit_button', lang)
         try:
-            submitted = st.button(_t('form_submit_button', lang), type="primary", use_container_width=True, key=f"btn_{edition_key}")
+            submitted = st.button(btn_label, type="primary", use_container_width=True, key=f"btn_{edition_key}", disabled=is_saving)
         except TypeError:
-             submitted = st.button(_t('form_submit_button', lang), type="primary", key=f"btn_{edition_key}")
+            submitted = st.button(btn_label, type="primary", key=f"btn_{edition_key}", disabled=is_saving)
         
         st.markdown("---")
         
@@ -164,6 +174,7 @@ def show_submission_form(lang, edition_key="december", is_active=True):
 
         # === LOGIKA ZAPISU DO ARKUSZA ===
         if submitted:
+            st.session_state[f"saving_{edition_key}"] = True
             if not submitter or not participant:
                 st.error(_t('form_error_no_participant', lang))
             else:
@@ -211,10 +222,12 @@ def show_submission_form(lang, edition_key="december", is_active=True):
                         'file_link': file_link_text if "http" in file_link_text else None
                     }
                     st.session_state.last_day_entered = day_input + 1
+                    st.session_state[f"saving_{edition_key}"] = False
                     st.cache_data.clear()
                     st.rerun()
                     
                 except Exception as e:
+                    st.session_state[f"saving_{edition_key}"] = False
                     st.error(f"Błąd zapisu: {e}")
 
         # === OSTATNIE ZGŁOSZENIA ===
