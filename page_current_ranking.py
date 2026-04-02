@@ -755,7 +755,28 @@ def show_current_edition_dashboard(lang, edition_key="december"):
     
     try:
         ranking_df, elimination_map = calculate_ranking(current_data, max_day_reported, lang, participants_list, ranking_type='live', complete_stages=complete_stages)
-        st.info(_t('ranking_selection_instruction', lang))        
+
+        # --- OSTRZEŻENIE O NIERÓWNYCH DANYCH ---
+        participant_max_days = {
+            p: max((int(k) for k in current_data.get(p, {}).keys()), default=0)
+            for p in participants_list
+        }
+        days_values = list(participant_max_days.values())
+        if days_values and (max(days_values) - min(days_values)) >= 2:
+            if lang == 'pl':
+                st.warning(
+                    "⚠️ **Klasyfikacja nieoficjalna — dane niekompletne.** "
+                    "Uczestnicy mają wpisane wyniki za różne dni, co zniekształca obraz — "
+                    "jak mierzenie czasu maratonu gdy jedni są już po 5 km, a inni dopiero startują. "
+                    "Wiarygodna jest tylko **Klasyfikacja Oficjalna** poniżej, która uwzględnia wyłącznie dni z kompletnymi danymi dla wszystkich."
+                )
+            else:
+                st.warning(
+                    "⚠️ **Unofficial ranking — incomplete data.** "
+                    "Participants have results entered for different days, which skews the picture — "
+                    "like measuring marathon times when some runners are already at km 5 while others are just starting. "
+                    "Only the **Official Ranking** below is reliable, as it only counts days with complete data for everyone."
+                )
 
         ranking_df_display = ranking_df.copy()
         ranking_df_display.columns = ranking_df_display.columns.astype(str)
@@ -846,6 +867,12 @@ def show_current_edition_dashboard(lang, edition_key="december"):
 
     # --- Reszta Dashboardu ---
     st.subheader(_t('current_completeness_header', lang))
+
+    # Legenda
+    if lang == 'pl':
+        st.caption("✅ Zaliczone &nbsp;|&nbsp; ❌ Niezaliczone &nbsp;|&nbsp; ⬜ Brak raportu (wpisany) &nbsp;|&nbsp; ❓ Brak danych (wydedukowany — etap pominięty lub nie wpisano)")
+    else:
+        st.caption("✅ Passed &nbsp;|&nbsp; ❌ Failed &nbsp;|&nbsp; ⬜ No report (entered) &nbsp;|&nbsp; ❓ No data (inferred — stage skipped or not entered)")
     
     pivot_data = []
     completeness_participant_col = _t('completeness_col_participant', lang) 
@@ -857,9 +884,14 @@ def show_current_edition_dashboard(lang, edition_key="december"):
                 status_icon = "" 
             elif day in days_data:
                 status_key = days_data[day].get("status", "Brak raportu")
-                status_icon = "✅" if status_key == "Zaliczone" else ("❌" if status_key == "Niezaliczone" else "❓")
+                if status_key == "Zaliczone":
+                    status_icon = "✅"
+                elif status_key == "Niezaliczone":
+                    status_icon = "❌"
+                else:
+                    status_icon = "⬜"  # Jawny "Brak raportu" wpisany przez formularz
             else:
-                status_icon = "❓" 
+                status_icon = "❓"  # Brak wpisu — wydedukowany (etap pominięty)
             pivot_data.append({
                 completeness_participant_col: participant, 
                 _t('completeness_col_day', lang): day,
