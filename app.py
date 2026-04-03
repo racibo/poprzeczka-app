@@ -7,6 +7,7 @@ import re
 import traceback
 import matplotlib.pyplot as plt
 import numpy as np
+from notifications import check_and_send_notifications
 
 # Importy lokalne
 from config import EDITIONS_CONFIG, MONTH_NAMES
@@ -278,7 +279,7 @@ def main():
     
     VISIBLE_EDITIONS_KEYS = [k for k, v in EDITIONS_CONFIG.items() if not v.get('is_hidden', False)] 
     
-    default_nav_key = "nav_historical_stats"
+    default_nav_key = "nav_april_form"
     active_edition_key = None
     for key, status_data in edition_statuses.items():
         if status_data['status'] == 'ACTIVE':
@@ -286,11 +287,11 @@ def main():
             break
     
     if active_edition_key:
-        default_nav_key = f"nav_{active_edition_key}_ranking"
+        default_nav_key = f"nav_{active_edition_key}_form"
     else:
         for key, status_data in edition_statuses.items():
             if status_data['status'] == 'FINALIZATION':
-                default_nav_key = f"nav_{key}_ranking"
+                default_nav_key = f"nav_{key}_form"
                 break
 
     # === 3. DEEP LINKING ===
@@ -329,7 +330,7 @@ def main():
         st.session_state.nav_selection = default_nav_key
     
     if 'lang_select' not in st.session_state:
-        st.session_state.lang_select = 'pl'
+        st.session_state.lang_select = 'en'
     
     lang = st.session_state.lang_select
     
@@ -341,7 +342,7 @@ def main():
     if 'last_day_entered' not in st.session_state: st.session_state.last_day_entered = 1
 
     # === PASEK BOCZNY ===
-    st.sidebar.selectbox("Język / Language", ["pl", "en"], index=0 if lang == 'pl' else 1, key="lang_select")
+    st.sidebar.selectbox("Język / Language", ["en", "pl"], key="lang_select")
     lang = st.session_state.lang_select
     
     st.sidebar.markdown("---\n")
