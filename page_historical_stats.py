@@ -158,10 +158,10 @@ def show_historical_stats(lang):
         col1, col2, col3, col4 = st.columns(4)
         
         best_result_row = user_df.loc[user_df['rezultat_numeric'].idxmax()] if not user_df['rezultat_numeric'].isnull().all() else None
-        col1.metric(label=_t('best_result', lang), value=f"{best_result_row['rezultat_raw']} ({best_result_row['miesiac_rok_str']})" if best_result_row is not None else "N/A")
+        col1.metric(label=_t('best_result', lang), value=f"{int(best_result_row['rezultat_numeric'])} ({best_result_row['miesiac_rok_str']})" if best_result_row is not None else "N/A")
         
         worst_result_row = user_df.loc[user_df['rezultat_numeric'].idxmin()] if not user_df['rezultat_numeric'].isnull().all() else None
-        col2.metric(label=_t('worst_result', lang), value=f"{worst_result_row['rezultat_raw']} ({worst_result_row['miesiac_rok_str']})" if worst_result_row is not None else "N/A")
+        col2.metric(label=_t('worst_result', lang), value=f"{int(worst_result_row['rezultat_numeric'])} ({worst_result_row['miesiac_rok_str']})" if worst_result_row is not None else "N/A")
         
         best_position_row = user_df.loc[user_df['miejsce'].idxmin()] if not user_df['miejsce'].isnull().all() else None
         col3.metric(label=_t('best_position', lang), value=f"{int(best_position_row['miejsce'])} ({best_position_row['miesiac_rok_str']})" if best_position_row is not None else "N/A")
