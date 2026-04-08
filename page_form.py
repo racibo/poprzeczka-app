@@ -110,7 +110,13 @@ def show_participant_profile(participant, lang, current_data, max_day_reported,
     eliminated_on = elimination_map.get(participant)
     days_data = current_data.get(participant, {})
 
-    if eliminated_on:
+    # Eliminację pokazujemy tylko jeśli mamy dane potwierdzające ten dzień
+    # (tzn. max_day_reported >= eliminated_on). Jeśli uczestnik nie wpisywał
+    # wyników przez kilka dni, eliminated_on może być zawyżony względem
+    # faktycznie pobranych danych — w takim przypadku nie ogłaszamy odpadnięcia.
+    confirmed_eliminated = eliminated_on and max_day_reported >= eliminated_on
+
+    if confirmed_eliminated:
         status_text = (f"❌ Odpadł/a w dniu {eliminated_on}" if lang == 'pl'
                        else f"❌ Eliminated on day {eliminated_on}")
         status_color = "error"
@@ -131,7 +137,7 @@ def show_participant_profile(participant, lang, current_data, max_day_reported,
     # Ikony są teraz generowane do BIEŻĄCEGO DNIA EDYCJI zamiast 'max_day_reported'
     all_days_icons = []
     for day in range(1, current_edition_day + 1):
-        if eliminated_on and day > eliminated_on:
+        if confirmed_eliminated and day > eliminated_on:
             all_days_icons.append("⬛")
         elif day in days_data:
             s = days_data[day].get('status', '')
