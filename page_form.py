@@ -110,11 +110,26 @@ def show_participant_profile(participant, lang, current_data, max_day_reported,
     eliminated_on = elimination_map.get(participant)
     days_data = current_data.get(participant, {})
 
-    # Eliminację pokazujemy tylko jeśli mamy dane potwierdzające ten dzień
-    # (tzn. max_day_reported >= eliminated_on). Jeśli uczestnik nie wpisywał
-    # wyników przez kilka dni, eliminated_on może być zawyżony względem
-    # faktycznie pobranych danych — w takim przypadku nie ogłaszamy odpadnięcia.
-    confirmed_eliminated = eliminated_on and max_day_reported >= eliminated_on
+    # Eliminację pokazujemy TYLKO jeśli uczestnik faktycznie wpisał "Niezaliczone"
+    # 3 razy z rzędu. Brak wpisu (uczestnik nie uzupełnił danych) NIE jest
+    # traktowany jako porażka na stronie profilu/formularza.
+    def _check_real_elimination(days_data, eliminated_on):
+        if not eliminated_on:
+            return False
+        consecutive = 0
+        for day in range(1, eliminated_on + 1):
+            if day in days_data:
+                if days_data[day]["status"] == "Niezaliczone":
+                    consecutive += 1
+                else:
+                    consecutive = 0
+            else:
+                consecutive = 0  # brak wpisu != porażka
+            if consecutive >= 3:
+                return True
+        return False
+
+    confirmed_eliminated = _check_real_elimination(days_data, eliminated_on)
 
     if confirmed_eliminated:
         status_text = (f"❌ Odpadł/a w dniu {eliminated_on}" if lang == 'pl'
