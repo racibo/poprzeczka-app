@@ -26,7 +26,7 @@ PARTICIPANTS_FEBRUARY = [p for p in PARTICIPANTS_LIST_BASE if p not in ["patif20
 PARTICIPANTS_MARCH = [p for p in PARTICIPANTS_LIST_BASE if p not in ["patif2025", "ataraksja"]] + ["stranger27"]
 
 # === NOWA LISTA: KWIECIEŃ ===
-PARTICIPANTS_APRIL = [p for p in PARTICIPANTS_LIST_BASE if p not in ["patif2025", "ataraksja"]] + ["stranger27"]
+PARTICIPANTS_APRIL = [p for p in PARTICIPANTS_LIST_BASE if p not in ["patif2025", "ataraksja"]]
 
 
 # === LISTY POMOCNICZE ===
