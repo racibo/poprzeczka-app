@@ -1514,6 +1514,11 @@
       "status": null,
       "miejsce": 8,
       "rezultat_uczestnika": "13"
+    },
+    "03.2026": {
+      "status": null,
+      "miejsce": 9,
+      "rezultat_uczestnika": "14"
     }
   },
   "cezary-io": {
@@ -1801,6 +1806,11 @@
       "status": null,
       "miejsce": 5,
       "rezultat_uczestnika": "20"
+    },
+    "03.2026": {
+      "status": null,
+      "miejsce": 1,
+      "rezultat_uczestnika": "28"
     }
   },
   "deepresearch": {
@@ -2572,6 +2582,11 @@
       "status": null,
       "miejsce": 7,
       "rezultat_uczestnika": "17"
+    },
+    "03.2026": {
+      "status": null,
+      "miejsce": 8,
+      "rezultat_uczestnika": "14"
     }
   },
   "ervin-lemark": {
@@ -2844,6 +2859,11 @@
       "status": null,
       "miejsce": 11,
       "rezultat_uczestnika": "12"
+    },
+    "03.2026": {
+      "status": null,
+      "miejsce": 10,
+      "rezultat_uczestnika": "11"
     }
   },
   "fredkese": {
@@ -3131,6 +3151,11 @@
       "status": null,
       "miejsce": 6,
       "rezultat_uczestnika": "18"
+    },
+    "03.2026": {
+      "status": null,
+      "miejsce": 7,
+      "rezultat_uczestnika": "17"
     }
   },
   "grecki-bazar-ewy": {
@@ -3902,6 +3927,11 @@
       "status": null,
       "miejsce": 10,
       "rezultat_uczestnika": "12"
+    },
+    "03.2026": {
+      "status": null,
+      "miejsce": 11,
+      "rezultat_uczestnika": "10"
     }
   },
   "ilodz24hd": {
@@ -5167,6 +5197,11 @@
       "status": null,
       "miejsce": 1,
       "rezultat_uczestnika": "23"
+    },
+    "03.2026": {
+      "status": null,
+      "miejsce": 3,
+      "rezultat_uczestnika": "21"
     }
   },
   "marianomariano": {
@@ -5453,6 +5488,11 @@
     "02.2026": {
       "status": null,
       "miejsce": 12,
+      "rezultat_uczestnika": "10"
+    },
+    "03.2026": {
+      "status": null,
+      "miejsce": 11,
       "rezultat_uczestnika": "10"
     }
   },
@@ -5741,6 +5781,11 @@
       "status": null,
       "miejsce": 3,
       "rezultat_uczestnika": "21"
+    },
+    "03.2026": {
+      "status": null,
+      "miejsce": 2,
+      "rezultat_uczestnika": "23"
     }
   },
   "new.things": {
@@ -6028,6 +6073,11 @@
       "status": null,
       "miejsce": 2,
       "rezultat_uczestnika": "23"
+    },
+    "03.2026": {
+      "status": null,
+      "miejsce": 5,
+      "rezultat_uczestnika": "19"
     }
   },
   "racibo": {
@@ -6312,6 +6362,11 @@
       "rezultat_uczestnika": "23"
     },
     "02.2026": {
+      "status": null,
+      "miejsce": 4,
+      "rezultat_uczestnika": "20"
+    },
+    "03.2026": {
       "status": null,
       "miejsce": 4,
       "rezultat_uczestnika": "20"
@@ -6854,6 +6909,11 @@
       "status": null,
       "miejsce": 9,
       "rezultat_uczestnika": "13"
+    },
+    "03.2026": {
+      "status": null,
+      "miejsce": 6,
+      "rezultat_uczestnika": "19"
     }
   },
   "masoom": {
@@ -9321,6 +9381,13 @@
       "status": null,
       "miejsce": 13,
       "rezultat_uczestnika": "4"
+    }
+  },
+  "stranger27": {
+    "03.2026": {
+      "status": null,
+      "miejsce": 13,
+      "rezultat_uczestnika": "10"
     }
   }
 }
