@@ -25,16 +25,25 @@ PARTICIPANTS_FEBRUARY = [p for p in PARTICIPANTS_LIST_BASE if p not in ["patif20
 
 PARTICIPANTS_MARCH = [p for p in PARTICIPANTS_LIST_BASE if p not in ["patif2025", "ataraksja"]] + ["stranger27"]
 
-# === NOWA LISTA: KWIECIEŃ ===
 PARTICIPANTS_APRIL = [p for p in PARTICIPANTS_LIST_BASE if p not in ["patif2025", "ataraksja"]]
+
+# === NOWA LISTA: MAJ ===
+PARTICIPANTS_MAY = [p for p in PARTICIPANTS_LIST_BASE if p not in ["patif2025", "ataraksja", "racibo"]]
 
 
 # === LISTY POMOCNICZE ===
 # Dodajemy stranger27 ręcznie do submitterów, bo nie ma go w BASE
 SUBMITTER_LIST = sorted(list(set(PARTICIPANTS_LIST_BASE + ["poprzeczka (Admin)", "stranger27"])))
 
-# Aktualizacja wszystkich możliwych uczestników o listę marcową i kwietniową
-ALL_POSSIBLE_PARTICIPANTS = sorted(list(set(PARTICIPANTS_DECEMBER + PARTICIPANTS_JANUARY + PARTICIPANTS_FEBRUARY + PARTICIPANTS_MARCH + PARTICIPANTS_APRIL)))
+# Aktualizacja wszystkich możliwych uczestników o edycje aż do maja włącznie
+ALL_POSSIBLE_PARTICIPANTS = sorted(list(set(
+    PARTICIPANTS_DECEMBER + 
+    PARTICIPANTS_JANUARY + 
+    PARTICIPANTS_FEBRUARY + 
+    PARTICIPANTS_MARCH + 
+    PARTICIPANTS_APRIL + 
+    PARTICIPANTS_MAY
+)))
 
 # ID folderu na Google Drive
 GOOGLE_DRIVE_FOLDER_ID = "1b-mUxDmKEUoOyLtTePeb7RaJWGfO_Xre"
@@ -47,6 +56,7 @@ MONTH_NAMES = {
     "february": {"pl": "Luty",     "en": "February", "icon": "💘", "url_param_pl": "luty",     "url_param_en": "february"},
     "march":    {"pl": "Marzec",   "en": "March",    "icon": "🌱", "url_param_pl": "marzec",   "url_param_en": "march"},
     "april":    {"pl": "Kwiecień", "en": "April",    "icon": "🌸", "url_param_pl": "kwiecien", "url_param_en": "april"},
+    "may":      {"pl": "Maj",      "en": "May",      "icon": "🌼", "url_param_pl": "maj",      "url_param_en": "may"},
 }
 
 # === DOMYŚLNA KONFIGURACJA ===
@@ -76,15 +86,22 @@ DEFAULT_EDITIONS_CONFIG = OrderedDict([
         "start_date": date(2026, 3, 1),
         "sheet_name": "EdycjaMarzec",
         "participants": PARTICIPANTS_MARCH,
-        "is_manually_closed": False,
-        "is_hidden": False
+        "is_manually_closed": True,  # ZAMKNIĘTO
+        "is_hidden": True            # UKRYTO W MENU
     }),
-    ("april", {  # === NOWA EDYCJA ===
+    ("april", {
         "start_date": date(2026, 4, 1),
         "sheet_name": "EdycjaKwiecien",
         "participants": PARTICIPANTS_APRIL,
-        "is_manually_closed": False,  # Otwarta
+        "is_manually_closed": False,
         "is_hidden": False
+    }),
+    ("may", {  # === NOWA EDYCJA ===
+        "start_date": date(2026, 5, 1),
+        "sheet_name": "EdycjaMaj",
+        "participants": PARTICIPANTS_MAY,
+        "is_manually_closed": False,  # OTWARTA
+        "is_hidden": False            # WIDOCZNA W MENU
     }),
 ])
 
